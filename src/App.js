@@ -1,25 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  Landing,
+  Login,
+  Register,
+  VerifyEmail,
+  ResetPassword,
+  ForgotPassword,
+  Error,
+  ProtectedRoute,
+  SharedLayout,
+  Home,
+  Search,
+  SingleBookPage,
+  MyBookshelf,
+  HowToUse,
+} from "./pages";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          {/* PUBLIC ROUTES */}
+          <Route path="/landing" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          {/* END OF PUBLIC ROUTES */}
+          {/* PROTECTED ROUTES */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<SharedLayout />}>
+              <Route index path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/search/:id" element={<SingleBookPage />} />
+              <Route path="/my-bookshelf" element={<MyBookshelf />} />
+              <Route path="/how-to-use" element={<HowToUse />} />
+            </Route>
+          </Route>
+          {/* END OF PROTECTED ROUTES */}
+          <Route path="*" element={<Error />} />
+        </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+      </BrowserRouter>
+    </>
   );
-}
+};
 
 export default App;

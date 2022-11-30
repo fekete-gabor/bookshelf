@@ -1,13 +1,177 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/*
+=============== 
+Font families
+===============
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kalam&display=swap");
+
+/*
+=============== 
+Variables
+===============
+*/
+
+:root {
+  --ff-cursive: "Kalam", cursive;
+  --ff-secondary: "Bebas Neue", cursive;
+  --ff-cursive-secondary: "Anton", sans-serif;
+  /* darkest grey - used for headings */
+  --clr-grey-1: hsl(209, 61%, 16%);
+  --clr-grey-2: hsl(209, 34%, 30%);
+  /* grey used for paragraphs */
+  --clr-grey-3: hsl(210, 31%, 80%);
+  --primary-clr-1: #bfbab0;
+  --primary-clr-2: #8c693e;
+  --primary-clr-3: #f2a007;
+  --primary-clr-4: #2b2724;
+  --primary-clr-5: #d9483b;
+  --primary-clr-6: #d36938;
+  --primary-black: #222;
+  --primary-white: #f2f2f0;
+  --border: solid 2px #f2f2f0;
+  --transition: all 0.3s linear;
+  --title-padding: 2rem;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/*
+=============== 
+Global Styles
+===============
+*/
+
+*,
+::after,
+::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Righteous", sans-serif, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  background: var(--primary-white);
+  color: var(--clr-grey-1);
+  line-height: 1.5;
+  font-size: 0.875rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding: calc(2rem + 10px);
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--clr-grey-2);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  letter-spacing: var(--spacing);
+  text-transform: capitalize;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+h5 {
+  font-size: 0.875rem;
+}
+
+p {
+  color: var(--clr-grey-2);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: orangered;
+}
+
+.title-container {
+  padding-top: var(--title-padding);
+  text-align: center;
+  color: var(--primary-white);
+}
+
+.btn {
+  cursor: pointer;
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+  margin: 2rem;
+  margin-bottom: 0;
+  padding: 1rem 1rem 1rem 1.5rem;
+  border: solid 1px var(--primary-clr-5);
+  font-size: clamp(1rem, 5vw, 1.5rem);
+  color: var(--primary-white);
+  background: none;
+  text-transform: uppercase;
+  transition: var(--transition);
+}
+
+@media screen and (min-width: 800px) {
+  h1 {
+    font-size: 3rem;
+  }
+  h2 {
+    font-size: 2.5rem;
+  }
+  h3 {
+    font-size: 2rem;
+  }
+  h4 {
+    font-size: 1.5rem;
+  }
+  h5 {
+    font-size: 1rem;
+  }
+  body {
+    font-size: 1rem;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1;
+  }
 }
