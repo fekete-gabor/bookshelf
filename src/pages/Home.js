@@ -2,19 +2,17 @@ import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const Home = () => {
-  const { savedItem } = useAppContext();
+  const { favouriteBook } = useAppContext();
 
   return (
     <Wrapper>
-      {!savedItem.singleBook ? (
-        <h2>"looks like there is nothing here, try to add some books"</h2>
-      ) : (
+      {favouriteBook?.singleBook ? (
         <div className="book">
-          <h2>{`id: ${savedItem.singleBook.id}`}</h2>
-          <h2>{`title: ${savedItem.singleBook.title}`}</h2>
+          <h2>{`id: ${favouriteBook.singleBook.id}`}</h2>
+          <h2>{`title: ${favouriteBook.singleBook.title}`}</h2>
           <div className="">
             <h2>authors:</h2>
-            {savedItem.singleBook.authors.map((author, i) => {
+            {favouriteBook.singleBook.authors.map((author, i) => {
               return (
                 <h2 key={i} className="author">
                   {author}
@@ -23,6 +21,8 @@ const Home = () => {
             })}
           </div>
         </div>
+      ) : (
+        <h2>looks like there is nothing here, try to add some books</h2>
       )}
     </Wrapper>
   );
