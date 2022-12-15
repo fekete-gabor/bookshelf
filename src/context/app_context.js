@@ -40,7 +40,7 @@ const initialState = {
     publisher: "",
     image: "",
   },
-  savedItem: {},
+  favouriteBook: null,
 };
 
 export const AppProvider = ({ children }) => {
@@ -117,14 +117,32 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const saveItem = () => {
+  const createFavouriteBook = () => {
     dispatch({ type: SAVE_SINGLE_ITEM });
+  };
+
+  const saveFavouriteBook = async () => {
+    try {
+      if (state.favouriteBook) {
+        const { favouriteBook } = state;
+        const { user, singleBook } = favouriteBook;
+        await axios.post("http://localhost:5000/bookshelf", {
+          payload: { user, singleBook },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     fetchBooks();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    saveFavouriteBook();
+  }, [state.favouriteBook]);
 
   return (
     <AppContext.Provider
@@ -143,7 +161,7 @@ export const AppProvider = ({ children }) => {
         constructUrl,
         fetchBooks,
         fetchSingleBook,
-        saveItem,
+        createFavouriteBook,
       }}
     >
       {children}

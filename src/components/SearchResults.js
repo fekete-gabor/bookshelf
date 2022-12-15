@@ -11,14 +11,13 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 
 const SearchResults = () => {
-  const { books, fetchSingleBook, saveItem } = useAppContext();
+  const { books, fetchSingleBook, createFavouriteBook } = useAppContext();
 
   const addToFavourite = async (id) => {
-    await fetchSingleBook(id);
-    await saveItem();
-    toast.success("added to favourites");
     try {
-      // axios post method
+      await fetchSingleBook(id);
+      await createFavouriteBook();
+      toast.success("added to favourites");
     } catch (error) {
       console.log(error);
       toast.error("something went wrong");

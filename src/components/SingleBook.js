@@ -9,13 +9,18 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 
 const SingleBook = () => {
-  const { isLoading, isError, fetchSingleBook, singleBook, saveItem } =
-    useAppContext();
+  const {
+    isLoading,
+    isError,
+    fetchSingleBook,
+    singleBook,
+    createFavouriteBook,
+  } = useAppContext();
 
   const { id } = useParams();
 
-  const handleChange = () => {
-    saveItem();
+  const addToFavourite = async () => {
+    await createFavouriteBook();
     toast.success("added to favourites");
   };
 
@@ -129,7 +134,7 @@ const SingleBook = () => {
           />
         </article>
         <div className="btn-container">
-          <button onClick={() => handleChange()}>add to favourites</button>
+          <button onClick={() => addToFavourite()}>add to favourites</button>
           <Link to="/search">
             <button>back</button>
           </Link>

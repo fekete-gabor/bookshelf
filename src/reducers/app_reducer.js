@@ -53,6 +53,7 @@ const app_reducer = (state, action) => {
 
   if (action.type === FETCH_SINGLE_BOOK_SUCCESSFUL) {
     const { id, data } = action.payload;
+
     const {
       title,
       subtitle,
@@ -66,6 +67,7 @@ const app_reducer = (state, action) => {
       publishedDate,
       publisher,
     } = data;
+
     const image = data?.imageLinks?.thumbnail;
     return {
       ...state,
@@ -96,12 +98,7 @@ const app_reducer = (state, action) => {
 
   if (action.type === SAVE_SINGLE_ITEM) {
     const { user, singleBook } = state;
-    return {
-      ...state,
-      isLoading: false,
-      isError: false,
-      savedItem: { user, singleBook },
-    };
+    return { ...state, favouriteBook: { user, singleBook } };
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);
