@@ -11,7 +11,8 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 
 const SearchResults = () => {
-  const { books, fetchSingleBook, createFavouriteBook } = useAppContext();
+  const { books, fetchSingleBook, createFavouriteBook, removeFavouriteBook } =
+    useAppContext();
 
   const addToFavourite = async (id) => {
     try {
