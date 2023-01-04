@@ -13,7 +13,7 @@ import {
   FETCH_SINGLE_BOOK_PENDING,
   FETCH_SINGLE_BOOK_SUCCESSFUL,
   FETCH_SINGLE_BOOK_REJECTED,
-  SAVE_SINGLE_ITEM,
+  CREATE_FAVOURITE_BOOK,
 } from "../actions";
 
 const AppContext = React.createContext();
@@ -45,13 +45,13 @@ const initialState = {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [searchAuthor, setSearchAuthor] = useState("");
-  const [searchTerm, setSearchTerm] = useState("metro");
+  const [searchAuthor, setSearchAuthor] = useState("mark+lawrence");
+  const [searchTerm, setSearchTerm] = useState("");
   const [maxResults, setMaxResults] = useState(10);
 
   let path;
-  const baseUrl = `https://www.googleapis.com/books/v1/volumes`;
-  const key = "AIzaSyDDB2x_90FEK4Hc2YlVSbFX_541hppC2Qg";
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const key = process.env.REACT_APP_API_KEY;
 
   const saveUser = (user) => {
     dispatch({ type: SAVE_USER, payload: user });
@@ -118,16 +118,24 @@ export const AppProvider = ({ children }) => {
   };
 
   const createFavouriteBook = () => {
-    dispatch({ type: SAVE_SINGLE_ITEM });
+    dispatch({ type: CREATE_FAVOURITE_BOOK });
   };
+
+  // const getFavouriteBooks = async () => {
+  //   try {
+  //     const response = await axios("http://localhost:5000/api/v1/bookshelf");
+  //     const { books } = response.data;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const saveFavouriteBook = async () => {
     try {
       if (state.favouriteBook) {
         const { favouriteBook } = state;
-        const { user, singleBook } = favouriteBook;
-        await axios.post("http://localhost:5000/bookshelf", {
-          payload: { user, singleBook },
+        await axios.post("http://localhost:5000/api/v1/bookshelf", {
+          data: favouriteBook,
         });
       }
     } catch (error) {
@@ -135,13 +143,23 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const removeFavouriteBook = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/v1/bookshelf/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchBooks();
+    // getFavouriteBooks();
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     saveFavouriteBook();
+    // eslint-disable-next-line
   }, [state.favouriteBook]);
 
   return (
@@ -162,6 +180,7 @@ export const AppProvider = ({ children }) => {
         fetchBooks,
         fetchSingleBook,
         createFavouriteBook,
+        removeFavouriteBook,
       }}
     >
       {children}
