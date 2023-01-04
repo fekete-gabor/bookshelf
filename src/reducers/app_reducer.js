@@ -9,7 +9,7 @@ import {
   FETCH_SINGLE_BOOK_PENDING,
   FETCH_SINGLE_BOOK_SUCCESSFUL,
   FETCH_SINGLE_BOOK_REJECTED,
-  SAVE_SINGLE_ITEM,
+  CREATE_FAVOURITE_BOOK,
 } from "../actions";
 
 const app_reducer = (state, action) => {
@@ -96,7 +96,7 @@ const app_reducer = (state, action) => {
     return { ...state, isLoading: false, isError: true };
   }
 
-  if (action.type === SAVE_SINGLE_ITEM) {
+  if (action.type === CREATE_FAVOURITE_BOOK) {
     const { user, singleBook } = state;
     return { ...state, favouriteBook: { user, singleBook } };
   }
