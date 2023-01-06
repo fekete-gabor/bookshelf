@@ -3,13 +3,22 @@ import {
   REMOVE_USER,
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
-  FETCH_PENDING,
-  FETCH_SUCCESSFUL,
-  FETCH_REJECTED,
-  FETCH_SINGLE_BOOK_PENDING,
-  FETCH_SINGLE_BOOK_SUCCESSFUL,
-  FETCH_SINGLE_BOOK_REJECTED,
-  CREATE_FAVOURITE_BOOK,
+  FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
+  FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
+  FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
+  FETCH_SINGLE_BOOK_FROM_GOOGLE_PENDING,
+  FETCH_SINGLE_BOOK_FROM_GOOGLE_SUCCESSFUL,
+  FETCH_SINGLE_BOOK_FROM_GOOGLE_REJECTED,
+  CREATE_BOOK_PAYLOAD,
+  FETCH_ALL_BOOKS_FROM_MONGODB_PENDING,
+  FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL,
+  FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED,
+  FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
+  FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
+  FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  CHANGE_FAVOURITE_ICON_ON_LOAD,
+  ADD_FAVOURITE_ICON,
+  REMOVE_FAVOURITE_ICON,
 } from "../actions";
 
 const app_reducer = (state, action) => {
@@ -29,31 +38,33 @@ const app_reducer = (state, action) => {
     return { ...state, isSidebar: false };
   }
 
-  if (action.type === FETCH_PENDING) {
+  // **************
+  // FETCH BOOKS FROM GOOGLE
+  // **************
+  if (action.type === FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING) {
     return { ...state, isLoading: true, isError: false };
   }
 
-  if (action.type === FETCH_SUCCESSFUL) {
+  if (action.type === FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL) {
     return {
       ...state,
       isLoading: false,
       isError: false,
-      books: action.payload,
+      allBooks: action.payload,
     };
   }
 
-  if (action.type === FETCH_REJECTED) {
+  if (action.type === FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED) {
     console.log(action.payload.message);
     return { ...state, isLoading: false, isError: true };
   }
 
-  if (action.type === FETCH_SINGLE_BOOK_PENDING) {
+  if (action.type === FETCH_SINGLE_BOOK_FROM_GOOGLE_PENDING) {
     return { ...state, isLoading: true, isError: false };
   }
 
-  if (action.type === FETCH_SINGLE_BOOK_SUCCESSFUL) {
+  if (action.type === FETCH_SINGLE_BOOK_FROM_GOOGLE_SUCCESSFUL) {
     const { id, data } = action.payload;
-
     const {
       title,
       subtitle,
@@ -67,8 +78,8 @@ const app_reducer = (state, action) => {
       publishedDate,
       publisher,
     } = data;
-
     const image = data?.imageLinks?.thumbnail;
+
     return {
       ...state,
       isLoading: false,
@@ -91,14 +102,87 @@ const app_reducer = (state, action) => {
     };
   }
 
-  if (action.type === FETCH_SINGLE_BOOK_REJECTED) {
+  if (action.type === FETCH_SINGLE_BOOK_FROM_GOOGLE_REJECTED) {
     console.log(action.payload.message);
     return { ...state, isLoading: false, isError: true };
   }
 
-  if (action.type === CREATE_FAVOURITE_BOOK) {
+  if (action.type === CREATE_BOOK_PAYLOAD) {
     const { user, singleBook } = state;
-    return { ...state, favouriteBook: { user, singleBook } };
+    return { ...state, bookPayload: { user, singleBook } };
+  }
+
+  // **************
+  // FETCH BOOKS FROM MONGODB
+  // **************
+  if (action.type === FETCH_ALL_BOOKS_FROM_MONGODB_PENDING) {
+    return { ...state, isLoading: true, isError: false };
+  }
+
+  if (action.type === FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL) {
+    return {
+      ...state,
+      isLoading: false,
+      isError: false,
+      allFavouriteBooks: action.payload,
+    };
+  }
+
+  if (action.type === FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED) {
+    console.log(action.payload.message);
+    return { ...state, isLoading: false, isError: true };
+  }
+
+  if (action.type === FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING) {
+    return { ...state, isLoading: true, isError: false };
+  }
+
+  if (action.type === FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL) {
+    return {
+      ...state,
+      isLoading: false,
+      isError: false,
+      singleFavouriteBook: action.payload,
+    };
+  }
+
+  if (action.type === FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED) {
+    console.log(action.payload.message);
+    return { ...state, isLoading: false, isError: true };
+  }
+
+  if (action.type === CHANGE_FAVOURITE_ICON_ON_LOAD) {
+    if (state.allFavouriteBooks) {
+      const favouriteIDs = [
+        ...new Set(state.allFavouriteBooks.map((book) => book.id)),
+      ];
+
+      state.allBooks.map((book) => {
+        const findFavourite = favouriteIDs.find((id) => id === book.id);
+
+        book.volumeInfo = {
+          ...book.volumeInfo,
+          favourite: findFavourite ? "true" : "false",
+        };
+      });
+    }
+    return { ...state };
+  }
+
+  if (action.type === ADD_FAVOURITE_ICON) {
+    const bookID = action.payload;
+
+    let book = state.allBooks.find((book) => book.id === bookID);
+    book.volumeInfo.favourite = "true";
+    return { ...state };
+  }
+
+  if (action.type === REMOVE_FAVOURITE_ICON) {
+    const bookID = action.payload;
+
+    let book = state.allBooks.find((book) => book.id === bookID);
+    book.volumeInfo.favourite = "false";
+    return { ...state };
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);
