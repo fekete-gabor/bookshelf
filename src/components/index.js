@@ -7,6 +7,8 @@ import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
 import SingleBook from "./SingleBook";
 import CustomDescription from "./CustomDescription";
+import SearchFavouriteResults from "./SearchFavouriteResults";
+import SingleFavouriteBook from "./SingleFavouriteBook";
 
 export {
   Navbar,
@@ -18,4 +20,6 @@ export {
   SearchResults,
   SingleBook,
   CustomDescription,
+  SearchFavouriteResults,
+  SingleFavouriteBook,
 };
