@@ -1,31 +1,59 @@
+import { useEffect } from "react";
 import notFound from "../assets/404.png";
 import {
   AiFillHeart,
   AiOutlineHeart,
   MdOutlineOpenInNew,
 } from "../utils/icons";
-import { formatDate } from "../utils/formatDate";
+import { add_success, remove_success, error } from "../utils/alertMessages";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
 const SearchResults = () => {
-  const { books, fetchSingleBook, createFavouriteBook, removeFavouriteBook } =
-    useAppContext();
+  const {
+    allBooks,
+    fetchSingleBookFromGoogle,
+    fetchAllFavouriteBooks,
+    createBookPayload,
+    removeFromFavourite,
+    addIcon,
+    removeIcon,
+  } = useAppContext();
 
-  const addToFavourite = async (id) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    fetchAllFavouriteBooks();
+  }, []);
+
+  const addBook = async (id) => {
     try {
-      await fetchSingleBook(id);
-      await createFavouriteBook();
-      toast.success("added to favourites");
+      addIcon(id);
+      toast.success(add_success);
+      await fetchSingleBookFromGoogle(id);
+      await createBookPayload();
     } catch (error) {
       console.log(error);
-      toast.error("something went wrong");
+      toast.error(error);
     }
   };
 
-  if (!books) {
+  const removeBook = async (id) => {
+    try {
+      removeIcon(id);
+      toast.success(remove_success);
+      await removeFromFavourite(id);
+    } catch (err) {
+      console.log(err);
+      toast.error(error);
+    }
+  };
+
+  if (!allBooks) {
     return (
       <Wrapper>
         <div className="error-container">
@@ -38,8 +66,9 @@ const SearchResults = () => {
   return (
     <Wrapper>
       <div className="main-container">
-        {books.map((book, i) => {
-          const { title, authors, publishedDate, publisher } = book.volumeInfo;
+        {allBooks.map((book, i) => {
+          const { title, authors, publishedDate, publisher, favourite } =
+            book.volumeInfo;
           const { id } = book;
           const image = book?.volumeInfo?.imageLinks?.thumbnail;
 
@@ -64,16 +93,23 @@ const SearchResults = () => {
                       );
                     })}
                     {publishedDate && (
-                      <p>{`date of publish: ${formatDate(publishedDate)}`}</p>
+                      <p>{`date of publish: ${publishedDate}`}</p>
                     )}
                     {publisher && <p>{`publisher: ${publisher}`}</p>}
                   </div>
                 </article>
                 <div className="icon-container">
-                  <AiOutlineHeart
-                    className="heart-icon"
-                    onClick={() => addToFavourite(id)}
-                  />
+                  {favourite === "true" ? (
+                    <AiFillHeart
+                      className="heart-icon"
+                      onClick={() => removeBook(id)}
+                    />
+                  ) : (
+                    <AiOutlineHeart
+                      className="heart-icon"
+                      onClick={() => addBook(id)}
+                    />
+                  )}
                   <Link to={`/search/${id}`} key={i}>
                     <MdOutlineOpenInNew className="open-icon" />
                   </Link>
