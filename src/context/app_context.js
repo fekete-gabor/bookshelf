@@ -7,13 +7,22 @@ import {
   REMOVE_USER,
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
-  FETCH_PENDING,
-  FETCH_SUCCESSFUL,
-  FETCH_REJECTED,
-  FETCH_SINGLE_BOOK_PENDING,
-  FETCH_SINGLE_BOOK_SUCCESSFUL,
-  FETCH_SINGLE_BOOK_REJECTED,
-  CREATE_FAVOURITE_BOOK,
+  FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
+  FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
+  FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
+  FETCH_SINGLE_BOOK_FROM_GOOGLE_PENDING,
+  FETCH_SINGLE_BOOK_FROM_GOOGLE_SUCCESSFUL,
+  FETCH_SINGLE_BOOK_FROM_GOOGLE_REJECTED,
+  CREATE_BOOK_PAYLOAD,
+  FETCH_ALL_BOOKS_FROM_MONGODB_PENDING,
+  FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL,
+  FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED,
+  FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
+  FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
+  FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  CHANGE_FAVOURITE_ICON_ON_LOAD,
+  ADD_FAVOURITE_ICON,
+  REMOVE_FAVOURITE_ICON,
 } from "../actions";
 
 const AppContext = React.createContext();
@@ -24,7 +33,7 @@ const initialState = {
   user: {
     name: "gabor",
   },
-  books: [],
+  allBooks: [],
   singleBook: {
     id: "",
     title: "",
@@ -40,7 +49,9 @@ const initialState = {
     publisher: "",
     image: "",
   },
-  favouriteBook: null,
+  bookPayload: null,
+  allFavouriteBooks: [],
+  singleFavouriteBook: [],
 };
 
 export const AppProvider = ({ children }) => {
@@ -93,49 +104,43 @@ export const AppProvider = ({ children }) => {
     return path;
   };
 
-  const fetchBooks = async () => {
-    dispatch({ type: FETCH_PENDING });
+  const fetchAllBooksFromGoogle = async () => {
+    dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING });
     try {
       const url = await constructUrl();
       const response = await axios(url);
       const payload = await response.data.items;
-      dispatch({ type: FETCH_SUCCESSFUL, payload });
+      dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL, payload });
     } catch (error) {
-      dispatch({ type: FETCH_REJECTED, payload: error });
+      dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED, payload: error });
     }
   };
 
-  const fetchSingleBook = async (id) => {
-    dispatch({ type: FETCH_SINGLE_BOOK_PENDING });
+  const fetchSingleBookFromGoogle = async (id) => {
+    dispatch({ type: FETCH_SINGLE_BOOK_FROM_GOOGLE_PENDING });
     try {
       const response = await axios(`${baseUrl}/${id}?key=${key}`);
       const data = await response.data.volumeInfo;
       const payload = { id, data };
-      dispatch({ type: FETCH_SINGLE_BOOK_SUCCESSFUL, payload });
+      dispatch({ type: FETCH_SINGLE_BOOK_FROM_GOOGLE_SUCCESSFUL, payload });
     } catch (error) {
-      dispatch({ type: FETCH_SINGLE_BOOK_REJECTED, payload: error });
+      dispatch({
+        type: FETCH_SINGLE_BOOK_FROM_GOOGLE_REJECTED,
+        payload: error,
+      });
     }
   };
 
-  const createFavouriteBook = () => {
-    dispatch({ type: CREATE_FAVOURITE_BOOK });
+  const createBookPayload = () => {
+    dispatch({ type: CREATE_BOOK_PAYLOAD });
   };
 
-  // const getFavouriteBooks = async () => {
-  //   try {
-  //     const response = await axios("http://localhost:5000/api/v1/bookshelf");
-  //     const { books } = response.data;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  const saveFavouriteBook = async () => {
+  const saveBookPayload = async () => {
     try {
-      if (state.favouriteBook) {
-        const { favouriteBook } = state;
+      if (state.bookPayload) {
+        const { bookPayload } = state;
         await axios.post("http://localhost:5000/api/v1/bookshelf", {
-          data: favouriteBook,
+          data: bookPayload,
         });
       }
     } catch (error) {
@@ -143,24 +148,74 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const removeFavouriteBook = async (id) => {
+  const fetchAllFavouriteBooks = async () => {
+    dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
     try {
-      await axios.delete(`http://localhost:5000/api/v1/bookshelf/${id}`);
+      const response = await axios("http://localhost:5000/api/v1/bookshelf");
+      const { books: payload } = response.data;
+      dispatch({
+        type: FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL,
+        payload,
+      });
     } catch (error) {
-      console.log(error);
+      dispatch({
+        type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED,
+        payload: error,
+      });
     }
   };
 
+  const fetchSingleBookFromMongoDB = async (id) => {
+    dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING });
+    try {
+      const response = await axios(
+        `http://localhost:5000/api/v1/bookshelf/${id}`
+      );
+      const { singleBook: payload } = response.data;
+      dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL, payload });
+    } catch (error) {
+      dispatch({
+        type: FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+        payload: error,
+      });
+    }
+  };
+
+  const removeFromFavourite = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/v1/bookshelf/${id}`);
+    } catch (error) {
+      dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED, payload: error });
+    }
+  };
+
+  const findFavourites = () => {
+    dispatch({ type: CHANGE_FAVOURITE_ICON_ON_LOAD });
+  };
+
+  const addIcon = (id) => {
+    dispatch({ type: ADD_FAVOURITE_ICON, payload: id });
+  };
+
+  const removeIcon = (id) => {
+    dispatch({ type: REMOVE_FAVOURITE_ICON, payload: id });
+  };
+
   useEffect(() => {
-    fetchBooks();
-    // getFavouriteBooks();
+    fetchAllBooksFromGoogle();
+    fetchAllFavouriteBooks();
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    saveFavouriteBook();
+    findFavourites();
     // eslint-disable-next-line
-  }, [state.favouriteBook]);
+  }, [state.allBooks, state.allFavouriteBooks]);
+
+  useEffect(() => {
+    saveBookPayload();
+    // eslint-disable-next-line
+  }, [state.bookPayload]);
 
   return (
     <AppContext.Provider
@@ -177,10 +232,14 @@ export const AppProvider = ({ children }) => {
         setSearchAuthor,
         setSearchTerm,
         constructUrl,
-        fetchBooks,
-        fetchSingleBook,
-        createFavouriteBook,
-        removeFavouriteBook,
+        fetchAllBooksFromGoogle,
+        fetchSingleBookFromGoogle,
+        createBookPayload,
+        removeFromFavourite,
+        fetchAllFavouriteBooks,
+        fetchSingleBookFromMongoDB,
+        addIcon,
+        removeIcon,
       }}
     >
       {children}
