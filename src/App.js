@@ -11,6 +11,7 @@ import {
   Home,
   Search,
   SingleBookPage,
+  SingleFavouriteBookPage,
   MyBookshelf,
   HowToUse,
 } from "./pages";
@@ -38,6 +39,10 @@ const App = () => {
               <Route path="/search" element={<Search />} />
               <Route path="/search/:id" element={<SingleBookPage />} />
               <Route path="/my-bookshelf" element={<MyBookshelf />} />
+              <Route
+                path="/my-bookshelf/:id"
+                element={<SingleFavouriteBookPage />}
+              />
               <Route path="/how-to-use" element={<HowToUse />} />
             </Route>
           </Route>
