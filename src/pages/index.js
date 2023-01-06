@@ -17,6 +17,7 @@ import SharedLayout from "./SharedLayout";
 import Home from "./Home";
 import Search from "./Search";
 import SingleBookPage from "./SingleBookPage";
+import SingleFavouriteBookPage from "./SingleFavouriteBookPage";
 import MyBookshelf from "./MyBookshelf";
 import HowToUse from "./HowToUse";
 
@@ -33,6 +34,7 @@ export {
   Home,
   Search,
   SingleBookPage,
+  SingleFavouriteBookPage,
   MyBookshelf,
   HowToUse,
 };
