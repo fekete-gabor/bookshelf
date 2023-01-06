@@ -1,7 +1,7 @@
 import { useEffect } from "react";
+import { add_success, remove_success, error } from "../utils/alertMessages";
 import { Link, Navigate } from "react-router-dom";
 import { CustomDescription } from "./index";
-import { formatDate } from "../utils/formatDate";
 import notFound from "../assets/404.png";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
@@ -12,16 +12,32 @@ const SingleBook = () => {
   const {
     isLoading,
     isError,
-    fetchSingleBook,
+    fetchSingleBookFromGoogle,
     singleBook,
-    createFavouriteBook,
+    createBookPayload,
+    removeFromFavourite,
   } = useAppContext();
 
   const { id } = useParams();
 
-  const addToFavourite = async () => {
-    await createFavouriteBook();
-    toast.success("added to favourites");
+  const addBook = async () => {
+    try {
+      toast.success(add_success);
+      await createBookPayload();
+    } catch (err) {
+      console.log(err);
+      toast.error(error);
+    }
+  };
+
+  const removeBook = async (id) => {
+    try {
+      toast.success(remove_success);
+      await removeFromFavourite(id);
+    } catch (err) {
+      console.log(err);
+      toast.error(error);
+    }
   };
 
   const {
@@ -44,7 +60,7 @@ const SingleBook = () => {
   }, []);
 
   useEffect(() => {
-    fetchSingleBook(id);
+    fetchSingleBookFromGoogle(id);
     // eslint-disable-next-line
   }, [id]);
 
@@ -130,11 +146,12 @@ const SingleBook = () => {
             fieldName="date of publish"
             className="dateOfPublish"
             showFieldName
-            value={formatDate(publishedDate)}
+            value={publishedDate}
           />
         </article>
         <div className="btn-container">
-          <button onClick={() => addToFavourite()}>add to favourites</button>
+          <button onClick={() => removeBook(id)}>remove</button>
+          <button onClick={() => addBook()}>add</button>
           <Link to="/search">
             <button>back</button>
           </Link>
