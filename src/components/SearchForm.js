@@ -14,14 +14,14 @@ const SearchForm = () => {
     setMaxResults,
     setSearchTerm,
     setSearchAuthor,
-    fetchBooks,
+    fetchAllBooksFromGoogle,
   } = useAppContext();
 
   const onSubmit = (e) => {
     e.preventDefault();
     setSearchAuthor(formatSearchValues(searchAuthor));
     setSearchTerm(formatSearchValues(searchTerm));
-    fetchBooks();
+    fetchAllBooksFromGoogle();
   };
 
   const handleChange = (e) => {
