@@ -12,7 +12,10 @@ const SingleBook = () => {
   const {
     isLoading,
     isError,
+    fetchAllFavouriteBooks,
     fetchSingleBookFromGoogle,
+    changeToAddButton,
+    changeToRemoveButton,
     singleBook,
     createBookPayload,
     removeFromFavourite,
@@ -23,20 +26,22 @@ const SingleBook = () => {
   const addBook = async () => {
     try {
       toast.success(add_success);
+      changeToAddButton(id);
       await createBookPayload();
     } catch (err) {
       console.log(err);
-      toast.error(error);
+      toast.warning(error);
     }
   };
 
   const removeBook = async (id) => {
     try {
-      toast.success(remove_success);
+      toast.error(remove_success);
+      changeToRemoveButton(id);
       await removeFromFavourite(id);
     } catch (err) {
       console.log(err);
-      toast.error(error);
+      toast.warning(error);
     }
   };
 
@@ -53,14 +58,24 @@ const SingleBook = () => {
     publishedDate,
     publisher,
     image,
+    favourite,
   } = singleBook;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  const fetchBooks = async (id) => {
+    try {
+      await fetchAllFavouriteBooks();
+      await fetchSingleBookFromGoogle(id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    fetchSingleBookFromGoogle(id);
+    fetchBooks(id);
     // eslint-disable-next-line
   }, [id]);
 
@@ -150,8 +165,14 @@ const SingleBook = () => {
           />
         </article>
         <div className="btn-container">
-          <button onClick={() => removeBook(id)}>remove</button>
-          <button onClick={() => addBook()}>add</button>
+          {favourite === true ? (
+            <button onClick={() => removeBook(id)}>
+              remove from favourites
+            </button>
+          ) : (
+            <button onClick={() => addBook()}>add from favourites</button>
+          )}
+
           <Link to="/search">
             <button>back</button>
           </Link>
@@ -197,7 +218,7 @@ const Wrapper = styled.div`
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 3px;
-    margin: 0 0.5rem;
+    margin: 0.25rem 0.5rem;
     padding: 1rem;
     border: solid 1px transparent;
     border-radius: 15px;
