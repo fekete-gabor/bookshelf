@@ -39,7 +39,7 @@ const Wrapper = styled.a`
   }
 
   &:hover {
-    background-color: hotpink;
+    background-color: var(--primary-clr-1);
   }
   svg {
     position: absolute;
