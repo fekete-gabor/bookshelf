@@ -1,25 +1,27 @@
 import { useEffect } from "react";
 import notFound from "../assets/404.png";
+import { add_success, remove_success, error } from "../utils/alertMessages";
+import { Link, Navigate } from "react-router-dom";
 import {
   AiFillHeart,
   AiOutlineHeart,
   MdOutlineOpenInNew,
 } from "../utils/icons";
-import { add_success, remove_success, error } from "../utils/alertMessages";
-import { Link } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
 const SearchResults = () => {
   const {
+    isLoading,
+    isError,
     allBooks,
     fetchSingleBookFromGoogle,
     fetchAllFavouriteBooks,
     createBookPayload,
     removeFromFavourite,
-    addIcon,
-    removeIcon,
+    changeToAddButton,
+    changeToRemoveButton,
   } = useAppContext();
 
   useEffect(() => {
@@ -32,26 +34,38 @@ const SearchResults = () => {
 
   const addBook = async (id) => {
     try {
-      addIcon(id);
+      changeToAddButton(id);
       toast.success(add_success);
       await fetchSingleBookFromGoogle(id);
       await createBookPayload();
     } catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.warning(error);
     }
   };
 
   const removeBook = async (id) => {
     try {
-      removeIcon(id);
-      toast.success(remove_success);
+      changeToRemoveButton(id);
+      toast.error(remove_success);
       await removeFromFavourite(id);
     } catch (err) {
       console.log(err);
-      toast.error(error);
+      toast.warning(error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <h1>Loading...</h1>
+      </Wrapper>
+    );
+  }
+
+  if (isError) {
+    return <Navigate to="/error" />;
+  }
 
   if (!allBooks) {
     return (
@@ -99,7 +113,7 @@ const SearchResults = () => {
                   </div>
                 </article>
                 <div className="icon-container">
-                  {favourite === "true" ? (
+                  {favourite === true ? (
                     <AiFillHeart
                       className="heart-icon"
                       onClick={() => removeBook(id)}
