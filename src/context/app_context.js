@@ -189,15 +189,15 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const findFavourites = () => {
+  const findAllFavouritedBooks = () => {
     dispatch({ type: CHANGE_FAVOURITE_ICON_ON_LOAD });
   };
 
-  const addIcon = (id) => {
+  const changeToAddButton = (id) => {
     dispatch({ type: ADD_FAVOURITE_ICON, payload: id });
   };
 
-  const removeIcon = (id) => {
+  const changeToRemoveButton = (id) => {
     dispatch({ type: REMOVE_FAVOURITE_ICON, payload: id });
   };
 
@@ -208,7 +208,7 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    findFavourites();
+    findAllFavouritedBooks();
     // eslint-disable-next-line
   }, [state.allBooks, state.allFavouriteBooks]);
 
@@ -238,8 +238,8 @@ export const AppProvider = ({ children }) => {
         removeFromFavourite,
         fetchAllFavouriteBooks,
         fetchSingleBookFromMongoDB,
-        addIcon,
-        removeIcon,
+        changeToAddButton,
+        changeToRemoveButton,
       }}
     >
       {children}
