@@ -1,6 +1,6 @@
 /*
 =============== 
-Font families
+Font Families
 ===============
 */
 
@@ -22,17 +22,14 @@ Variables
   --clr-grey-2: hsl(209, 34%, 30%);
   /* grey used for paragraphs */
   --clr-grey-3: hsl(210, 31%, 80%);
-  --primary-clr-1: #bfbab0;
-  --primary-clr-2: #8c693e;
-  --primary-clr-3: #f2a007;
-  --primary-clr-4: #2b2724;
-  --primary-clr-5: #d9483b;
-  --primary-clr-6: #d36938;
+  --primary-clr-1: #ae6bf2;
+  --primary-clr-2: #7749a6;
+  --primary-clr-3: #221440;
+  --primary-clr-4: #f29441;
+  --primary-clr-5: #f27244;
   --primary-black: #222;
   --primary-white: #f2f2f0;
-  --border: solid 2px #f2f2f0;
   --transition: all 0.3s linear;
-  --title-padding: 2rem;
 }
 
 /*
@@ -135,18 +132,40 @@ p {
 
 .btn {
   cursor: pointer;
-  z-index: 1;
-  position: relative;
-  overflow: hidden;
-  margin: 2rem;
-  margin-bottom: 0;
-  padding: 1rem 1rem 1rem 1.5rem;
-  border: solid 1px var(--primary-clr-5);
-  font-size: clamp(1rem, 5vw, 1.5rem);
-  color: var(--primary-white);
-  background: none;
   text-transform: uppercase;
+  letter-spacing: 3px;
+  margin: 0.25rem 0.5rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 15px;
+  color: var(--primary-white);
+  background: var(--primary-clr-1);
   transition: var(--transition);
+}
+
+.btn:hover {
+  color: var(--primary-white);
+  background: #221440;
+}
+
+.remove-btn {
+  background: tomato;
+  transition: var(--transition);
+}
+
+.remove-btn:hover {
+  background: darkred;
+}
+
+.add-btn,
+.edit-btn {
+  background: green;
+  transition: var(--transition);
+}
+
+.add-btn:hover,
+.edit-btn:hover {
+  background: darkgreen;
 }
 
 @media screen and (min-width: 800px) {
