@@ -166,15 +166,17 @@ const SingleBook = () => {
         </article>
         <div className="btn-container">
           {favourite === true ? (
-            <button onClick={() => removeBook(id)}>
+            <button className="btn remove-btn" onClick={() => removeBook(id)}>
               remove from favourites
             </button>
           ) : (
-            <button onClick={() => addBook()}>add from favourites</button>
+            <button className="btn add-btn" onClick={() => addBook()}>
+              add to favourites
+            </button>
           )}
 
           <Link to="/search">
-            <button>back</button>
+            <button className="btn">back</button>
           </Link>
         </div>
       </div>
@@ -200,6 +202,8 @@ const Wrapper = styled.div`
     }
     .btn-container {
       border: none;
+      display: flex;
+      flex-direction: column;
     }
   }
 
@@ -212,24 +216,6 @@ const Wrapper = styled.div`
 
   .authors {
     color: dodgerblue;
-  }
-
-  button {
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin: 0.25rem 0.5rem;
-    padding: 1rem;
-    border: solid 1px transparent;
-    border-radius: 15px;
-    color: honeydew;
-    background: salmon;
-    transition: var(--transition);
-    &:hover {
-      border: solid 1px black;
-      color: salmon;
-      background: honeydew;
-    }
   }
 
   h4 {
