@@ -42,6 +42,11 @@ const Wrapper = styled.section`
   z-index: 999;
   transition: var(--transition);
 
+  .active {
+    transition: var(--transition);
+    text-decoration: underline var(--primary-clr-1) 3px;
+  }
+
   &:hover {
     box-shadow: 2px 2px 10px #222;
   }
