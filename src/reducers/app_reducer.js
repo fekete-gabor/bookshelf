@@ -80,6 +80,10 @@ const app_reducer = (state, action) => {
     } = data;
     const image = data?.imageLinks?.thumbnail;
 
+    const favouriteIDs = state.allFavouriteBooks.map((book) => book.id);
+    const book = favouriteIDs.find((bookID) => bookID === id);
+    const favourite = book ? true : false;
+
     return {
       ...state,
       isLoading: false,
@@ -98,6 +102,7 @@ const app_reducer = (state, action) => {
         publishedDate,
         publisher,
         image,
+        favourite,
       },
     };
   }
@@ -156,13 +161,12 @@ const app_reducer = (state, action) => {
       const favouriteIDs = [
         ...new Set(state.allFavouriteBooks.map((book) => book.id)),
       ];
-
       state.allBooks.map((book) => {
         const findFavourite = favouriteIDs.find((id) => id === book.id);
 
         book.volumeInfo = {
           ...book.volumeInfo,
-          favourite: findFavourite ? "true" : "false",
+          favourite: findFavourite ? true : false,
         };
       });
     }
@@ -173,16 +177,16 @@ const app_reducer = (state, action) => {
     const bookID = action.payload;
 
     let book = state.allBooks.find((book) => book.id === bookID);
-    book.volumeInfo.favourite = "true";
-    return { ...state };
+    book.volumeInfo.favourite = true;
+    return { ...state, singleBook: { ...state.singleBook, favourite: true } };
   }
 
   if (action.type === REMOVE_FAVOURITE_ICON) {
     const bookID = action.payload;
 
     let book = state.allBooks.find((book) => book.id === bookID);
-    book.volumeInfo.favourite = "false";
-    return { ...state };
+    book.volumeInfo.favourite = false;
+    return { ...state, singleBook: { ...state.singleBook, favourite: false } };
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);
