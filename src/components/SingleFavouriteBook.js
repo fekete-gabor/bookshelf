@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { remove_success, error } from "../utils/alertMessages";
 import { Link, Navigate } from "react-router-dom";
 import { CustomDescription } from "./index";
 import notFound from "../assets/404.png";
@@ -11,7 +12,6 @@ const SingleFavouriteBook = () => {
   const {
     isLoading,
     isError,
-    fetchAllFavouriteBooks,
     fetchSingleBookFromMongoDB,
     singleFavouriteBook,
     removeFromFavourite,
@@ -20,9 +20,13 @@ const SingleFavouriteBook = () => {
   const { id } = useParams();
 
   const removeBook = async () => {
-    await removeFromFavourite(id);
-    // await fetchAllFavouriteBooks();
-    toast.success("removed from favourites");
+    try {
+      toast.error(remove_success);
+      await removeFromFavourite(id);
+    } catch (err) {
+      console.log(err);
+      toast.warning(error);
+    }
   };
 
   useEffect(() => {
@@ -44,10 +48,6 @@ const SingleFavouriteBook = () => {
     publisher,
     image,
   } = singleFavouriteBook;
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   if (isLoading) {
     return (
@@ -142,11 +142,13 @@ const SingleFavouriteBook = () => {
         </article>
         <div className="btn-container">
           <Link to="/my-bookshelf">
-            <button onClick={() => removeBook(id)}>remove</button>
+            <button className="btn remove-btn" onClick={() => removeBook(id)}>
+              remove from favourites
+            </button>
           </Link>
-          <button>save changes</button>
+          <button className="btn edit-btn">save changes</button>
           <Link to="/my-bookshelf">
-            <button>back</button>
+            <button className="btn">back</button>
           </Link>
         </div>
       </div>
@@ -172,6 +174,8 @@ const Wrapper = styled.div`
     }
     .btn-container {
       border: none;
+      display: flex;
+      flex-direction: column;
     }
   }
 
@@ -184,24 +188,6 @@ const Wrapper = styled.div`
 
   .authors {
     color: dodgerblue;
-  }
-
-  button {
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin: 0 0.5rem;
-    padding: 1rem;
-    border: solid 1px transparent;
-    border-radius: 15px;
-    color: honeydew;
-    background: salmon;
-    transition: var(--transition);
-    &:hover {
-      border: solid 1px black;
-      color: salmon;
-      background: honeydew;
-    }
   }
 
   h4 {
