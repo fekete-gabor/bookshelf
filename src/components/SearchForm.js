@@ -17,11 +17,15 @@ const SearchForm = () => {
     fetchAllBooksFromGoogle,
   } = useAppContext();
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setSearchAuthor(formatSearchValues(searchAuthor));
-    setSearchTerm(formatSearchValues(searchTerm));
-    fetchAllBooksFromGoogle();
+    try {
+      setSearchAuthor(formatSearchValues(searchAuthor));
+      setSearchTerm(formatSearchValues(searchTerm));
+      await fetchAllBooksFromGoogle();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleChange = (e) => {
