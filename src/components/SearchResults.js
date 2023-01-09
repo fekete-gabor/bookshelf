@@ -55,14 +55,6 @@ const SearchResults = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <Wrapper>
-        <h1>Loading...</h1>
-      </Wrapper>
-    );
-  }
-
   if (isError) {
     return <Navigate to="/error" />;
   }
@@ -210,7 +202,7 @@ const Wrapper = styled.div`
   .open-icon {
     color: plum;
     &:hover {
-      color: yellowgreen;
+      color: var(--primary-clr-1);
     }
   }
 
