@@ -27,7 +27,7 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === REMOVE_USER) {
-    return { ...state, user: { name: "" } };
+    return { ...state, user: { email: "", password: "" } };
   }
 
   if (action.type === OPEN_SIDEBAR) {
