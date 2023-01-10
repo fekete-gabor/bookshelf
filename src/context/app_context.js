@@ -31,7 +31,8 @@ const initialState = {
   isLoading: false,
   isSidebar: false,
   user: {
-    name: "gabor",
+    email: "fekete_gabor@outlook.hu",
+    password: "asd",
   },
   allBooks: [],
   singleBook: {
