@@ -27,8 +27,13 @@ export const navLinks = links.map((link) => {
   const { id, text, url } = link;
 
   return (
-    <li key={id} className={({ isActive }) => isActive && "active-link"}>
-      <NavLink to={url}>{text}</NavLink>
+    <li key={id}>
+      <NavLink
+        to={url}
+        className={({ isActive }) => (isActive ? "active-link" : undefined)}
+      >
+        {text}
+      </NavLink>
     </li>
   );
 });
