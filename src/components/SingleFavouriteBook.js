@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { remove_success, error } from "../utils/alertMessages";
 import { Link, Navigate } from "react-router-dom";
 import { CustomDescription } from "./index";
 import notFound from "../assets/404.png";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
-import { toast } from "react-toastify";
+import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
 
 const SingleFavouriteBook = () => {
@@ -21,16 +20,17 @@ const SingleFavouriteBook = () => {
 
   const removeBook = async () => {
     try {
-      toast.error(remove_success);
+      alertMessages("error", "Removed from favourites!");
       await removeFromFavourite(id);
-    } catch (err) {
-      console.log(err);
-      toast.warning(error);
+    } catch (error) {
+      console.log(error);
+      alertMessages("warning", "Something went wrong!");
     }
   };
 
   useEffect(() => {
     fetchSingleBookFromMongoDB(id);
+    // eslint-disable-next-line
   }, [id]);
 
   const {
