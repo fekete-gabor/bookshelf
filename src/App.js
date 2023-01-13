@@ -1,7 +1,5 @@
 import {
   Landing,
-  Login,
-  Register,
   VerifyEmail,
   ResetPassword,
   ForgotPassword,
@@ -26,8 +24,6 @@ const App = () => {
         <Routes>
           {/* PUBLIC ROUTES */}
           <Route path="/landing" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
