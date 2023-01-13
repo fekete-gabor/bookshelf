@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import { alertMessages } from "../utils/alertMessages";
 import { useNavigate } from "react-router-dom";
 import { CustomInput } from "../components";
 import { useAppContext } from "../context/app_context";
@@ -23,11 +25,20 @@ const Login = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await saveUser(user);
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/auth/login",
+        user
+      );
+      localStorage.setItem("token", response.data.token);
+      const { name } = response.data.user;
+      const { email } = user;
+      await saveUser({ name, email });
+      alertMessages("success", `Welcome back ${name}!`);
       setUser({ email: "", password: "" });
       navigateHome();
     } catch (error) {
       console.log(error);
+      alertMessages("warning", `${error.response.data.msg}`);
     }
   };
 
@@ -59,6 +70,7 @@ const Login = ({ form, setForm }) => {
         <button
           className={form === "register" ? "active-btn btn" : "btn"}
           onClick={() => setForm("register")}
+          type="button"
         >
           Register
         </button>
