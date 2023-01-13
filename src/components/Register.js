@@ -1,21 +1,14 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { alertMessages } from "../utils/alertMessages";
 import { CustomInput } from "../components";
-import { useAppContext } from "../context/app_context";
 
 const Register = ({ form, setForm }) => {
-  const { saveUser } = useAppContext();
   const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
   });
-
-  const history = useNavigate();
-
-  const navigateHome = () => {
-    history("/");
-  };
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -24,13 +17,14 @@ const Register = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await saveUser(user);
+      alertMessages("success", "User successfully created!");
+      await axios.post("http://localhost:5000/api/v1/auth/register", user);
       setUser({ name: "", email: "", password: "" });
-      navigateHome();
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <form onSubmit={onSubmit}>
       <h3>create new account</h3>
@@ -59,6 +53,7 @@ const Register = ({ form, setForm }) => {
         <button
           className={form === "login" ? "active-btn btn" : "btn"}
           onClick={() => setForm("login")}
+          type="button"
         >
           Log In
         </button>
