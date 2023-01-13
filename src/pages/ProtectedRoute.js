@@ -4,9 +4,9 @@ import { useAppContext } from "../context/app_context";
 
 const ProtectedRoute = ({ redirectPath = "/landing", children }) => {
   const { user } = useAppContext();
-  const { email, password } = user;
+  const { email } = user;
 
-  if (!email && !password) {
+  if (!email) {
     return <Navigate to={redirectPath} replace />;
   }
 
