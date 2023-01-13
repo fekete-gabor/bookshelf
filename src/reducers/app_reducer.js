@@ -27,7 +27,7 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === REMOVE_USER) {
-    return { ...state, user: { email: "", password: "" } };
+    return { ...state, user: { name: "", email: "" } };
   }
 
   if (action.type === OPEN_SIDEBAR) {
@@ -80,8 +80,9 @@ const app_reducer = (state, action) => {
     } = data;
     const image = data?.imageLinks?.thumbnail;
 
-    const favouriteIDs = state.allFavouriteBooks.map((book) => book.id);
-    const book = favouriteIDs.find((bookID) => bookID === id);
+    const favouriteIDs =
+      state.allFavouriteBooks && state.allFavouriteBooks.map((book) => book.id);
+    const book = favouriteIDs && favouriteIDs.find((bookID) => bookID === id);
     const favourite = book ? true : false;
 
     return {
@@ -157,19 +158,21 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === CHANGE_FAVOURITE_ICON_ON_LOAD) {
-    if (state.allFavouriteBooks) {
-      const favouriteIDs = [
-        ...new Set(state.allFavouriteBooks.map((book) => book.id)),
-      ];
-      state.allBooks.map((book) => {
-        const findFavourite = favouriteIDs.find((id) => id === book.id);
+    const favouriteIDs = state.allFavouriteBooks && [
+      ...new Set(state.allFavouriteBooks.map((book) => book.id)),
+    ];
 
-        book.volumeInfo = {
-          ...book.volumeInfo,
-          favourite: findFavourite ? true : false,
-        };
-      });
-    }
+    // eslint-disable-next-line
+    state.allBooks.map((book) => {
+      const findFavourite =
+        favouriteIDs && favouriteIDs.find((id) => id === book.id);
+
+      book.volumeInfo = {
+        ...book.volumeInfo,
+        favourite: findFavourite ? true : false,
+      };
+    });
+
     return { ...state };
   }
 
