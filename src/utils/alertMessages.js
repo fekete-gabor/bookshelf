@@ -1,5 +1,8 @@
-const add_success = "Added to favourites!";
-const remove_success = "Removed from favourites!";
-const error = "Something went wrong!";
+import { toast } from "react-toastify";
 
-export { add_success, remove_success, error };
+export const alertMessages = (type, msg) => {
+  msg = msg.toLowerCase();
+  if (type === "success") return toast.success(msg);
+  if (type === "warning") return toast.warning(msg);
+  if (type === "error") return toast.error(msg);
+};
