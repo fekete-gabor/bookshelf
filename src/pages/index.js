@@ -2,8 +2,6 @@
 //   PUBLIC ROUTES
 //   *****
 import Landing from "./Landing";
-import Login from "./Login";
-import Register from "./Register";
 import VerifyEmail from "./VerifyEmail";
 import ResetPassword from "./ResetPassword";
 import ForgotPassword from "./ForgotPassword";
@@ -23,8 +21,6 @@ import HowToUse from "./HowToUse";
 
 export {
   Landing,
-  Login,
-  Register,
   VerifyEmail,
   ResetPassword,
   ForgotPassword,
