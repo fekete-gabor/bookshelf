@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import notFound from "../assets/404.png";
-import { add_success, remove_success, error } from "../utils/alertMessages";
 import { Link, Navigate } from "react-router-dom";
 import {
   AiFillHeart,
@@ -8,12 +7,11 @@ import {
   MdOutlineOpenInNew,
 } from "../utils/icons";
 import { useAppContext } from "../context/app_context";
-import { toast } from "react-toastify";
+import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
 
 const SearchResults = () => {
   const {
-    isLoading,
     isError,
     allBooks,
     fetchSingleBookFromGoogle,
@@ -30,28 +28,29 @@ const SearchResults = () => {
 
   useEffect(() => {
     fetchAllFavouriteBooks();
+    // eslint-disable-next-line
   }, []);
 
   const addBook = async (id) => {
     try {
       changeToAddButton(id);
-      toast.success(add_success);
+      alertMessages("success", "Added to favourites!");
       await fetchSingleBookFromGoogle(id);
       await createBookPayload();
     } catch (error) {
       console.log(error);
-      toast.warning(error);
+      alertMessages("warning", "Something went wrong!");
     }
   };
 
   const removeBook = async (id) => {
     try {
       changeToRemoveButton(id);
-      toast.error(remove_success);
+      alertMessages("error", "Removed from favourites!");
       await removeFromFavourite(id);
-    } catch (err) {
-      console.log(err);
-      toast.warning(error);
+    } catch (error) {
+      console.log(error);
+      alertMessages("warning", "Something went wrong!");
     }
   };
 
