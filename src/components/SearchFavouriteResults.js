@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import notFound from "../assets/404.png";
 import { AiFillHeart, MdOutlineOpenInNew } from "../utils/icons";
-import { remove_success, error } from "../utils/alertMessages";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
-import { toast } from "react-toastify";
+import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
 
 const SearchFavouriteResults = () => {
@@ -13,6 +12,7 @@ const SearchFavouriteResults = () => {
 
   useEffect(() => {
     fetchAllFavouriteBooks();
+    // eslint-disable-next-line
   }, []);
 
   if (!allFavouriteBooks) {
@@ -27,12 +27,12 @@ const SearchFavouriteResults = () => {
 
   const removeBook = async (id) => {
     try {
-      toast.success(remove_success);
+      alertMessages("error", "Removed from favourites!");
       await removeFromFavourite(id);
       await fetchAllFavouriteBooks();
-    } catch (err) {
-      console.log(err);
-      toast.error(error);
+    } catch (error) {
+      console.log(error);
+      alertMessages("warning", "Something went wrong!");
     }
   };
 
@@ -40,18 +40,7 @@ const SearchFavouriteResults = () => {
     <Wrapper>
       <div className="main-container">
         {allFavouriteBooks.map((book, i) => {
-          const {
-            authors,
-            categories,
-            id,
-            image,
-            language,
-            myRating,
-            pageCount,
-            publisher,
-            publishedDate,
-            title,
-          } = book;
+          const { authors, id, image, publisher, publishedDate, title } = book;
 
           return (
             <div className="book-container" key={i}>
