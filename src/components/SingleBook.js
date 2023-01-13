@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { add_success, remove_success, error } from "../utils/alertMessages";
 import { Link, Navigate } from "react-router-dom";
 import { CustomDescription } from "./index";
 import notFound from "../assets/404.png";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
-import { toast } from "react-toastify";
+import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
 
 const SingleBook = () => {
@@ -25,23 +24,23 @@ const SingleBook = () => {
 
   const addBook = async () => {
     try {
-      toast.success(add_success);
+      alertMessages("success", "Added to favourites!");
       changeToAddButton(id);
       await createBookPayload();
-    } catch (err) {
-      console.log(err);
-      toast.warning(error);
+    } catch (error) {
+      console.log(error);
+      alertMessages("warning", "Something went wrong!");
     }
   };
 
   const removeBook = async (id) => {
     try {
-      toast.error(remove_success);
+      alertMessages("error", "Removed from favourites!");
       changeToRemoveButton(id);
       await removeFromFavourite(id);
-    } catch (err) {
-      console.log(err);
-      toast.warning(error);
+    } catch (error) {
+      console.log(error);
+      alertMessages("warning", "Something went wrong!");
     }
   };
 
