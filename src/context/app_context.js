@@ -31,8 +31,8 @@ const initialState = {
   isLoading: false,
   isSidebar: false,
   user: {
-    email: "fekete_gabor@outlook.hu",
-    password: "asd",
+    name: "",
+    email: "",
   },
   allBooks: [],
   singleBook: {
@@ -140,19 +140,26 @@ export const AppProvider = ({ children }) => {
     try {
       if (state.bookPayload) {
         const { bookPayload } = state;
-        await axios.post("http://localhost:5000/api/v1/bookshelf", {
-          data: bookPayload,
+        const url = "http://localhost:5000/api/v1/bookshelf";
+        await axios.post(url, bookPayload, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
     }
   };
 
   const fetchAllFavouriteBooks = async () => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
     try {
-      const response = await axios("http://localhost:5000/api/v1/bookshelf");
+      const response = await axios("http://localhost:5000/api/v1/bookshelf", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       const { books: payload } = response.data;
       dispatch({
         type: FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL,
@@ -170,7 +177,12 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING });
     try {
       const response = await axios(
-        `http://localhost:5000/api/v1/bookshelf/${id}`
+        `http://localhost:5000/api/v1/bookshelf/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       const { singleBook: payload } = response.data;
       dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL, payload });
@@ -184,7 +196,11 @@ export const AppProvider = ({ children }) => {
 
   const removeFromFavourite = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/bookshelf/${id}`);
+      await axios.delete(`http://localhost:5000/api/v1/bookshelf/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
     } catch (error) {
       dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED, payload: error });
     }
@@ -203,10 +219,12 @@ export const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchAllBooksFromGoogle();
-    fetchAllFavouriteBooks();
+    if (state.user.email.length > 0) {
+      fetchAllBooksFromGoogle();
+      fetchAllFavouriteBooks();
+    }
     // eslint-disable-next-line
-  }, []);
+  }, [state.user]);
 
   useEffect(() => {
     findAllFavouritedBooks();
