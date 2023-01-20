@@ -11,14 +11,23 @@ const Register = ({ form, setForm }) => {
   });
 
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    const inputName = e.target.name;
+    const inputValue = e.target.value;
+
+    // set email field value to lowercase
+    if (inputName === "email") {
+      return setUser({
+        ...user,
+        [inputName]: inputValue.toLowerCase(),
+      });
+    }
+
+    setUser({ ...user, [inputName]: inputValue });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      // verification email test
-      // await axios.post("/api/v1/auth/email", user);
       const response = await axios.post("/api/v1/auth/register", user);
       alertMessages("success", `${response.data.msg}`);
       setUser({ name: "", email: "", password: "" });

@@ -19,7 +19,18 @@ const Login = ({ form, setForm }) => {
   };
 
   const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    const inputName = e.target.name;
+    const inputValue = e.target.value;
+
+    // set email field value to lowercase
+    if (inputName === "email") {
+      return setUser({
+        ...user,
+        [inputName]: inputValue.toLowerCase(),
+      });
+    }
+
+    setUser({ ...user, [inputName]: inputValue });
   };
 
   const onSubmit = async (e) => {
@@ -28,6 +39,7 @@ const Login = ({ form, setForm }) => {
       const response = await axios.post("/api/v1/auth/login", user);
       const { name } = response.data.user;
       const { email } = user;
+
       await saveUser({ name, email });
       alertMessages("success", `Welcome back ${name}!`);
       setUser({ email: "", password: "" });
