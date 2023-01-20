@@ -11,8 +11,8 @@ const SingleBook = () => {
   const {
     isLoading,
     isError,
-    fetchAllFavouriteBooks,
     fetchSingleBookFromGoogle,
+    fetchSingleBookFromMongoDB,
     changeToAddButton,
     changeToRemoveButton,
     singleBook,
@@ -66,7 +66,7 @@ const SingleBook = () => {
 
   const fetchBooks = async (id) => {
     try {
-      await fetchAllFavouriteBooks();
+      await fetchSingleBookFromMongoDB(id);
       await fetchSingleBookFromGoogle(id);
     } catch (err) {
       console.log(err);
@@ -76,7 +76,7 @@ const SingleBook = () => {
   useEffect(() => {
     fetchBooks(id);
     // eslint-disable-next-line
-  }, [id]);
+  }, []);
 
   if (isLoading) {
     return (
