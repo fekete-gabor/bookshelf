@@ -1,4 +1,10 @@
 import {
+  FETCH_CURRENT_USER_PENDING,
+  FETCH_CURRENT_USER_SUCCESSFUL,
+  FETCH_CURRENT_USER_REJECTED,
+  VERIFY_EMAIL_PENDING,
+  VERIFY_EMAIL_SUCCESSFUL,
+  VERIFY_EMAIL_REJECTED,
   SAVE_USER,
   REMOVE_USER,
   OPEN_SIDEBAR,
@@ -22,6 +28,38 @@ import {
 } from "../actions";
 
 const app_reducer = (state, action) => {
+  if (action.type === FETCH_CURRENT_USER_PENDING) {
+    return { ...state, isLoading: true, isError: false };
+  }
+
+  if (action.type === FETCH_CURRENT_USER_SUCCESSFUL) {
+    const { name, email } = action.payload;
+    return {
+      ...state,
+      isLoading: false,
+      isError: false,
+      user: { name, email },
+    };
+  }
+
+  if (action.type === FETCH_CURRENT_USER_REJECTED) {
+    console.log(action.payload.message);
+    return { ...state, isLoading: true, isError: true };
+  }
+
+  if (action.type === VERIFY_EMAIL_PENDING) {
+    return { ...state, isLoading: true, isError: false };
+  }
+
+  if (action.type === VERIFY_EMAIL_SUCCESSFUL) {
+    return { ...state, isLoading: false, isError: false };
+  }
+
+  if (action.type === VERIFY_EMAIL_REJECTED) {
+    console.log(action.payload.message);
+    return { ...state, isLoading: true, isError: true };
+  }
+
   if (action.type === SAVE_USER) {
     return { ...state, user: action.payload };
   }
@@ -80,10 +118,9 @@ const app_reducer = (state, action) => {
     } = data;
     const image = data?.imageLinks?.thumbnail;
 
-    const favouriteIDs =
-      state.allFavouriteBooks && state.allFavouriteBooks.map((book) => book.id);
-    const book = favouriteIDs && favouriteIDs.find((bookID) => bookID === id);
-    const favourite = book ? true : false;
+    const favouriteID =
+      state.singleFavouriteBook && state.singleFavouriteBook.id;
+    const favourite = id === favouriteID ? true : false;
 
     return {
       ...state,
