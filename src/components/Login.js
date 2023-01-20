@@ -25,11 +25,7 @@ const Login = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/login",
-        user
-      );
-      localStorage.setItem("token", response.data.token);
+      const response = await axios.post("/api/v1/auth/login", user);
       const { name } = response.data.user;
       const { email } = user;
       await saveUser({ name, email });
@@ -38,7 +34,7 @@ const Login = ({ form, setForm }) => {
       navigateHome();
     } catch (error) {
       console.log(error);
-      alertMessages("warning", `${error.response.data.msg}`);
+      alertMessages("warning", `${error.response.data}`);
     }
   };
 
