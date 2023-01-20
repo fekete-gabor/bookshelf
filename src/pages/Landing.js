@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import landing_page_bg from "../assets/landing_page_bg.svg";
 import { Login, Register } from "../components";
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const Landing = () => {
   const [form, setForm] = useState("login");
+  const { user } = useAppContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const { name, email } = user;
+    if (name.length > 0 && email.length > 0) return navigate("/");
+    // eslint-disable-next-line
+  }, [user]);
 
   return (
     <Wrapper>
