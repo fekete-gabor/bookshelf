@@ -17,11 +17,14 @@ const Register = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      alertMessages("success", "User successfully created!");
-      await axios.post("http://localhost:5000/api/v1/auth/register", user);
+      // verification email test
+      // await axios.post("/api/v1/auth/email", user);
+      const response = await axios.post("/api/v1/auth/register", user);
+      alertMessages("success", `${response.data.msg}`);
       setUser({ name: "", email: "", password: "" });
     } catch (error) {
-      console.log(error);
+      alertMessages("error", `${error.response.data}`);
+      console.log(error.response.data);
     }
   };
 
@@ -29,9 +32,9 @@ const Register = ({ form, setForm }) => {
     <form onSubmit={onSubmit}>
       <h3>create new account</h3>
       <CustomInput
-        type="name"
+        type="text"
         name="name"
-        values={user.name}
+        value={user.name}
         handleChange={handleChange}
         required
       />
