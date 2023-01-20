@@ -1,8 +1,15 @@
 import React, { useContext, useState, useEffect, useReducer } from "react";
 import axios from "axios";
 import reducer from "../reducers/app_reducer";
+import { alertMessages } from "../utils/alertMessages";
 import { formatSearchValues } from "../utils/formatSearchValues";
 import {
+  FETCH_CURRENT_USER_PENDING,
+  FETCH_CURRENT_USER_SUCCESSFUL,
+  FETCH_CURRENT_USER_REJECTED,
+  VERIFY_EMAIL_PENDING,
+  VERIFY_EMAIL_SUCCESSFUL,
+  VERIFY_EMAIL_REJECTED,
   SAVE_USER,
   REMOVE_USER,
   OPEN_SIDEBAR,
@@ -64,6 +71,32 @@ export const AppProvider = ({ children }) => {
   let path;
   const baseUrl = process.env.REACT_APP_BASE_URL;
   const key = process.env.REACT_APP_API_KEY;
+
+  const showCurrentUser = async () => {
+    dispatch({ type: FETCH_CURRENT_USER_PENDING });
+    try {
+      const response = await axios("/api/v1/auth/showCurrentUser");
+      const payload = await response.data.user;
+      dispatch({ type: FETCH_CURRENT_USER_SUCCESSFUL, payload });
+    } catch (error) {
+      dispatch({ type: FETCH_CURRENT_USER_REJECTED, payload: error });
+    }
+  };
+
+  const verifyEmail = async (payload) => {
+    dispatch({ type: VERIFY_EMAIL_PENDING });
+    try {
+      await axios.post(
+        "http://localhost:5000/api/v1/auth/verify-email",
+        payload
+      );
+      dispatch({ type: VERIFY_EMAIL_SUCCESSFUL });
+      alertMessages("success", "email successfully verified!");
+    } catch (error) {
+      dispatch({ type: VERIFY_EMAIL_REJECTED, payload: error });
+      alertMessages("error", "something went wrong, please try again!");
+    }
+  };
 
   const saveUser = (user) => {
     dispatch({ type: SAVE_USER, payload: user });
@@ -140,12 +173,8 @@ export const AppProvider = ({ children }) => {
     try {
       if (state.bookPayload) {
         const { bookPayload } = state;
-        const url = "http://localhost:5000/api/v1/bookshelf";
-        await axios.post(url, bookPayload, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const url = "/api/v1/bookshelf";
+        await axios.post(url, bookPayload);
       }
     } catch (error) {
       console.log(error.response.data);
@@ -155,11 +184,7 @@ export const AppProvider = ({ children }) => {
   const fetchAllFavouriteBooks = async () => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
     try {
-      const response = await axios("http://localhost:5000/api/v1/bookshelf", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios("/api/v1/bookshelf");
       const { books: payload } = response.data;
       dispatch({
         type: FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL,
@@ -176,14 +201,7 @@ export const AppProvider = ({ children }) => {
   const fetchSingleBookFromMongoDB = async (id) => {
     dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING });
     try {
-      const response = await axios(
-        `http://localhost:5000/api/v1/bookshelf/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axios(`/api/v1/bookshelf/${id}`);
       const { singleBook: payload } = response.data;
       dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL, payload });
     } catch (error) {
@@ -196,11 +214,7 @@ export const AppProvider = ({ children }) => {
 
   const removeFromFavourite = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/bookshelf/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      await axios.delete(`/api/v1/bookshelf/${id}`);
     } catch (error) {
       dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED, payload: error });
     }
@@ -217,6 +231,10 @@ export const AppProvider = ({ children }) => {
   const changeToRemoveButton = (id) => {
     dispatch({ type: REMOVE_FAVOURITE_ICON, payload: id });
   };
+
+  useEffect(() => {
+    showCurrentUser();
+  }, []);
 
   useEffect(() => {
     if (state.user.email.length > 0) {
@@ -240,6 +258,7 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         ...state,
+        verifyEmail,
         saveUser,
         removeUser,
         openSidebar,
