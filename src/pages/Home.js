@@ -1,4 +1,5 @@
 import axios from "axios";
+import { alertMessages } from "../utils/alertMessages";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
@@ -6,8 +7,13 @@ const Home = () => {
   const { removeUser } = useAppContext();
 
   const logout = async () => {
-    await axios("/api/v1/auth/logout");
-    await removeUser();
+    try {
+      const response = await axios.delete("/api/v1/auth/logout");
+      await removeUser();
+      alertMessages("success", `${response.data}`);
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
 
   return (
