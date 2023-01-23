@@ -12,7 +12,7 @@ const SingleBook = () => {
     isLoading,
     isError,
     fetchSingleBookFromGoogle,
-    fetchSingleBookFromMongoDB,
+    fetchAllFavouriteBooks,
     changeToAddButton,
     changeToRemoveButton,
     singleBook,
@@ -66,7 +66,7 @@ const SingleBook = () => {
 
   const fetchBooks = async (id) => {
     try {
-      await fetchSingleBookFromMongoDB(id);
+      await fetchAllFavouriteBooks();
       await fetchSingleBookFromGoogle(id);
     } catch (err) {
       console.log(err);
