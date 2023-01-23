@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import landing_page_bg from "../assets/landing_page_bg.svg";
+import bg from "../assets/landing_page_bg.svg";
 import { Login, Register } from "../components";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
@@ -20,7 +20,7 @@ const Landing = () => {
   return (
     <Wrapper>
       <div className="img-container">
-        <img src={landing_page_bg} alt="asd" />
+        <img src={bg} alt="main" />
       </div>
       <div className="form-container">
         {form === "login" ? (
