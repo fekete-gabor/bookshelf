@@ -1,21 +1,14 @@
-const CustomInput = ({
-  addLabel,
-  type,
-  name,
-  value,
-  handleChange,
-  required,
-}) => {
+const CustomInput = ({ label, type, name, value, handleChange, required }) => {
   return (
     <div>
-      {addLabel && <label htmlFor={name}>{name}</label>}
+      {label && <label htmlFor={name}>{label}</label>}
       <input
         type={type}
         onChange={handleChange}
         name={name}
         value={value && value.replaceAll("+", " ")}
         required={required && required}
-        placeholder={required ? `${name}*` : name}
+        placeholder={!label && name}
       />
     </div>
   );
