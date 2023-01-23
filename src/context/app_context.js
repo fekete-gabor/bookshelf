@@ -87,7 +87,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: VERIFY_EMAIL_PENDING });
     try {
       await axios.post(
-        "http://localhost:5000/api/v1/auth/verify-email",
+        "http://localhost:5000/api/v1/auth/verifyEmail",
         payload
       );
       dispatch({ type: VERIFY_EMAIL_SUCCESSFUL });
