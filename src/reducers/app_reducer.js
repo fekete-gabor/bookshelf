@@ -118,9 +118,10 @@ const app_reducer = (state, action) => {
     } = data;
     const image = data?.imageLinks?.thumbnail;
 
-    const favouriteID =
-      state.singleFavouriteBook && state.singleFavouriteBook.id;
-    const favourite = id === favouriteID ? true : false;
+    const favouriteIDs =
+      state.allFavouriteBooks && state.allFavouriteBooks.map((book) => book.id);
+    const book = favouriteIDs && favouriteIDs.find((bookID) => bookID === id);
+    const favourite = book ? true : false;
 
     return {
       ...state,
