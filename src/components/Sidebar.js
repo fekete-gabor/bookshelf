@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import axios from "axios";
+import { alertMessages } from "../utils/alertMessages";
 import { navLinks } from "../utils/navLinks";
 import { useAppContext } from "../context/app_context";
 import useMediaQuery from "../utils/mediaQuery";
@@ -6,7 +8,7 @@ import styled from "styled-components";
 import { gsap } from "gsap/dist/gsap";
 
 const Sidebar = () => {
-  const { isSidebar, closeSidebar } = useAppContext();
+  const { removeUser, isSidebar, closeSidebar } = useAppContext();
   const mediaQuery = useMediaQuery("(min-width: 792px)");
 
   useEffect(() => {
@@ -25,10 +27,25 @@ const Sidebar = () => {
     }
   }, [isSidebar]);
 
+  const logout = async () => {
+    try {
+      const response = await axios.delete("/api/v1/auth/logout");
+      await removeUser();
+      alertMessages("success", `${response.data}`);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
   return (
     <Wrapper>
       <div className="sidebar">
-        <ul onClick={() => closeSidebar()}>{navLinks}</ul>
+        <ul onClick={() => closeSidebar()}>
+          {navLinks}
+          <li>
+            <p onClick={() => logout()}>logout</p>
+          </li>
+        </ul>
       </div>
     </Wrapper>
   );
@@ -48,10 +65,12 @@ const Wrapper = styled.section`
   }
 
   li {
+    cursor: pointer;
     list-style: none;
     text-align: center;
     padding: 0.5rem 0;
-    a {
+    a,
+    p {
       color: honeydew;
       font-size: 2rem;
       text-decoration: none;
@@ -59,6 +78,12 @@ const Wrapper = styled.section`
       transition: var(--transition);
       &:hover {
         color: hotpink;
+      }
+    }
+    p {
+      color: tomato;
+      &:hover {
+        color: red;
       }
     }
   }
