@@ -1,11 +1,24 @@
 import { navLinks } from "../utils/navLinks";
-import { FaBars, FaWindowClose } from "../utils/icons";
+import axios from "axios";
+import { alertMessages } from "../utils/alertMessages";
+import { FaBars, FaWindowClose, ImExit } from "../utils/icons";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const Navbar = () => {
-  const { isSidebar, openSidebar, closeSidebar } = useAppContext();
+  const { user, isSidebar, openSidebar, closeSidebar } = useAppContext();
+  const { removeUser } = useAppContext();
+
+  const logout = async () => {
+    try {
+      const response = await axios.delete("/api/v1/auth/logout");
+      await removeUser();
+      alertMessages("success", `${response.data}`);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
   return (
     <Wrapper className="navbar">
@@ -17,11 +30,20 @@ const Navbar = () => {
       <div>
         <ul>{navLinks}</ul>
       </div>
+      <div className="logout-container">
+        <p>{user.name.charAt(0).toUpperCase()}</p>
+        <div className="icon-container" onClick={() => logout()}>
+          <ImExit className="exit-icon" />
+        </div>
+      </div>
       <div>
         {!isSidebar ? (
-          <FaBars onClick={() => openSidebar()} />
+          <FaBars className="open-icon" onClick={() => openSidebar()} />
         ) : (
-          <FaWindowClose onClick={() => closeSidebar()} />
+          <FaWindowClose
+            className="close-icon"
+            onClick={() => closeSidebar()}
+          />
         )}
       </div>
     </Wrapper>
@@ -42,12 +64,61 @@ const Wrapper = styled.section`
   z-index: 999;
   transition: var(--transition);
 
-  &:hover {
-    box-shadow: 2px 2px 10px #222;
-  }
-
   div {
     padding: 1.5rem;
+  }
+
+  .logout-container,
+  .icon-container {
+    padding: 0;
+  }
+
+  .logout-container {
+    cursor: pointer;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: dodgerblue;
+    user-select: none;
+    position: relative;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    transition: var(--transition);
+    p {
+      font-size: 1.5rem;
+      color: whitesmoke;
+    }
+
+    .icon-container {
+      position: absolute;
+      z-index: -1;
+      svg {
+        transform: translate(3px, 2.5px);
+        font-size: 1.5rem;
+        transition: var(--transition);
+      }
+    }
+
+    &:hover {
+      background: transparent;
+    }
+
+    &:hover p {
+      display: none;
+    }
+
+    &:hover .icon-container {
+      z-index: 1;
+    }
+
+    .icon-container:hover svg {
+      color: tomato;
+    }
+  }
+
+  &:hover {
+    box-shadow: 2px 2px 10px #222;
   }
 
   .brand {
@@ -70,7 +141,8 @@ const Wrapper = styled.section`
     text-decoration: underline var(--primary-clr-1) 3px;
   }
 
-  svg {
+  .open-icon,
+  .close-icon {
     cursor: pointer;
     font-size: 1.5rem;
     display: block;
@@ -95,7 +167,15 @@ const Wrapper = styled.section`
       }
     }
 
-    svg {
+    .logout-container {
+      display: flex;
+      .exit-icon {
+        display: block;
+      }
+    }
+
+    .open-icon,
+    .close-icon {
       display: none;
     }
   }
