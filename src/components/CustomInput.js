@@ -8,7 +8,7 @@ const CustomInput = ({ label, type, name, value, handleChange, required }) => {
         name={name}
         value={value && value.replaceAll("+", " ")}
         required={required && required}
-        placeholder={!label && name}
+        placeholder={!label ? name : undefined}
       />
     </div>
   );
