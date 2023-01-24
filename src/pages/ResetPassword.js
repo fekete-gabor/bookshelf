@@ -52,7 +52,7 @@ const ResetPassword = () => {
             label="new password"
             type="password"
             name="newPassword"
-            value={user.value}
+            value={user.newPassword}
             handleChange={handleChange}
             required
           />
@@ -60,7 +60,7 @@ const ResetPassword = () => {
             label="confirm password"
             type="password"
             name="confirmPassword"
-            value={user.value}
+            value={user.confirmPassword}
             handleChange={handleChange}
             required
           />
