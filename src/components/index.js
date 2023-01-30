@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import Error from "./Error";
 import ScrollTop from "./ScrollTop";
 import CustomInput from "./CustomInput";
+import CustomTextArea from "./CustomTextArea";
 import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
 import SingleBook from "./SingleBook";
@@ -20,6 +21,7 @@ export {
   Error,
   ScrollTop,
   CustomInput,
+  CustomTextArea,
   SearchForm,
   SearchResults,
   SingleBook,
