@@ -9,6 +9,8 @@ import {
   REMOVE_USER,
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
+  OPEN_MODAL,
+  CLOSE_MODAL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
   FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
@@ -74,6 +76,14 @@ const app_reducer = (state, action) => {
 
   if (action.type === CLOSE_SIDEBAR) {
     return { ...state, isSidebar: false };
+  }
+
+  if (action.type === OPEN_MODAL) {
+    return { ...state, isModal: { status: true, tempTitle: action.payload } };
+  }
+
+  if (action.type === CLOSE_MODAL) {
+    return { ...state, isModal: { status: false, tempTitle: "" } };
   }
 
   // **************
@@ -228,6 +238,75 @@ const app_reducer = (state, action) => {
     let book = state.allBooks.find((book) => book.id === bookID);
     book.volumeInfo.favourite = false;
     return { ...state, singleBook: { ...state.singleBook, favourite: false } };
+  }
+
+  // **************
+  // EDIT FAVOURITE BOOK
+  // **************
+
+  if (action.type === "test") {
+    return { ...state, fieldTitle: action.payload };
+  }
+
+  if (action.type === "show_form") {
+    return { ...state, isFormVisible: true };
+  }
+
+  if (action.type === "hide_form") {
+    return { ...state, isFormVisible: false };
+  }
+
+  if (action.type === "ince") {
+    return { ...state, counter: state.counter + 1 };
+  }
+
+  if (action.type === "update") {
+    const { counter, inputList } = state;
+    const { fieldName, inputs } = action.payload;
+    let currentInput = inputs[0];
+    currentInput.id = counter;
+    if (inputList.length === 0) {
+      return { ...state, inputList: [{ fieldName, inputs }] };
+    }
+
+    let findInput = inputList.find((input) => input.fieldName === fieldName);
+
+    if (!findInput) {
+      return { ...state, inputList: [...inputList, { fieldName, inputs }] };
+    }
+
+    const newList = inputList.map((input) => {
+      if (input.fieldName === fieldName) {
+        const obj = {
+          ...input,
+          inputs: [...input.inputs, currentInput],
+        };
+        return obj;
+      } else {
+        return input;
+      }
+    });
+
+    return { ...state, inputList: newList };
+  }
+
+  if (action.type === "del") {
+    const id = action.payload;
+    const { inputList, fieldTitle } = state;
+
+    const newList = inputList.map((input) => {
+      if (input.fieldName === fieldTitle) {
+        const obj = {
+          ...input,
+          inputs: input.inputs.filter((input) => input.id !== id),
+        };
+        return obj;
+      } else {
+        return input;
+      }
+    });
+
+    return { ...state, inputList: newList };
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);
