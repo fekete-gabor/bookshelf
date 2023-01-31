@@ -14,6 +14,8 @@ import {
   REMOVE_USER,
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
+  OPEN_MODAL,
+  CLOSE_MODAL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
   FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
@@ -37,6 +39,7 @@ const AppContext = React.createContext();
 const initialState = {
   isLoading: false,
   isSidebar: false,
+  isModal: { status: false, tempTitle: "" },
   user: {
     name: "",
     email: "",
@@ -60,6 +63,10 @@ const initialState = {
   bookPayload: null,
   allFavouriteBooks: [],
   singleFavouriteBook: [],
+  counter: 0,
+  fieldTitle: "places",
+  isFormVisible: false,
+  inputList: [],
 };
 
 export const AppProvider = ({ children }) => {
@@ -112,6 +119,14 @@ export const AppProvider = ({ children }) => {
 
   const closeSidebar = () => {
     dispatch({ type: CLOSE_SIDEBAR });
+  };
+
+  const openModal = (title) => {
+    dispatch({ type: OPEN_MODAL, payload: title });
+  };
+
+  const closeModal = () => {
+    dispatch({ type: CLOSE_MODAL });
   };
 
   const constructUrl = () => {
@@ -232,6 +247,30 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: REMOVE_FAVOURITE_ICON, payload: id });
   };
 
+  const changeFieldTitle = (title) => {
+    dispatch({ type: "test", payload: title });
+  };
+
+  const showForm = () => {
+    dispatch({ type: "show_form" });
+  };
+
+  const hideForm = () => {
+    dispatch({ type: "hide_form" });
+  };
+
+  const increaseCounter = () => {
+    dispatch({ type: "ince" });
+  };
+
+  const updateInputList = (input) => {
+    dispatch({ type: "update", payload: input });
+  };
+
+  const deleteInput = (id) => {
+    dispatch({ type: "del", payload: id });
+  };
+
   useEffect(() => {
     showCurrentUser();
   }, []);
@@ -263,6 +302,8 @@ export const AppProvider = ({ children }) => {
         removeUser,
         openSidebar,
         closeSidebar,
+        openModal,
+        closeModal,
         maxResults,
         searchTerm,
         searchAuthor,
@@ -278,6 +319,12 @@ export const AppProvider = ({ children }) => {
         fetchSingleBookFromMongoDB,
         changeToAddButton,
         changeToRemoveButton,
+        changeFieldTitle,
+        showForm,
+        hideForm,
+        increaseCounter,
+        updateInputList,
+        deleteInput,
       }}
     >
       {children}
