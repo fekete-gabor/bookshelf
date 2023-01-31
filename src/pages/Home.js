@@ -1,45 +1,47 @@
 import { useState, useEffect } from "react";
-import { CustomInput, CustomTextArea, Login } from "../components";
+import { CustomInput, CustomTextArea, Modal } from "../components";
+import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
+import { gsap } from "gsap/dist/gsap";
 
 const Home = () => {
-  const [counter, setCounter] = useState(0);
-  const [title, setTitle] = useState("places");
-  const [formVisible, setFormVisible] = useState(false);
-  const [inputList, setInputList] = useState([]);
+  const {
+    openModal,
+    fieldTitle,
+    changeFieldTitle,
+    isFormVisible,
+    showForm,
+    hideForm,
+    updateInputList,
+    increaseCounter,
+    inputList,
+    deleteInput,
+  } = useAppContext();
+
+  const message =
+    "You have an unsaved field, if you continue it's values will be lost. Do you want to proceed?";
+
   const [currentInput, setCurrentInput] = useState({
-    id: 0,
     name: "",
     desc: "",
   });
 
   const changeTitle = (e) => {
-    setTitle(e.target.dataset.title);
+    if (!isFormVisible) return changeFieldTitle(e.target.dataset.title);
+    openModal(e.target.dataset.title);
   };
 
   const addInput = () => {
-    setFormVisible(true);
-    setCurrentInput({ ...currentInput, id: counter });
+    showForm();
   };
 
-  const removeInput = (e) => {
-    setFormVisible(false);
-    setCurrentInput({ ...currentInput, name: "", desc: "" });
+  const removeInput = () => {
+    hideForm();
+    setCurrentInput({ name: "", desc: "" });
   };
 
-  const deleteItem = (id) => {
-    const newList = inputList.map((input) => {
-      if (input.fieldName === title) {
-        const obj = {
-          ...input,
-          inputs: input.inputs.filter((q) => q.id !== id),
-        };
-        return obj;
-      } else {
-        return input;
-      }
-    });
-    setInputList([...newList]);
+  const deleteField = (id) => {
+    deleteInput(id);
   };
 
   const handleChange = (e) => {
@@ -49,58 +51,37 @@ const Home = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      setCounter(counter + 1);
-      if (inputList.length === 0) {
-        setInputList([{ fieldName: title, inputs: [currentInput] }]);
-        setCurrentInput({ ...currentInput, name: "", desc: "" });
-        setFormVisible(false);
-        return;
-      }
-
-      let findInput = inputList.find((input) => input.fieldName === title);
-
-      if (!findInput) {
-        setInputList([
-          ...inputList,
-          { fieldName: title, inputs: [currentInput] },
-        ]);
-        setCurrentInput({ ...currentInput, name: "", desc: "" });
-        setFormVisible(false);
-        return;
-      }
-
-      findInput = {
-        ...findInput,
-        inputs: [...findInput.inputs, findInput.inputs.push(currentInput)],
-      };
-
-      setInputList([...inputList]);
-      setCurrentInput({ ...currentInput, name: "", desc: "" });
-      setFormVisible(false);
+      await increaseCounter();
+      await updateInputList({ fieldName: fieldTitle, inputs: [currentInput] });
+      setCurrentInput({ name: "", desc: "" });
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    setCurrentInput({ name: "", desc: "" });
+  }, [fieldTitle]);
+
   return (
     <Wrapper>
       <div>
         <button
-          className="btn"
+          className="btn ww"
           data-title="places"
           onClick={(e) => changeTitle(e)}
         >
           places
         </button>
         <button
-          className="btn"
+          className="btn ww"
           data-title="items"
           onClick={(e) => changeTitle(e)}
         >
           items
         </button>
         <button
-          className="btn"
+          className="btn ww"
           data-title="dates"
           onClick={(e) => changeTitle(e)}
         >
@@ -108,9 +89,9 @@ const Home = () => {
         </button>
       </div>
       <div>
-        <h2>{title}</h2>
+        <h2>{fieldTitle}</h2>
       </div>
-      {formVisible && (
+      {isFormVisible && (
         <form onSubmit={onSubmit}>
           <CustomInput
             type="text"
@@ -127,7 +108,7 @@ const Home = () => {
           <button className="btn" type="submit">
             save
           </button>
-          <button className="btn" type="button" onClick={(e) => removeInput(e)}>
+          <button className="btn" type="button" onClick={() => removeInput()}>
             remove
           </button>
         </form>
@@ -135,7 +116,7 @@ const Home = () => {
 
       {inputList.map((input) => {
         const { fieldName, inputs } = input;
-        if (fieldName === title) {
+        if (fieldName === fieldTitle) {
           return inputs.map((field) => {
             const { id, name, desc } = field;
 
@@ -144,23 +125,26 @@ const Home = () => {
                 <h3>{id}</h3>
                 <h4>{name}</h4>
                 <p>{desc}</p>
-                <button className="btn" onClick={() => deleteItem(id)}>
+                <button className="btn" onClick={() => deleteField(id)}>
                   delete
                 </button>
               </div>
             );
           });
+        } else {
+          return null;
         }
       })}
       <div>
         <button
           className="btn"
-          disabled={formVisible}
+          disabled={isFormVisible}
           onClick={() => addInput()}
         >
           add
         </button>
       </div>
+      <Modal text={message} />
     </Wrapper>
   );
 };
