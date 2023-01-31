@@ -1,5 +1,6 @@
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import Modal from "./Modal";
 import Footer from "./Footer";
 import Error from "./Error";
 import ScrollTop from "./ScrollTop";
@@ -17,6 +18,7 @@ import Register from "./Register";
 export {
   Navbar,
   Sidebar,
+  Modal,
   Footer,
   Error,
   ScrollTop,
