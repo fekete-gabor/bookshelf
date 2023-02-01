@@ -16,6 +16,8 @@ import {
   CLOSE_SIDEBAR,
   OPEN_MODAL,
   CLOSE_MODAL,
+  SHOW_NOTIFICATIONS,
+  HIDE_NOTIFICATIONS,
   FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
   FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
@@ -29,6 +31,14 @@ import {
   FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
   FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
   FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  CHANGE_CATEGORY,
+  SHOW_FORM,
+  HIDE_FORM,
+  INCREASE_BTN_COUNTER,
+  UPDATE_INPUT_LIST,
+  DELETE_INPUT,
+  EDIT_INPUT,
+  STOP_EDITING,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -39,7 +49,7 @@ const AppContext = React.createContext();
 const initialState = {
   isLoading: false,
   isSidebar: false,
-  isModal: { status: false, tempTitle: "" },
+  isModal: { notification: true, status: false, tempTitle: "" },
   user: {
     name: "",
     email: "",
@@ -64,9 +74,10 @@ const initialState = {
   allFavouriteBooks: [],
   singleFavouriteBook: [],
   counter: 0,
-  fieldTitle: "places",
+  categoryName: "places",
   isFormVisible: false,
   inputList: [],
+  isEditing: { status: false, id: null },
 };
 
 export const AppProvider = ({ children }) => {
@@ -105,6 +116,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // **************
+  // GLOBAL FUNCTIONS
+  // **************
+
   const saveUser = (user) => {
     dispatch({ type: SAVE_USER, payload: user });
   };
@@ -128,6 +143,18 @@ export const AppProvider = ({ children }) => {
   const closeModal = () => {
     dispatch({ type: CLOSE_MODAL });
   };
+
+  const showModalNotification = () => {
+    dispatch({ type: SHOW_NOTIFICATIONS });
+  };
+
+  const hideModalNotification = () => {
+    dispatch({ type: HIDE_NOTIFICATIONS });
+  };
+
+  // **************
+  // FETCH BOOKS FROM GOOGLE
+  // **************
 
   const constructUrl = () => {
     if (searchAuthor && !searchTerm) {
@@ -180,6 +207,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // **************
+  // SEND BOOKS TO MONGODB
+  // **************
+
   const createBookPayload = () => {
     dispatch({ type: CREATE_BOOK_PAYLOAD });
   };
@@ -195,6 +226,10 @@ export const AppProvider = ({ children }) => {
       console.log(error.response.data);
     }
   };
+
+  // **************
+  // FETCH BOOKS FROM MONGODB
+  // **************
 
   const fetchAllFavouriteBooks = async () => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
@@ -235,6 +270,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // **************
+  // CHANGE FAVOURITE BOOK'S ICONS
+  // **************
+
   const findAllFavouritedBooks = () => {
     dispatch({ type: CHANGE_FAVOURITE_ICON_ON_LOAD });
   };
@@ -247,28 +286,40 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: REMOVE_FAVOURITE_ICON, payload: id });
   };
 
-  const changeFieldTitle = (title) => {
-    dispatch({ type: "test", payload: title });
+  // **************
+  // EDIT FAVOURITE BOOK FUNCTIONS
+  // **************
+
+  const changeCategory = (title) => {
+    dispatch({ type: CHANGE_CATEGORY, payload: title });
   };
 
   const showForm = () => {
-    dispatch({ type: "show_form" });
+    dispatch({ type: SHOW_FORM });
   };
 
   const hideForm = () => {
-    dispatch({ type: "hide_form" });
+    dispatch({ type: HIDE_FORM });
   };
 
   const increaseCounter = () => {
-    dispatch({ type: "ince" });
+    dispatch({ type: INCREASE_BTN_COUNTER });
   };
 
   const updateInputList = (input) => {
-    dispatch({ type: "update", payload: input });
+    dispatch({ type: UPDATE_INPUT_LIST, payload: input });
   };
 
   const deleteInput = (id) => {
-    dispatch({ type: "del", payload: id });
+    dispatch({ type: DELETE_INPUT, payload: id });
+  };
+
+  const editInput = (id) => {
+    dispatch({ type: EDIT_INPUT, payload: id });
+  };
+
+  const stopEditing = () => {
+    dispatch({ type: STOP_EDITING });
   };
 
   useEffect(() => {
@@ -304,6 +355,8 @@ export const AppProvider = ({ children }) => {
         closeSidebar,
         openModal,
         closeModal,
+        showModalNotification,
+        hideModalNotification,
         maxResults,
         searchTerm,
         searchAuthor,
@@ -319,12 +372,14 @@ export const AppProvider = ({ children }) => {
         fetchSingleBookFromMongoDB,
         changeToAddButton,
         changeToRemoveButton,
-        changeFieldTitle,
+        changeCategory,
         showForm,
         hideForm,
         increaseCounter,
         updateInputList,
         deleteInput,
+        editInput,
+        stopEditing,
       }}
     >
       {children}
