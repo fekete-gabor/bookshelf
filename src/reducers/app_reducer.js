@@ -11,6 +11,8 @@ import {
   CLOSE_SIDEBAR,
   OPEN_MODAL,
   CLOSE_MODAL,
+  SHOW_NOTIFICATIONS,
+  HIDE_NOTIFICATIONS,
   FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
   FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
@@ -24,6 +26,14 @@ import {
   FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
   FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
   FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  CHANGE_CATEGORY,
+  SHOW_FORM,
+  HIDE_FORM,
+  INCREASE_BTN_COUNTER,
+  UPDATE_INPUT_LIST,
+  DELETE_INPUT,
+  EDIT_INPUT,
+  STOP_EDITING,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -79,16 +89,31 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === OPEN_MODAL) {
-    return { ...state, isModal: { status: true, tempTitle: action.payload } };
+    return {
+      ...state,
+      isModal: { ...state.isModal, status: true, tempTitle: action.payload },
+    };
   }
 
   if (action.type === CLOSE_MODAL) {
-    return { ...state, isModal: { status: false, tempTitle: "" } };
+    return {
+      ...state,
+      isModal: { ...state.isModal, status: false, tempTitle: "" },
+    };
+  }
+
+  if (action.type === SHOW_NOTIFICATIONS) {
+    return { ...state, isModal: { ...state.isModal, notification: true } };
+  }
+
+  if (action.type === HIDE_NOTIFICATIONS) {
+    return { ...state, isModal: { ...state.isModal, notification: false } };
   }
 
   // **************
   // FETCH BOOKS FROM GOOGLE
   // **************
+
   if (action.type === FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING) {
     return { ...state, isLoading: true, isError: false };
   }
@@ -169,6 +194,7 @@ const app_reducer = (state, action) => {
   // **************
   // FETCH BOOKS FROM MONGODB
   // **************
+
   if (action.type === FETCH_ALL_BOOKS_FROM_MONGODB_PENDING) {
     return { ...state, isLoading: true, isError: false };
   }
@@ -241,42 +267,86 @@ const app_reducer = (state, action) => {
   }
 
   // **************
-  // EDIT FAVOURITE BOOK
+  // EDIT FAVOURITE BOOK FUNCTIONS
   // **************
 
-  if (action.type === "test") {
-    return { ...state, fieldTitle: action.payload };
+  if (action.type === CHANGE_CATEGORY) {
+    return { ...state, categoryName: action.payload };
   }
 
-  if (action.type === "show_form") {
+  if (action.type === SHOW_FORM) {
     return { ...state, isFormVisible: true };
   }
 
-  if (action.type === "hide_form") {
+  if (action.type === HIDE_FORM) {
     return { ...state, isFormVisible: false };
   }
 
-  if (action.type === "ince") {
+  if (action.type === INCREASE_BTN_COUNTER) {
+    const { isEditing } = state;
+
+    // if editing, dont increment counter
+    if (isEditing.status) return { ...state };
+
     return { ...state, counter: state.counter + 1 };
   }
 
-  if (action.type === "update") {
-    const { counter, inputList } = state;
-    const { fieldName, inputs } = action.payload;
+  if (action.type === UPDATE_INPUT_LIST) {
+    const { counter, inputList, isEditing } = state;
+    const { category, inputs } = action.payload;
+    const { id: editID } = isEditing;
+
     let currentInput = inputs[0];
     currentInput.id = counter;
+
+    // if inputList was empty (e.g. after page load), create first object
     if (inputList.length === 0) {
-      return { ...state, inputList: [{ fieldName, inputs }] };
+      return { ...state, inputList: [{ category, inputs }] };
     }
 
-    let findInput = inputList.find((input) => input.fieldName === fieldName);
+    let findInput = inputList.find((input) => input.category === category);
 
+    // if category wasn't found create first instance
     if (!findInput) {
-      return { ...state, inputList: [...inputList, { fieldName, inputs }] };
+      return { ...state, inputList: [...inputList, { category, inputs }] };
     }
 
+    // if category was found, but currently being edited
+    if (isEditing.status) {
+      currentInput.id = editID;
+      const { inputs } = findInput;
+
+      // find object's being edited & it's values
+      const editedInputs = inputs.map((input) => {
+        if (input.id === editID) {
+          const { name, desc, id } = currentInput;
+          const obj = { name, desc, id };
+          return obj;
+        } else {
+          return input;
+        }
+      });
+
+      // find category that was
+      const editedList = inputList.map((input) => {
+        if (input.category === category) {
+          const obj = { ...input, inputs: editedInputs };
+          return obj;
+        } else {
+          return input;
+        }
+      });
+
+      return {
+        ...state,
+        isEditing: { status: false, id: null },
+        inputList: editedList,
+      };
+    }
+
+    // if category was found and currently not being edited
     const newList = inputList.map((input) => {
-      if (input.fieldName === fieldName) {
+      if (input.category === category) {
         const obj = {
           ...input,
           inputs: [...input.inputs, currentInput],
@@ -287,10 +357,14 @@ const app_reducer = (state, action) => {
       }
     });
 
-    return { ...state, inputList: newList };
+    return {
+      ...state,
+      inputList: newList,
+      isEditing: { status: false, id: null },
+    };
   }
 
-  if (action.type === "del") {
+  if (action.type === DELETE_INPUT) {
     const id = action.payload;
     const { inputList, fieldTitle } = state;
 
@@ -309,6 +383,14 @@ const app_reducer = (state, action) => {
     return { ...state, inputList: newList };
   }
 
+  if (action.type === EDIT_INPUT) {
+    const id = action.payload;
+    return { ...state, isEditing: { status: true, id } };
+  }
+
+  if (action.type === STOP_EDITING) {
+    return { ...state, isEditing: { status: false, id: null } };
+  }
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 
