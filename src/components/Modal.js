@@ -1,14 +1,25 @@
-import { FaWindowClose } from "../utils/icons";
+import {
+  FaWindowClose,
+  IoIosNotificationsOff,
+  IoIosNotifications,
+} from "../utils/icons";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const Modal = ({ text }) => {
-  const { isModal, hideForm, changeFieldTitle, closeModal } = useAppContext();
-  const { status, tempTitle } = isModal;
+  const {
+    isModal,
+    showModalNotification,
+    hideModalNotification,
+    hideForm,
+    changeCategory,
+    closeModal,
+  } = useAppContext();
+  const { notification, status, tempTitle } = isModal;
 
   const handleChange = async () => {
     try {
-      await changeFieldTitle(tempTitle);
+      await changeCategory(tempTitle);
       await hideForm();
       await closeModal();
     } catch (error) {
@@ -20,8 +31,13 @@ const Modal = ({ text }) => {
     return (
       <Wrapper>
         <div className="container">
-          <div className="icon-container" onClick={() => closeModal()}>
-            <FaWindowClose />
+          <div className="icon-container">
+            {notification ? (
+              <IoIosNotificationsOff onClick={() => hideModalNotification()} />
+            ) : (
+              <IoIosNotifications onClick={() => showModalNotification()} />
+            )}
+            <FaWindowClose onClick={() => closeModal()} />
           </div>
           <article>
             <p>{text}</p>
@@ -74,6 +90,8 @@ const Wrapper = styled.div`
     position: absolute;
     top: 15px;
     right: 20px;
+    display: flex;
+    gap: 0.5rem;
 
     svg {
       cursor: pointer;
