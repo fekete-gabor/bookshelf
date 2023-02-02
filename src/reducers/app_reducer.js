@@ -89,16 +89,55 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === OPEN_MODAL) {
+    const { message, actionType } = action.payload;
     return {
       ...state,
-      isModal: { ...state.isModal, status: true, tempTitle: action.payload },
+      isModal: {
+        ...state.isModal,
+        open: true,
+        action: actionType,
+        alertMessage: message,
+      },
     };
+  }
+
+  if (action.type === "test") {
+    const { isModal } = state;
+
+    if (isModal.action === "remove") {
+      return {
+        ...state,
+        isModal: {
+          ...state.isModal,
+          remove: true,
+          changeCategory: false,
+        },
+      };
+    }
+
+    if (isModal.action === "changeCategory") {
+      return {
+        ...state,
+        isModal: {
+          ...state.isModal,
+          remove: false,
+          changeCategory: true,
+        },
+      };
+    }
+    return { ...state };
   }
 
   if (action.type === CLOSE_MODAL) {
     return {
       ...state,
-      isModal: { ...state.isModal, status: false, tempTitle: "" },
+      isModal: {
+        ...state.isModal,
+        open: false,
+        remove: false,
+        changeCategory: false,
+        alertMessage: "",
+      },
     };
   }
 
