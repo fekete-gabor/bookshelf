@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CustomInput, CustomTextArea, Modal } from "../components";
+import { EditCategoryButtons, EditForm, EditSavedFields } from "../components";
 import { useAppContext } from "../context/app_context";
 import { IoIosNotificationsOff, IoIosNotifications } from "../utils/icons";
 import styled from "styled-components";
@@ -9,6 +9,7 @@ const Home = () => {
   const {
     isModal,
     openModal,
+    closeModal,
     showModalNotification,
     hideModalNotification,
     categoryName,
@@ -24,13 +25,14 @@ const Home = () => {
     stopEditing,
   } = useAppContext();
 
-  const message =
-    "You have an unsaved field, if you continue it's values will be lost. Do you want to proceed?";
-
   const [currentInput, setCurrentInput] = useState({
     name: "",
     desc: "",
   });
+  const [currentCategory, setCurrentCategory] = useState("");
+
+  const message =
+    "You have an unsaved field, if you continue it's values will be lost. Do you want to proceed?";
 
   const { notification } = isModal;
 
@@ -42,10 +44,12 @@ const Home = () => {
         notification &&
         (name.length !== 0 || desc.length !== 0)
       ) {
-        return await openModal(e.target.dataset.title);
+        setCurrentCategory(e.target.dataset.title);
+        return await openModal({ message, actionType: "changeCategory" });
       }
-      await stopEditing();
+
       await hideForm();
+      await stopEditing();
       await changeCategory(e.target.dataset.title);
     } catch (error) {
       console.log(error);
@@ -103,6 +107,7 @@ const Home = () => {
         inputs: [currentInput],
       });
       setCurrentInput({ name: "", desc: "" });
+      setCurrentCategory("");
     } catch (error) {
       console.log(error);
     }
@@ -110,94 +115,30 @@ const Home = () => {
 
   useEffect(() => {
     setCurrentInput({ name: "", desc: "" });
+    setCurrentCategory("");
   }, [categoryName]);
+
+  useEffect(() => {
+    if (isModal.changeCategory) {
+      console.log(isModal.changeCategory);
+      console.log(isFormVisible);
+      hideForm();
+      stopEditing();
+      changeCategory(currentCategory);
+    }
+  }, [isModal.changeCategory]);
 
   return (
     <Wrapper>
-      <div>
-        <button
-          className="btn ww"
-          data-title="places"
-          onClick={(e) => changeTitle(e)}
-        >
-          places
-        </button>
-        <button
-          className="btn ww"
-          data-title="items"
-          onClick={(e) => changeTitle(e)}
-        >
-          items
-        </button>
-        <button
-          className="btn ww"
-          data-title="dates"
-          onClick={(e) => changeTitle(e)}
-        >
-          dates
-        </button>
-        {notification ? (
-          <IoIosNotificationsOff onClick={() => hideModalNotification()} />
-        ) : (
-          <IoIosNotifications onClick={() => showModalNotification()} />
-        )}
-      </div>
-      <div>
-        <h2>{categoryName}</h2>
-      </div>
-      {isFormVisible && (
-        <form onSubmit={onSubmit}>
-          <CustomInput
-            type="text"
-            name="name"
-            handleChange={handleChange}
-            value={currentInput.name}
-          />
-          <CustomTextArea
-            type="text"
-            name="desc"
-            handleChange={handleChange}
-            value={currentInput.desc}
-          />
-          <button
-            className="btn"
-            type="submit"
-            disabled={
-              currentInput.name.length === 0 || currentInput.desc.length === 0
-            }
-          >
-            save
-          </button>
-          <button className="btn" type="button" onClick={() => resetInput()}>
-            remove
-          </button>
-        </form>
-      )}
-
-      {inputList.map((input) => {
-        const { category, inputs } = input;
-        if (category === categoryName) {
-          return inputs.map((field) => {
-            const { id, name, desc } = field;
-
-            return (
-              <div key={id}>
-                <h3>{id}</h3>
-                <h4>{name}</h4>
-                <p>{desc}</p>
-                <button className="btn" onClick={() => deleteField(id)}>
-                  delete
-                </button>
-                <button className="btn" onClick={() => editField(id)}>
-                  edit
-                </button>
-              </div>
-            );
-          });
-        } else {
-          return null;
-        }
-      })}
+      <EditCategoryButtons handleChange={changeTitle} />
+      <EditForm
+        isFormVisible={isFormVisible}
+        onSubmit={onSubmit}
+        handleChange={handleChange}
+        currentInput={currentInput}
+        resetInput={resetInput}
+      />
+      <EditSavedFields deleteField={deleteField} editField={editField} />
       <div>
         <button
           className="btn"
@@ -207,7 +148,6 @@ const Home = () => {
           add
         </button>
       </div>
-      <Modal text={message} />
     </Wrapper>
   );
 };
