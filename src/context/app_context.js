@@ -49,7 +49,14 @@ const AppContext = React.createContext();
 const initialState = {
   isLoading: false,
   isSidebar: false,
-  isModal: { notification: true, status: false, tempTitle: "" },
+  isModal: {
+    notification: true,
+    open: false,
+    action: "",
+    remove: false,
+    changeCategory: false,
+    alertMessage: "",
+  },
   user: {
     name: "",
     email: "",
@@ -136,8 +143,12 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: CLOSE_SIDEBAR });
   };
 
-  const openModal = (title) => {
-    dispatch({ type: OPEN_MODAL, payload: title });
+  const openModal = (payload) => {
+    dispatch({ type: OPEN_MODAL, payload });
+  };
+
+  const runModalFunctions = () => {
+    dispatch({ type: "test" });
   };
 
   const closeModal = () => {
@@ -354,6 +365,7 @@ export const AppProvider = ({ children }) => {
         openSidebar,
         closeSidebar,
         openModal,
+        runModalFunctions,
         closeModal,
         showModalNotification,
         hideModalNotification,
