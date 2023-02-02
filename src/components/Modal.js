@@ -6,28 +6,27 @@ import {
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
-const Modal = ({ text }) => {
+const Modal = () => {
   const {
     isModal,
     showModalNotification,
     hideModalNotification,
-    hideForm,
-    changeCategory,
+    runModalFunctions,
     closeModal,
   } = useAppContext();
-  const { notification, status, tempTitle } = isModal;
+
+  const { notification, open, alertMessage } = isModal;
 
   const handleChange = async () => {
     try {
-      await changeCategory(tempTitle);
-      await hideForm();
+      await runModalFunctions();
       await closeModal();
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (status) {
+  if (open) {
     return (
       <Wrapper>
         <div className="container">
@@ -40,7 +39,7 @@ const Modal = ({ text }) => {
             <FaWindowClose onClick={() => closeModal()} />
           </div>
           <article>
-            <p>{text}</p>
+            <p>{alertMessage}</p>
           </article>
           <div className="btn-container">
             <button className="btn" onClick={() => handleChange()}>
