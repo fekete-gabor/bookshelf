@@ -15,6 +15,7 @@ import {
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
   OPEN_MODAL,
+  RUN_MODAL_FUNCTIONS,
   CLOSE_MODAL,
   SHOW_NOTIFICATIONS,
   HIDE_NOTIFICATIONS,
@@ -148,7 +149,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const runModalFunctions = () => {
-    dispatch({ type: "test" });
+    dispatch({ type: RUN_MODAL_FUNCTIONS });
   };
 
   const closeModal = () => {
