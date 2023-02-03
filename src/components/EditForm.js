@@ -1,12 +1,45 @@
 import { CustomInput, CustomTextArea } from "./index";
+import { useAppContext } from "../context/app_context";
 
-const EditForm = ({
-  isFormVisible,
-  onSubmit,
-  handleChange,
-  currentInput,
-  resetInput,
-}) => {
+const EditForm = ({ currentInput, setCurrentInput, setCurrentCategory }) => {
+  const {
+    stopEditing,
+    isFormVisible,
+    hideForm,
+    updateInputList,
+    increaseCounter,
+    categoryName,
+  } = useAppContext();
+
+  const resetInput = async () => {
+    try {
+      await stopEditing();
+      await hideForm();
+      setCurrentInput({ name: "", desc: "" });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChange = (e) => {
+    setCurrentInput({ ...currentInput, [e.target.name]: e.target.value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await increaseCounter();
+      await updateInputList({
+        category: categoryName,
+        inputs: [currentInput],
+      });
+      setCurrentInput({ name: "", desc: "" });
+      setCurrentCategory("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (isFormVisible) {
     return (
       <form onSubmit={onSubmit}>
