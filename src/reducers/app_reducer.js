@@ -10,6 +10,7 @@ import {
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
   OPEN_MODAL,
+  RUN_MODAL_FUNCTIONS,
   CLOSE_MODAL,
   SHOW_NOTIFICATIONS,
   HIDE_NOTIFICATIONS,
@@ -101,7 +102,7 @@ const app_reducer = (state, action) => {
     };
   }
 
-  if (action.type === "test") {
+  if (action.type === RUN_MODAL_FUNCTIONS) {
     const { isModal } = state;
 
     if (isModal.action === "remove") {
@@ -366,7 +367,7 @@ const app_reducer = (state, action) => {
         }
       });
 
-      // find category that was
+      // find category that was edited
       const editedList = inputList.map((input) => {
         if (input.category === category) {
           const obj = { ...input, inputs: editedInputs };
