@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
-const EditSavedFields = ({ deleteField, editField }) => {
-  const { isModal, openModal, inputList, categoryName } = useAppContext();
+const EditSavedFields = ({ setCurrentInput }) => {
+  const {
+    isModal,
+    openModal,
+    showForm,
+    inputList,
+    deleteInput,
+    editInput,
+    categoryName,
+  } = useAppContext();
   const { remove } = isModal;
 
   const [buttonID, setButtonID] = useState(null);
@@ -20,8 +28,28 @@ const EditSavedFields = ({ deleteField, editField }) => {
     }
   };
 
+  const editField = async (id) => {
+    try {
+      const findCategory = await inputList.find(
+        (input) => input.category === categoryName
+      );
+
+      const { inputs } = findCategory;
+
+      const findInput = await inputs.find((input) => input.id === id);
+
+      const { name, desc } = findInput;
+
+      setCurrentInput({ name, desc });
+      await showForm();
+      await editInput(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    if (remove) deleteField(buttonID);
+    if (remove) deleteInput(buttonID);
   }, [remove]);
 
   return inputList.map((input) => {
