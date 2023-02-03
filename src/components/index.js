@@ -10,9 +10,13 @@ import CustomButton from "./CustomButton";
 import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
 import SingleBook from "./SingleBook";
+import SingleBookButtons from "./SingleBookButtons";
+import SingleBookDescriptions from "./SingleBookDescriptions";
 import CustomDescription from "./CustomDescription";
 import SearchFavouriteResults from "./SearchFavouriteResults";
 import SingleFavouriteBook from "./SingleFavouriteBook";
+import SingleFavouriteBookButtons from "./SingleFavouriteBookButtons";
+import SingleFavouriteBookEdit from "./SingleFavouriteBookEdit";
 import EditCategoryButtons from "./EditCategoryButtons";
 import EditForm from "./EditForm";
 import EditSavedFields from "./EditSavedFields";
@@ -32,9 +36,13 @@ export {
   SearchForm,
   SearchResults,
   SingleBook,
+  SingleBookButtons,
+  SingleBookDescriptions,
   CustomDescription,
   SearchFavouriteResults,
   SingleFavouriteBook,
+  SingleFavouriteBookButtons,
+  SingleFavouriteBookEdit,
   EditCategoryButtons,
   EditForm,
   EditSavedFields,
