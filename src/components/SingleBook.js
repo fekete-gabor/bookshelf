@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
-import { CustomDescription } from "./index";
+import { Navigate } from "react-router-dom";
+import { SingleBookButtons, SingleBookDescriptions } from "./index";
 import notFound from "../assets/404.png";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
-import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
 
 const SingleBook = () => {
@@ -13,52 +12,12 @@ const SingleBook = () => {
     isError,
     fetchSingleBookFromGoogle,
     fetchAllFavouriteBooks,
-    changeToAddButton,
-    changeToRemoveButton,
     singleBook,
-    createBookPayload,
-    removeFromFavourite,
   } = useAppContext();
 
   const { id } = useParams();
 
-  const addBook = async () => {
-    try {
-      alertMessages("success", "Added to favourites!");
-      changeToAddButton(id);
-      await createBookPayload();
-    } catch (error) {
-      console.log(error);
-      alertMessages("warning", "Something went wrong!");
-    }
-  };
-
-  const removeBook = async (id) => {
-    try {
-      alertMessages("error", "Removed from favourites!");
-      changeToRemoveButton(id);
-      await removeFromFavourite(id);
-    } catch (error) {
-      console.log(error);
-      alertMessages("warning", "Something went wrong!");
-    }
-  };
-
-  const {
-    title,
-    subtitle,
-    authors,
-    averageRating,
-    ratingsCount,
-    categories,
-    description,
-    language,
-    pageCount,
-    publishedDate,
-    publisher,
-    image,
-    favourite,
-  } = singleBook;
+  const { title, image, favourite } = singleBook;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -96,88 +55,8 @@ const SingleBook = () => {
         <header>
           <img src={image || notFound} alt={title} />
         </header>
-        <article>
-          <CustomDescription
-            fieldName="title"
-            className="title"
-            showFieldName
-            value={title}
-          />
-          <CustomDescription
-            fieldName="subtitle"
-            className="subtitle"
-            showFieldName
-            value={subtitle}
-          />
-          <CustomDescription
-            fieldName="authors"
-            className="authors"
-            showFieldName
-            value={authors}
-          />
-          <CustomDescription
-            fieldName="average rating"
-            className="averageRating"
-            showFieldName
-            value={averageRating && `${averageRating} / 5`}
-          />
-          <CustomDescription
-            fieldName="ratings count"
-            className="ratingsCount"
-            showFieldName
-            value={ratingsCount}
-          />
-          <CustomDescription
-            fieldName="categories"
-            className="categories"
-            showFieldName
-            value={categories}
-          />
-          <CustomDescription
-            fieldName="description"
-            className="description"
-            value={description}
-          />
-          <CustomDescription
-            fieldName="language"
-            className="language"
-            showFieldName
-            value={language}
-          />
-          <CustomDescription
-            fieldName="page count"
-            className="pageCount"
-            showFieldName
-            value={pageCount}
-          />
-          <CustomDescription
-            fieldName="publisher"
-            className="publisher"
-            showFieldName
-            value={publisher}
-          />
-          <CustomDescription
-            fieldName="date of publish"
-            className="dateOfPublish"
-            showFieldName
-            value={publishedDate}
-          />
-        </article>
-        <div className="btn-container">
-          {favourite === true ? (
-            <button className="btn remove-btn" onClick={() => removeBook(id)}>
-              remove from favourites
-            </button>
-          ) : (
-            <button className="btn add-btn" onClick={() => addBook()}>
-              add to favourites
-            </button>
-          )}
-
-          <Link to="/search">
-            <button className="btn">back</button>
-          </Link>
-        </div>
+        <SingleBookDescriptions bookInfo={singleBook} />
+        <SingleBookButtons id={id} favourite={favourite} />
       </div>
     </Wrapper>
   );
