@@ -20,19 +20,21 @@ const SingleFavouriteBookEdit = () => {
     desc: "",
   });
 
+  const { allActions } = isModal;
+
   useEffect(() => {
     setCurrentInput({ name: "", desc: "" });
     setCurrentCategory("");
   }, [categoryName]);
 
   useEffect(() => {
-    if (isModal.changeCategory) {
+    if (allActions.changeCategory) {
       hideForm();
       stopEditing();
       changeCategory(currentCategory);
     }
     // eslint-disable-next-line
-  }, [isModal.changeCategory]);
+  }, [allActions.changeCategory]);
 
   return (
     <Wrapper>
