@@ -51,12 +51,15 @@ const initialState = {
   isLoading: false,
   isSidebar: false,
   isModal: {
-    notification: true,
     open: false,
-    action: "",
-    remove: false,
-    changeCategory: false,
     alertMessage: "",
+    actionName: "",
+    allActions: {
+      changeCategory: false,
+      removeFromFavourite: false,
+      delete: false,
+    },
+    notification: true,
   },
   user: {
     name: "",
