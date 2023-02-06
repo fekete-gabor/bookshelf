@@ -15,7 +15,6 @@ import SingleBookDescriptions from "./SingleBookDescriptions";
 import CustomDescription from "./CustomDescription";
 import SearchFavouriteResults from "./SearchFavouriteResults";
 import SingleFavouriteBook from "./SingleFavouriteBook";
-import SingleFavouriteBookButtons from "./SingleFavouriteBookButtons";
 import SingleFavouriteBookEdit from "./SingleFavouriteBookEdit";
 import EditCategoryButtons from "./EditCategoryButtons";
 import EditForm from "./EditForm";
@@ -41,7 +40,6 @@ export {
   CustomDescription,
   SearchFavouriteResults,
   SingleFavouriteBook,
-  SingleFavouriteBookButtons,
   SingleFavouriteBookEdit,
   EditCategoryButtons,
   EditForm,
