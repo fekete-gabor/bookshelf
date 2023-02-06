@@ -56,7 +56,7 @@ const SingleBook = () => {
           <img src={image || notFound} alt={title} />
         </header>
         <SingleBookDescriptions bookInfo={singleBook} />
-        <SingleBookButtons id={id} favourite={favourite} />
+        <SingleBookButtons id={id} favourite={favourite} path="/search" />
       </div>
     </Wrapper>
   );
