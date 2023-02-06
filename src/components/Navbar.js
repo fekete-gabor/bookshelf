@@ -1,13 +1,21 @@
 import { navLinks } from "../utils/navLinks";
 import axios from "axios";
 import { alertMessages } from "../utils/alertMessages";
-import { FaBars, FaWindowClose, ImExit } from "../utils/icons";
+import {
+  FaBars,
+  FaWindowClose,
+  ImExit,
+  IoIosNotifications,
+  IoIosNotificationsOff,
+} from "../utils/icons";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const Navbar = () => {
-  const { user, isSidebar, openSidebar, closeSidebar } = useAppContext();
+  const { user, isSidebar, openSidebar, closeSidebar, isModal } =
+    useAppContext();
+  const { notification } = isModal;
   const { removeUser } = useAppContext();
 
   const logout = async () => {
@@ -30,10 +38,15 @@ const Navbar = () => {
       <div>
         <ul>{navLinks}</ul>
       </div>
-      <div className="logout-container">
-        <p>{user.name.charAt(0).toUpperCase()}</p>
-        <div className="icon-container" onClick={() => logout()}>
-          <ImExit className="exit-icon" />
+      <div className="btn-container">
+        <div className="notification-container">
+          {notification ? <IoIosNotificationsOff /> : <IoIosNotifications />}
+        </div>
+        <div className="logout-container">
+          <p>{user.name.charAt(0).toUpperCase()}</p>
+          <div className="icon-container" onClick={() => logout()}>
+            <ImExit className="exit-icon" />
+          </div>
         </div>
       </div>
       <div>
@@ -73,6 +86,15 @@ const Wrapper = styled.section`
     padding: 0;
   }
 
+  .btn-container {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+  }
+
   .logout-container {
     cursor: pointer;
     display: none;
@@ -93,11 +115,6 @@ const Wrapper = styled.section`
     .icon-container {
       position: absolute;
       z-index: -1;
-      svg {
-        transform: translate(3px, 2.5px);
-        font-size: 1.5rem;
-        transition: var(--transition);
-      }
     }
 
     &:hover {
@@ -111,10 +128,17 @@ const Wrapper = styled.section`
     &:hover .icon-container {
       z-index: 1;
     }
+  }
 
-    .icon-container:hover svg {
-      color: tomato;
-    }
+  svg {
+    transform: translate(3px, 2.5px);
+    font-size: 1.5rem;
+    transition: var(--transition);
+    color: var(--primary-clr-2);
+  }
+
+  svg:hover {
+    color: orangered;
   }
 
   &:hover {
