@@ -96,7 +96,7 @@ const app_reducer = (state, action) => {
       isModal: {
         ...state.isModal,
         open: true,
-        action: actionType,
+        actionName: actionType,
         alertMessage: message,
       },
     };
@@ -105,24 +105,44 @@ const app_reducer = (state, action) => {
   if (action.type === RUN_MODAL_FUNCTIONS) {
     const { isModal } = state;
 
-    if (isModal.action === "remove") {
+    if (isModal.actionName === "changeCategory") {
       return {
         ...state,
         isModal: {
           ...state.isModal,
-          remove: true,
-          changeCategory: false,
+          allActions: {
+            changeCategory: true,
+            removeFromFavourite: false,
+            delete: false,
+          },
         },
       };
     }
 
-    if (isModal.action === "changeCategory") {
+    if (isModal.actionName === "removeFromFavourite") {
       return {
         ...state,
         isModal: {
           ...state.isModal,
-          remove: false,
-          changeCategory: true,
+          allActions: {
+            changeCategory: false,
+            removeFromFavourite: true,
+            delete: false,
+          },
+        },
+      };
+    }
+
+    if (isModal.actionName === "delete") {
+      return {
+        ...state,
+        isModal: {
+          ...state.isModal,
+          allActions: {
+            changeCategory: false,
+            removeFromFavourite: false,
+            delete: true,
+          },
         },
       };
     }
@@ -135,9 +155,12 @@ const app_reducer = (state, action) => {
       isModal: {
         ...state.isModal,
         open: false,
-        remove: false,
-        changeCategory: false,
         alertMessage: "",
+        allActions: {
+          changeCategory: false,
+          removeFromFavourite: false,
+          delete: false,
+        },
       },
     };
   }
