@@ -12,17 +12,20 @@ const EditSavedFields = ({ setCurrentInput }) => {
     editInput,
     categoryName,
   } = useAppContext();
-  const { remove } = isModal;
+  const { notification, allActions } = isModal;
 
   const [buttonID, setButtonID] = useState(null);
 
   const message = "Are you sure to delete this field?";
 
   const handleChange = async (id) => {
+    setButtonID(id);
     try {
-      setButtonID(id);
-      const payload = { message, actionType: "remove" };
-      await openModal(payload);
+      const payload = { message, actionType: "delete" };
+
+      if (notification) return await openModal(payload);
+
+      await deleteInput(id);
     } catch (error) {
       console.log(error);
     }
@@ -49,8 +52,8 @@ const EditSavedFields = ({ setCurrentInput }) => {
   };
 
   useEffect(() => {
-    if (remove) deleteInput(buttonID);
-  }, [remove]);
+    if (allActions.delete) deleteInput(buttonID);
+  }, [allActions.delete]);
 
   return inputList.map((input) => {
     const { category, inputs } = input;
