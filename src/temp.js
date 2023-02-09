@@ -1,47 +1,40 @@
-const Wrapper = styled.div`
-  width: 100%;
-  background: whitesmoke;
-  padding-top: 50px;
+if (action.type === "filter") {
+  const { searchAuthor, searchTerm } = action.payload;
 
-  .book-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    div {
-      margin-bottom: 0.5rem;
-      padding: 1rem;
-      border-bottom: dotted 1px goldenrod;
-    }
-    .btn-container {
-      border: none;
-      display: flex;
-      flex-direction: column;
-    }
+  const formatAuthor = searchAuthor.replaceAll("+", " ");
+  const formatTerm = searchTerm.replaceAll("+", " ");
+
+  let tempArray = [...state.allFavouriteBooks];
+
+  if (formatAuthor.length === 0 && formatTerm.length === 0) {
+    return { ...state, filteredFavouriteBooks: state.allFavouriteBooks };
   }
 
-  img {
-    max-width: 350px;
-    max-height: 350px;
-    object-fit: scale-down;
-    border-radius: 15px;
+  if (formatAuthor.length > 0 && formatTerm.length === 0) {
+    tempArray = tempArray.filter((books) => {
+      const find = books.authors.find((author) =>
+        author.toLowerCase().includes(formatAuthor)
+      );
+      if (find) return books;
+    });
   }
 
-  .authors {
-    color: dodgerblue;
+  if (formatAuthor.length === 0 && formatTerm.length > 0) {
+    tempArray = tempArray.filter((books) =>
+      books.title.toLowerCase().includes(searchTerm)
+    );
   }
 
-  h4 {
-    color: black;
+  if (formatAuthor.length > 0 && formatTerm.length > 0) {
+    tempArray = tempArray
+      .filter((books) => {
+        const find = books.authors.find((author) =>
+          author.toLowerCase().includes(formatAuthor)
+        );
+        if (find) return books;
+      })
+      .filter((books) => books.title.toLowerCase().includes(searchTerm));
   }
 
-  @media screen and (min-width: 792px) {
-    width: 700px;
-    margin: 0 auto;
-    .book-container {
-      padding: 0 5rem;
-      margin: 0 auto;
-    }
-  }
-`;
+  return { ...state, filteredFavouriteBooks: tempArray };
+}
