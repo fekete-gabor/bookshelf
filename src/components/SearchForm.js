@@ -5,7 +5,7 @@ import { SlMagnifier } from "../utils/icons";
 import CustomInput from "./CustomInput";
 import styled from "styled-components";
 
-const SearchForm = () => {
+const SearchForm = ({ fetchFromGoogle }) => {
   const {
     onLoading,
     maxResults,
@@ -15,6 +15,7 @@ const SearchForm = () => {
     setSearchTerm,
     setSearchAuthor,
     fetchAllBooksFromGoogle,
+    fetchAllFavouriteBooks,
   } = useAppContext();
 
   const onSubmit = async (e) => {
@@ -22,7 +23,8 @@ const SearchForm = () => {
     try {
       setSearchAuthor(formatSearchValues(searchAuthor));
       setSearchTerm(formatSearchValues(searchTerm));
-      await fetchAllBooksFromGoogle();
+      if (fetchFromGoogle) return await fetchAllBooksFromGoogle();
+      await fetchAllFavouriteBooks();
     } catch (err) {
       console.log(err);
     }
@@ -38,7 +40,7 @@ const SearchForm = () => {
     <Wrapper>
       <form onSubmit={onSubmit} className="form">
         <select
-          onChange={(e) => setMaxResults(e.target.value)}
+          onChange={(e) => setMaxResults(parseInt(e.target.value))}
           defaultValue={maxResults}
         >
           {fetchLimit}
@@ -58,13 +60,18 @@ const SearchForm = () => {
         <button
           type="submit"
           className={`${
-            searchAuthor.length === 0 && searchTerm.length === 0
+            fetchFromGoogle &&
+            searchAuthor.length === 0 &&
+            searchTerm.length === 0
               ? "submit-btn disabled"
               : "submit-btn"
           }`}
           onClick={(e) => onSubmit(e)}
           disabled={
-            onLoading || (searchAuthor.length === 0 && searchTerm.length === 0)
+            onLoading ||
+            (fetchFromGoogle &&
+              searchAuthor.length === 0 &&
+              searchTerm.length === 0)
           }
         >
           <SlMagnifier />
