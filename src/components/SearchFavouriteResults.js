@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import notFound from "../assets/404.png";
 import { AiFillHeart, MdOutlineOpenInNew } from "../utils/icons";
 import { Link } from "react-router-dom";
@@ -7,13 +7,41 @@ import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
 
 const SearchFavouriteResults = () => {
-  const { allFavouriteBooks, removeFromFavourite, fetchAllFavouriteBooks } =
-    useAppContext();
+  const {
+    isLoading,
+    allFavouriteBooks,
+    removeFromFavourite,
+    fetchAllFavouriteBooks,
+    numberOfPages,
+    page,
+    setPage,
+  } = useAppContext();
+
+  const [currentPage, setCurrentPage] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(1);
 
   useEffect(() => {
     fetchAllFavouriteBooks();
     // eslint-disable-next-line
-  }, []);
+  }, [page]);
+
+  useEffect(() => {
+    const pages = Array.from({ length: numberOfPages }, (_, index) => {
+      return index + 1;
+    });
+    setCurrentPage(pages);
+    setCurrentIndex(1);
+    setPage(1);
+    // eslint-disable-next-line
+  }, [numberOfPages]);
+
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <h2>Loading...</h2>
+      </Wrapper>
+    );
+  }
 
   if (!allFavouriteBooks) {
     return (
@@ -34,6 +62,13 @@ const SearchFavouriteResults = () => {
       console.log(error);
       alertMessages("warning", "Something went wrong!");
     }
+  };
+
+  const handleChange = (e) => {
+    const id = e.target.dataset.number;
+
+    setCurrentIndex(parseInt(id));
+    setPage(parseInt(id));
   };
 
   return (
@@ -78,12 +113,27 @@ const SearchFavouriteResults = () => {
           );
         })}
       </div>
+      <div className="number-container">
+        {currentPage.map((page) => {
+          return (
+            <button
+              className={currentIndex === page ? "active-btn" : null}
+              data-number={page}
+              key={page}
+              onClick={(e) => handleChange(e)}
+            >
+              {page}
+            </button>
+          );
+        })}
+      </div>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
   width: 100%;
+  margin-bottom: 7.5rem;
   z-index: 1;
 
   .main-container {
@@ -159,9 +209,36 @@ const Wrapper = styled.div`
     }
   }
 
+  .number-container {
+    width: min-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem auto;
+    text-align: center;
+
+    button {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      font-size: 1.5rem;
+      background: dodgerblue;
+      border-radius: 15px;
+      border: none;
+      color: whitesmoke;
+      margin: 0 1rem;
+      transition: var(--transition);
+      &:hover {
+        background: var(--primary-clr-2);
+      }
+    }
+
+    .active-btn {
+      background: yellowgreen;
+    }
+  }
+
   @media screen and (min-width: 600px) {
     .main-container {
-      width: 65%;
       border-radius: 15px;
       margin: 0 auto;
       padding: 1rem;
