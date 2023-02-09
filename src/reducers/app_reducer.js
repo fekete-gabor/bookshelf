@@ -12,8 +12,7 @@ import {
   OPEN_MODAL,
   RUN_MODAL_FUNCTIONS,
   CLOSE_MODAL,
-  SHOW_NOTIFICATIONS,
-  HIDE_NOTIFICATIONS,
+  CHANGE_USER_NOTIFICATION,
   FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
   FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
@@ -46,12 +45,13 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === FETCH_CURRENT_USER_SUCCESSFUL) {
-    const { name, email } = action.payload;
+    const { name, notification, email } = action.payload;
     return {
       ...state,
       isLoading: false,
       isError: false,
       user: { name, email },
+      isModal: { ...state.isModal, notification },
     };
   }
 
@@ -74,7 +74,12 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === SAVE_USER) {
-    return { ...state, user: action.payload };
+    const { name, notification, email } = action.payload;
+    return {
+      ...state,
+      user: { name, email },
+      isModal: { ...state.isModal, notification },
+    };
   }
 
   if (action.type === REMOVE_USER) {
@@ -165,12 +170,11 @@ const app_reducer = (state, action) => {
     };
   }
 
-  if (action.type === SHOW_NOTIFICATIONS) {
-    return { ...state, isModal: { ...state.isModal, notification: true } };
-  }
-
-  if (action.type === HIDE_NOTIFICATIONS) {
-    return { ...state, isModal: { ...state.isModal, notification: false } };
+  if (action.type === CHANGE_USER_NOTIFICATION) {
+    return {
+      ...state,
+      isModal: { ...state.isModal, notification: action.payload },
+    };
   }
 
   // **************
@@ -263,11 +267,13 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL) {
+    const { books, numberOfPages } = action.payload;
     return {
       ...state,
       isLoading: false,
       isError: false,
-      allFavouriteBooks: action.payload,
+      allFavouriteBooks: books,
+      numberOfPages,
     };
   }
 
