@@ -40,7 +40,7 @@ const SingleBookButtons = ({ id, favourite, path }) => {
       if (notification) return await openModal(payload);
 
       alertMessages("error", "Removed from favourites!");
-      changeToRemoveButton(id);
+      if (path !== "/my-bookshelf") changeToRemoveButton(id);
       await removeFromFavourite(id);
       navigate(`${path}`);
     } catch (error) {
@@ -52,10 +52,10 @@ const SingleBookButtons = ({ id, favourite, path }) => {
   useEffect(() => {
     if (allActions.removeFromFavourite) {
       alertMessages("error", "Removed from favourites!");
-      changeToRemoveButton(bookID);
       removeFromFavourite(bookID);
       navigate(`${path}`);
     }
+    // eslint-disable-next-line
   }, [allActions.removeFromFavourite]);
 
   return (
