@@ -13,8 +13,14 @@ import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const Navbar = () => {
-  const { user, isSidebar, openSidebar, closeSidebar, isModal } =
-    useAppContext();
+  const {
+    user,
+    isSidebar,
+    openSidebar,
+    closeSidebar,
+    isModal,
+    changeUserNotifications,
+  } = useAppContext();
   const { notification } = isModal;
   const { removeUser } = useAppContext();
 
@@ -40,7 +46,11 @@ const Navbar = () => {
       </div>
       <div className="btn-container">
         <div className="notification-container">
-          {notification ? <IoIosNotificationsOff /> : <IoIosNotifications />}
+          {notification ? (
+            <IoIosNotificationsOff onClick={() => changeUserNotifications()} />
+          ) : (
+            <IoIosNotifications onClick={() => changeUserNotifications()} />
+          )}
         </div>
         <div className="logout-container">
           <p>{user.name.charAt(0).toUpperCase()}</p>
