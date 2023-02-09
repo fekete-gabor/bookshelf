@@ -9,7 +9,7 @@ const SearchPage = () => {
         className="bg"
         style={{ background: `url(${bg}) center/cover no-repeat` }}
       ></div>
-      <SearchForm />
+      <SearchForm fetchFromGoogle={true} />
       <SearchResults />
     </Wrapper>
   );
