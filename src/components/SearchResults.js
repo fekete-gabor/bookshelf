@@ -130,6 +130,7 @@ const SearchResults = () => {
 
 const Wrapper = styled.div`
   width: 100%;
+  margin-bottom: 7.5rem;
   z-index: 1;
 
   .main-container {
@@ -207,7 +208,6 @@ const Wrapper = styled.div`
 
   @media screen and (min-width: 600px) {
     .main-container {
-      width: 65%;
       border-radius: 15px;
       margin: 0 auto;
       padding: 1rem;
