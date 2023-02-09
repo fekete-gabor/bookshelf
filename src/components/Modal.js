@@ -7,13 +7,8 @@ import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const Modal = () => {
-  const {
-    isModal,
-    showModalNotification,
-    hideModalNotification,
-    runModalFunctions,
-    closeModal,
-  } = useAppContext();
+  const { isModal, changeUserNotifications, runModalFunctions, closeModal } =
+    useAppContext();
 
   const { notification, open, alertMessage } = isModal;
 
@@ -32,9 +27,11 @@ const Modal = () => {
         <div className="container">
           <div className="icon-container">
             {notification ? (
-              <IoIosNotificationsOff onClick={() => hideModalNotification()} />
+              <IoIosNotificationsOff
+                onClick={() => changeUserNotifications()}
+              />
             ) : (
-              <IoIosNotifications onClick={() => showModalNotification()} />
+              <IoIosNotifications onClick={() => changeUserNotifications()} />
             )}
             <FaWindowClose onClick={() => closeModal()} />
           </div>
