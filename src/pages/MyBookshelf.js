@@ -9,7 +9,7 @@ const MyBookshelfPage = () => {
         className="bg"
         style={{ background: `url(${bg}) center/cover no-repeat` }}
       ></div>
-      <SearchForm />
+      <SearchForm fetchFromGoogle={false} />
       <SearchFavouriteResults />
     </Wrapper>
   );
