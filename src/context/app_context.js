@@ -17,8 +17,7 @@ import {
   OPEN_MODAL,
   RUN_MODAL_FUNCTIONS,
   CLOSE_MODAL,
-  SHOW_NOTIFICATIONS,
-  HIDE_NOTIFICATIONS,
+  CHANGE_USER_NOTIFICATION,
   FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING,
   FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL,
   FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED,
@@ -83,6 +82,7 @@ const initialState = {
   },
   bookPayload: null,
   allFavouriteBooks: [],
+  numberOfPages: null,
   singleFavouriteBook: [],
   counter: 0,
   categoryName: "places",
@@ -96,6 +96,7 @@ export const AppProvider = ({ children }) => {
   const [searchAuthor, setSearchAuthor] = useState("mark+lawrence");
   const [searchTerm, setSearchTerm] = useState("");
   const [maxResults, setMaxResults] = useState(10);
+  const [page, setPage] = useState(1);
 
   let path;
   const baseUrl = process.env.REACT_APP_BASE_URL;
@@ -159,12 +160,18 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: CLOSE_MODAL });
   };
 
-  const showModalNotification = () => {
-    dispatch({ type: SHOW_NOTIFICATIONS });
-  };
-
-  const hideModalNotification = () => {
-    dispatch({ type: HIDE_NOTIFICATIONS });
+  const changeUserNotifications = async () => {
+    const { user, isModal } = state;
+    const payload = { email: user.email, notification: isModal.notification };
+    const url = "/api/v1/auth/changeUserNotifications";
+    try {
+      const response = await axios.patch(url, payload);
+      const { message, notificationStatus } = await response.data;
+      alertMessages("success", message);
+      dispatch({ type: CHANGE_USER_NOTIFICATION, payload: notificationStatus });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // **************
@@ -249,8 +256,10 @@ export const AppProvider = ({ children }) => {
   const fetchAllFavouriteBooks = async () => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
     try {
-      const response = await axios("/api/v1/bookshelf");
-      const { books: payload } = response.data;
+      const response = await axios(
+        `/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`
+      );
+      const payload = await response.data;
       dispatch({
         type: FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL,
         payload,
@@ -260,6 +269,7 @@ export const AppProvider = ({ children }) => {
         type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED,
         payload: error,
       });
+      alertMessages("error", error.response.data.msg);
     }
   };
 
@@ -267,7 +277,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING });
     try {
       const response = await axios(`/api/v1/bookshelf/${id}`);
-      const { singleBook: payload } = response.data;
+      const payload = await response.data.singleBook;
       dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL, payload });
     } catch (error) {
       dispatch({
@@ -371,12 +381,13 @@ export const AppProvider = ({ children }) => {
         openModal,
         runModalFunctions,
         closeModal,
-        showModalNotification,
-        hideModalNotification,
+        changeUserNotifications,
         maxResults,
         searchTerm,
         searchAuthor,
         setMaxResults,
+        page,
+        setPage,
         setSearchAuthor,
         setSearchTerm,
         constructUrl,
