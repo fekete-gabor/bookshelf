@@ -34,6 +34,7 @@ import {
   DELETE_INPUT,
   EDIT_INPUT,
   STOP_EDITING,
+  FIND_INPUTS_INDEX,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -267,12 +268,14 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL) {
-    const { books, numberOfPages } = action.payload;
+    const { books, numberOfPages, allUniqueIDs } = action.payload;
+
     return {
       ...state,
       isLoading: false,
       isError: false,
       allFavouriteBooks: books,
+      allFavouriteBookIDs: allUniqueIDs,
       numberOfPages,
     };
   }
@@ -301,8 +304,8 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === CHANGE_FAVOURITE_ICON_ON_LOAD) {
-    const favouriteIDs = state.allFavouriteBooks && [
-      ...new Set(state.allFavouriteBooks.map((book) => book.id)),
+    const favouriteIDs = state.allFavouriteBookIDs && [
+      ...new Set(state.allFavouriteBookIDs.map((id) => id)),
     ];
 
     // eslint-disable-next-line
@@ -375,7 +378,7 @@ const app_reducer = (state, action) => {
 
     let findInput = inputList.find((input) => input.category === category);
 
-    // if category wasn't found create first instance
+    // if category wasn't found, create first instance
     if (!findInput) {
       return { ...state, inputList: [...inputList, { category, inputs }] };
     }
@@ -385,7 +388,7 @@ const app_reducer = (state, action) => {
       currentInput.id = editID;
       const { inputs } = findInput;
 
-      // find object's being edited & it's values
+      // find object that is being edited & it's values
       const editedInputs = inputs.map((input) => {
         if (input.id === editID) {
           const { name, desc, id } = currentInput;
@@ -414,7 +417,7 @@ const app_reducer = (state, action) => {
     }
 
     // if category was found and currently not being edited
-    const newList = inputList.map((input) => {
+    const newList = inputList.map((input, i) => {
       if (input.category === category) {
         const obj = {
           ...input,
@@ -435,19 +438,30 @@ const app_reducer = (state, action) => {
 
   if (action.type === DELETE_INPUT) {
     const id = action.payload;
-    const { inputList, fieldTitle } = state;
+    const { inputList, categoryName } = state;
 
-    const newList = inputList.map((input) => {
-      if (input.fieldName === fieldTitle) {
-        const obj = {
-          ...input,
-          inputs: input.inputs.filter((input) => input.id !== id),
-        };
-        return obj;
-      } else {
-        return input;
-      }
-    });
+    const findInput = inputList.find(
+      (input) => input.category === categoryName
+    );
+    const { inputs } = findInput;
+    let newList;
+
+    if (inputs.length === 1) {
+      newList = inputList.filter((input) => input.category !== categoryName);
+    } else {
+      newList = inputList.map((input) => {
+        if (input.category === categoryName) {
+          const obj = {
+            ...input,
+            inputs: input.inputs.filter((input) => input.id !== id),
+          };
+
+          return obj;
+        } else {
+          return input;
+        }
+      });
+    }
 
     return { ...state, inputList: newList };
   }
@@ -460,6 +474,21 @@ const app_reducer = (state, action) => {
   if (action.type === STOP_EDITING) {
     return { ...state, isEditing: { status: false, id: null } };
   }
+
+  if (action.type === FIND_INPUTS_INDEX) {
+    const { categoryName, inputList } = state;
+
+    let findInput = inputList.find((input) => input.category === categoryName);
+
+    if (findInput) {
+      for (let i = 0; i < findInput.inputs.length; i++) {
+        findInput.inputs[i].index = i + 1;
+      }
+    }
+
+    return { ...state };
+  }
+
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 
