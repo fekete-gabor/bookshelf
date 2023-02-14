@@ -70,10 +70,14 @@ const Wrapper = styled.div`
     grid-template-rows: 1fr auto;
     position: relative;
     background: whitesmoke;
-    width: 45%;
+    width: 95%;
     height: 350px;
-    padding: 1rem 4rem;
+    padding: 1rem;
     border-radius: 15px;
+
+    p {
+      font-size: 1.15rem;
+    }
   }
 
   article {
@@ -97,6 +101,16 @@ const Wrapper = styled.div`
       color: orangered;
       &:hover {
         color: red;
+      }
+    }
+  }
+
+  @media screen and (min-width: 792px) {
+    .container {
+      width: 55%;
+      padding: 1rem 4rem;
+      p {
+        font-size: 1.25rem;
       }
     }
   }
