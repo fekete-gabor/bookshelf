@@ -39,6 +39,7 @@ import {
   DELETE_INPUT,
   EDIT_INPUT,
   STOP_EDITING,
+  FIND_INPUTS_INDEX,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -82,6 +83,7 @@ const initialState = {
   },
   bookPayload: null,
   allFavouriteBooks: [],
+  allFavouriteBookIDs: [],
   numberOfPages: null,
   singleFavouriteBook: [],
   counter: 0,
@@ -346,6 +348,14 @@ export const AppProvider = ({ children }) => {
   const stopEditing = () => {
     dispatch({ type: STOP_EDITING });
   };
+
+  const findInputsIndex = () => {
+    dispatch({ type: FIND_INPUTS_INDEX });
+  };
+
+  useEffect(() => {
+    findInputsIndex();
+  }, [state.inputList]);
 
   useEffect(() => {
     showCurrentUser();
