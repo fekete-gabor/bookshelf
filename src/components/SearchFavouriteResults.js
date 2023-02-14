@@ -43,7 +43,7 @@ const SearchFavouriteResults = () => {
     );
   }
 
-  if (!allFavouriteBooks) {
+  if (!allFavouriteBooks || allFavouriteBooks.length === 0) {
     return (
       <Wrapper>
         <div className="error-container">
@@ -242,7 +242,8 @@ const Wrapper = styled.div`
       border-radius: 15px;
       margin: 0 auto;
       padding: 1rem;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 600px));
+      place-content: center;
       gap: 0.25rem;
     }
 
