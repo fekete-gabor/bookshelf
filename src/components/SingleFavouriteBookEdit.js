@@ -38,25 +38,29 @@ const SingleFavouriteBookEdit = () => {
 
   return (
     <Wrapper>
-      <EditCategoryButtons
-        currentInput={currentInput}
-        setCurrentCategory={setCurrentCategory}
-      />
-      <EditForm
-        currentInput={currentInput}
-        setCurrentInput={setCurrentInput}
-        setCurrentCategory={setCurrentCategory}
-      />
-      <EditSavedFields setCurrentInput={setCurrentInput} />
-      <div>
-        <button
-          className="btn"
-          disabled={isFormVisible}
-          onClick={() => showForm()}
-        >
-          add
-        </button>
-      </div>
+      <aside>
+        <EditCategoryButtons
+          currentInput={currentInput}
+          setCurrentCategory={setCurrentCategory}
+        />
+        <div>
+          <button
+            className="btn add-btn"
+            disabled={isFormVisible}
+            onClick={() => showForm()}
+          >
+            add
+          </button>
+        </div>
+      </aside>
+      <main>
+        <EditForm
+          currentInput={currentInput}
+          setCurrentInput={setCurrentInput}
+          setCurrentCategory={setCurrentCategory}
+        />
+        <EditSavedFields setCurrentInput={setCurrentInput} />
+      </main>
     </Wrapper>
   );
 };
@@ -65,12 +69,27 @@ const Wrapper = styled.section`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
+  position: relative;
+
+  aside {
+    display: grid;
+  }
 
   button:disabled {
     cursor: not-allowed;
     background: grey;
+  }
+
+  .add-btn {
+    background: goldenrod;
+    display: block;
+    margin: 1rem auto;
+    &:hover {
+      color: #222;
+      background: #fc3;
+    }
   }
 
   svg {
@@ -80,6 +99,25 @@ const Wrapper = styled.section`
     color: orangered;
     &:hover {
       color: red;
+    }
+  }
+
+  @media screen and (min-width: 1300px) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: flex-start;
+
+    aside {
+      display: grid;
+      position: sticky;
+      top: 50%;
+      transform: translateY(-50%);
+      width: fit-content;
+      height: fit-content;
+    }
+
+    .add-btn {
+      display: none;
     }
   }
 `;
