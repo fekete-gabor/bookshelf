@@ -16,7 +16,7 @@ const EditSavedFields = ({ setCurrentInput }) => {
 
   const [buttonID, setButtonID] = useState(null);
 
-  const message = "Are you sure to delete this field?";
+  const message = "Are you sure you want to delete this field?";
 
   const handleChange = async (id) => {
     setButtonID(id);
@@ -53,42 +53,73 @@ const EditSavedFields = ({ setCurrentInput }) => {
 
   useEffect(() => {
     if (allActions.delete) deleteInput(buttonID);
+    // eslint-disable-next-line
   }, [allActions.delete]);
 
-  return inputList.map((input) => {
-    const { category, inputs } = input;
+  return (
+    <Wrapper>
+      {inputList.map((input) => {
+        const { category, inputs } = input;
 
-    if (category === categoryName) {
-      return inputs.map((field) => {
-        const { id, name, desc } = field;
+        if (category === categoryName) {
+          return inputs.map((field) => {
+            const { id, name, desc, index } = field;
 
-        return (
-          <Wrapper key={id}>
-            <div>
-              <h3>{id}</h3>
-              <h4>{name}</h4>
-              <p>{desc}</p>
-              <button className="btn" onClick={() => handleChange(id)}>
-                delete
-              </button>
-              <button className="btn" onClick={() => editField(id)}>
-                edit
-              </button>
-            </div>
-          </Wrapper>
-        );
-      });
-    } else {
-      return null;
-    }
-  });
+            return (
+              <div className="container" key={id}>
+                <article>
+                  <h3>index : {index}</h3>
+                  <h4>{name}</h4>
+                  <p>{desc}</p>
+                </article>
+                <footer>
+                  <button className="btn" onClick={() => handleChange(id)}>
+                    delete
+                  </button>
+                  <button className="btn" onClick={() => editField(id)}>
+                    edit
+                  </button>
+                </footer>
+              </div>
+            );
+          });
+        } else {
+          return null;
+        }
+      })}
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.div`
-  width: 75%;
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
-  border-radius: 15px;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 1rem 2rem;
+
+  .container {
+    display: grid;
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+    height: fit-content;
+    border-radius: 15px;
+    padding: 0.5rem;
+    margin: 0.25rem;
+
+    article {
+      display: grid;
+    }
+
+    footer {
+      align-self: flex-end;
+    }
+  }
+
+  @media screen and (min-width: 1300px) {
+    display: grid;
+    width: 75%;
+  }
 `;
 
 export default EditSavedFields;
