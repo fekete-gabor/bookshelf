@@ -29,7 +29,6 @@ import {
   CHANGE_CATEGORY,
   SHOW_FORM,
   HIDE_FORM,
-  INCREASE_BTN_COUNTER,
   UPDATE_INPUT_LIST,
   DELETE_INPUT,
   EDIT_INPUT,
@@ -39,6 +38,7 @@ import {
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
 } from "../actions";
+import { removeHTMLTags } from "../utils/removeHTMLTags";
 
 const app_reducer = (state, action) => {
   if (action.type === FETCH_CURRENT_USER_PENDING) {
@@ -255,7 +255,11 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === CREATE_BOOK_PAYLOAD) {
-    const { user, singleBook } = state;
+    let { user, singleBook } = state;
+    let { description } = singleBook;
+    description = removeHTMLTags(description);
+    singleBook = { ...singleBook, description };
+
     return { ...state, bookPayload: { user, singleBook } };
   }
 
@@ -354,22 +358,12 @@ const app_reducer = (state, action) => {
     return { ...state, isFormVisible: false };
   }
 
-  if (action.type === INCREASE_BTN_COUNTER) {
-    const { isEditing } = state;
-
-    // if editing, dont increment counter
-    if (isEditing.status) return { ...state };
-
-    return { ...state, counter: state.counter + 1 };
-  }
-
   if (action.type === UPDATE_INPUT_LIST) {
-    const { counter, inputList, isEditing } = state;
+    const { inputList, isEditing } = state;
     const { category, inputs } = action.payload;
     const { id: editID } = isEditing;
 
     let currentInput = inputs[0];
-    currentInput.id = counter;
 
     // if inputList was empty (e.g. after page load), create first object
     if (inputList.length === 0) {
@@ -482,7 +476,7 @@ const app_reducer = (state, action) => {
 
     if (findInput) {
       for (let i = 0; i < findInput.inputs.length; i++) {
-        findInput.inputs[i].index = i + 1;
+        findInput.inputs[i].id = i + 1;
       }
     }
 
