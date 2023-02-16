@@ -62,15 +62,18 @@ const EditSavedFields = ({ setCurrentInput }) => {
         const { category, inputs } = input;
 
         if (category === categoryName) {
-          return inputs.map((field) => {
-            const { id, name, desc, index } = field;
+          return inputs.map((field, i) => {
+            const { id, name, desc } = field;
 
             return (
-              <div className="container" key={id}>
+              <div className="container" key={i}>
                 <article>
-                  <h3>index : {index}</h3>
+                  <h3>index : {id}</h3>
                   <h4>{name}</h4>
-                  <p>{desc}</p>
+                  <div
+                    style={{ overflowWrap: "break-word" }}
+                    dangerouslySetInnerHTML={{ __html: desc }}
+                  ></div>
                 </article>
                 <footer>
                   <button className="btn" onClick={() => handleChange(id)}>
@@ -92,15 +95,11 @@ const EditSavedFields = ({ setCurrentInput }) => {
 };
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   margin: 0 auto;
-  flex-wrap: wrap;
   width: 100%;
   padding: 1rem 2rem;
 
   .container {
-    display: grid;
     background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
     height: fit-content;
     border-radius: 15px;
@@ -108,7 +107,13 @@ const Wrapper = styled.div`
     margin: 0.25rem;
 
     article {
-      display: grid;
+      width: 100%;
+      blockquote {
+        color: dodgerblue;
+        margin: 0;
+        padding-left: 3em;
+        border-left: 0.5em dodgerblue dotted;
+      }
     }
 
     footer {
