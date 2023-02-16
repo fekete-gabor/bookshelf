@@ -1,6 +1,6 @@
 const CustomInput = ({ label, type, name, value, handleChange, required }) => {
   return (
-    <div>
+    <div className="form-input">
       {label && <label htmlFor={name}>{label}</label>}
       <input
         type={type}
