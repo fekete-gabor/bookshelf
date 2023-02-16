@@ -14,7 +14,7 @@ const CustomDescription = ({
           {value.map((item, i) => {
             return (
               <p key={i} className={className}>
-                {item}
+                {removeHTMLTags(item)}
               </p>
             );
           })}
