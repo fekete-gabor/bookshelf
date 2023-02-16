@@ -34,7 +34,6 @@ import {
   CHANGE_CATEGORY,
   SHOW_FORM,
   HIDE_FORM,
-  INCREASE_BTN_COUNTER,
   UPDATE_INPUT_LIST,
   DELETE_INPUT,
   EDIT_INPUT,
@@ -86,7 +85,6 @@ const initialState = {
   allFavouriteBookIDs: [],
   numberOfPages: null,
   singleFavouriteBook: [],
-  counter: 0,
   categoryName: "places",
   isFormVisible: false,
   inputList: [],
@@ -329,10 +327,6 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: HIDE_FORM });
   };
 
-  const increaseCounter = () => {
-    dispatch({ type: INCREASE_BTN_COUNTER });
-  };
-
   const updateInputList = (input) => {
     dispatch({ type: UPDATE_INPUT_LIST, payload: input });
   };
@@ -354,12 +348,12 @@ export const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    findInputsIndex();
-  }, [state.inputList]);
-
-  useEffect(() => {
     showCurrentUser();
   }, []);
+
+  useEffect(() => {
+    findInputsIndex();
+  }, [state.inputList]);
 
   useEffect(() => {
     if (state.user.email.length > 0) {
@@ -412,7 +406,6 @@ export const AppProvider = ({ children }) => {
         changeCategory,
         showForm,
         hideForm,
-        increaseCounter,
         updateInputList,
         deleteInput,
         editInput,
