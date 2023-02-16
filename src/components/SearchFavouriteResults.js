@@ -8,6 +8,8 @@ import styled from "styled-components";
 
 const SearchFavouriteResults = () => {
   const {
+    isModal,
+    openModal,
     isLoading,
     allFavouriteBooks,
     removeFromFavourite,
@@ -19,7 +21,9 @@ const SearchFavouriteResults = () => {
 
   const [currentPage, setCurrentPage] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(1);
+  const [bookID, setBookID] = useState(null);
 
+  const { notification, allActions } = isModal;
   useEffect(() => {
     fetchAllFavouriteBooks();
     // eslint-disable-next-line
@@ -34,6 +38,41 @@ const SearchFavouriteResults = () => {
     setPage(1);
     // eslint-disable-next-line
   }, [numberOfPages]);
+
+  useEffect(() => {
+    if (allActions.removeFromFavourite) {
+      alertMessages("error", "Removed from favourites!");
+      removeFromFavourite(bookID);
+      fetchAllFavouriteBooks();
+    }
+    // eslint-disable-next-line
+  }, [allActions.removeFromFavourite]);
+
+  const removeBook = async (id) => {
+    setBookID(id);
+    try {
+      const message =
+        "Are you sure you want to remove this book from your favourites?";
+      const actionType = "removeFromFavourite";
+      const payload = { message, actionType };
+
+      if (notification) return await openModal(payload);
+
+      alertMessages("error", "Removed from favourites!");
+      await removeFromFavourite(id);
+      await fetchAllFavouriteBooks();
+    } catch (error) {
+      console.log(error);
+      alertMessages("warning", "Something went wrong!");
+    }
+  };
+
+  const handleChange = (e) => {
+    const id = e.target.dataset.number;
+
+    setCurrentIndex(parseInt(id));
+    setPage(parseInt(id));
+  };
 
   if (isLoading) {
     return (
@@ -52,24 +91,6 @@ const SearchFavouriteResults = () => {
       </Wrapper>
     );
   }
-
-  const removeBook = async (id) => {
-    try {
-      alertMessages("error", "Removed from favourites!");
-      await removeFromFavourite(id);
-      await fetchAllFavouriteBooks();
-    } catch (error) {
-      console.log(error);
-      alertMessages("warning", "Something went wrong!");
-    }
-  };
-
-  const handleChange = (e) => {
-    const id = e.target.dataset.number;
-
-    setCurrentIndex(parseInt(id));
-    setPage(parseInt(id));
-  };
 
   return (
     <Wrapper>
