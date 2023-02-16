@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import notFound from "../assets/404.png";
 import { Link, Navigate } from "react-router-dom";
 import {
@@ -13,6 +13,8 @@ import styled from "styled-components";
 const SearchResults = () => {
   const {
     isError,
+    isModal,
+    openModal,
     allBooks,
     fetchSingleBookFromGoogle,
     fetchAllFavouriteBooks,
@@ -22,6 +24,10 @@ const SearchResults = () => {
     changeToRemoveButton,
   } = useAppContext();
 
+  const [bookID, setBookID] = useState(null);
+
+  const { notification, allActions } = isModal;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -30,6 +36,15 @@ const SearchResults = () => {
     fetchAllFavouriteBooks();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (allActions.removeFromFavourite) {
+      alertMessages("error", "Removed from favourites!");
+      removeFromFavourite(bookID);
+      changeToRemoveButton(bookID);
+    }
+    // eslint-disable-next-line
+  }, [allActions.removeFromFavourite]);
 
   const addBook = async (id) => {
     try {
@@ -44,7 +59,15 @@ const SearchResults = () => {
   };
 
   const removeBook = async (id) => {
+    setBookID(id);
     try {
+      const message =
+        "Are you sure you want to remove this book from your favourites?";
+      const actionType = "removeFromFavourite";
+      const payload = { message, actionType };
+
+      if (notification) return await openModal(payload);
+
       changeToRemoveButton(id);
       alertMessages("error", "Removed from favourites!");
       await removeFromFavourite(id);
