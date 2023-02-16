@@ -77,6 +77,10 @@ const Wrapper = styled.section`
     display: grid;
   }
 
+  main {
+    width: 100%;
+  }
+
   button:disabled {
     cursor: not-allowed;
     background: grey;
