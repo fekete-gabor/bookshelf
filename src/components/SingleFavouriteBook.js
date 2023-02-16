@@ -94,7 +94,7 @@ const SingleFavouriteBook = () => {
       ) : (
         <div className="edit-container">
           <h3>now editing</h3>
-          <article>
+          <article className="edit-title-container">
             {authors.map((author, i) => {
               return (
                 <h4 key={i}>
@@ -157,9 +157,10 @@ const Wrapper = styled.div`
 
   .edit-container {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     article {
-      display: flex;
-      justify-content: center;
       gap: 0.5rem;
       margin-bottom: 2rem;
       h4 {
@@ -167,6 +168,12 @@ const Wrapper = styled.div`
         color: dodgerblue;
       }
     }
+  }
+
+  .edit-title-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: unset;
   }
 
   .active-btn {
