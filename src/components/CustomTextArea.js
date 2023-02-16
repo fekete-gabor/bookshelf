@@ -1,23 +1,38 @@
-const CustomTextArea = ({
-  label,
-  type,
-  name,
-  value,
-  handleChange,
-  required,
-}) => {
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
+const modules = {
+  toolbar: [
+    ["bold", "italic", "underline", "strike"],
+    ["blockquote"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+    ["clean"],
+  ],
+};
+
+const formats = [
+  "link",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+];
+
+const CustomTextArea = ({ value, handleChange, label }) => {
   return (
-    <div>
-      {label && <label htmlFor={name}>{label}</label>}
-      <textarea
-        type={type}
-        cols="50"
-        rows="5"
+    <div className="form-input">
+      {label && <label>{label}</label>}
+      <ReactQuill
+        theme="snow"
         onChange={handleChange}
-        name={name}
         value={value}
-        required={required && required}
-        placeholder={!label ? name : undefined}
+        modules={modules}
+        formats={formats}
+        className="textarea"
       />
     </div>
   );
