@@ -18,6 +18,9 @@ const SingleFavouriteBook = () => {
     isError,
     fetchSingleBookFromMongoDB,
     singleFavouriteBook,
+    getAllCategories,
+    hideForm,
+    changeCategory,
   } = useAppContext();
 
   const { id } = useParams();
@@ -26,11 +29,15 @@ const SingleFavouriteBook = () => {
   const mainContainer = document.querySelector(".main-container");
 
   const handleChange = (e) => {
-    setMainComponent(e.target.dataset.category);
+    const category = e.target.dataset.category;
+    setMainComponent(category);
   };
 
   useEffect(() => {
     fetchSingleBookFromMongoDB(id);
+    getAllCategories(id);
+    hideForm();
+    changeCategory("");
     // eslint-disable-next-line
   }, [id]);
 
@@ -93,8 +100,8 @@ const SingleFavouriteBook = () => {
         </div>
       ) : (
         <div className="edit-container">
-          <h3>now editing</h3>
           <article className="edit-title-container">
+            <h4>now editing:</h4>
             {authors.map((author, i) => {
               return (
                 <h4 key={i}>
@@ -105,7 +112,7 @@ const SingleFavouriteBook = () => {
             })}
             <h4>- {title}</h4>
           </article>
-          <SingleFavouriteBookEdit />
+          <SingleFavouriteBookEdit id={id} />
         </div>
       )}
     </Wrapper>
@@ -115,6 +122,7 @@ const SingleFavouriteBook = () => {
 const Wrapper = styled.div`
   padding-top: 50px;
   background: whitesmoke;
+  position: relative;
 
   .book-container {
     display: flex;
@@ -152,7 +160,7 @@ const Wrapper = styled.div`
   .category-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 2rem;
+    margin: 5rem 0 2rem 0;
   }
 
   .edit-container {
@@ -162,7 +170,11 @@ const Wrapper = styled.div`
     justify-content: center;
     article {
       gap: 0.5rem;
-      margin-bottom: 2rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      h4:first-of-type {
+        color: #222;
+      }
       h4 {
         padding: 1rem 0;
         color: dodgerblue;
@@ -174,6 +186,12 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: unset;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.075));
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
   }
 
   .active-btn {
@@ -186,6 +204,10 @@ const Wrapper = styled.div`
     .book-container {
       padding: 0 5rem;
       margin: 0 auto;
+    }
+    .category-container {
+      display: flex;
+      justify-content: center;
     }
   }
 `;
