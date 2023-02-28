@@ -3,23 +3,30 @@ import "react-quill/dist/quill.snow.css";
 
 const modules = {
   toolbar: [
-    ["bold", "italic", "underline", "strike"],
-    ["blockquote"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link"],
     ["clean"],
   ],
 };
 
 const formats = [
-  "link",
-  "size",
+  "header",
   "bold",
   "italic",
   "underline",
   "strike",
   "blockquote",
   "list",
+  "bullet",
+  "indent",
+  "link",
 ];
 
 const CustomTextArea = ({ value, handleChange, label }) => {
