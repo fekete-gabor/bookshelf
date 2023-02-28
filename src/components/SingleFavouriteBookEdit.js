@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
-import { EditCategoryButtons, EditForm, EditSavedFields } from "../components";
+import {
+  EditCategoryButtons,
+  CreateCategoryButtonsForm,
+  EditForm,
+  EditSavedFields,
+} from "../components";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
-const SingleFavouriteBookEdit = () => {
+const SingleFavouriteBookEdit = ({ id }) => {
   const {
     isModal,
     categoryName,
@@ -12,23 +17,24 @@ const SingleFavouriteBookEdit = () => {
     showForm,
     hideForm,
     stopEditing,
+    getNotes,
   } = useAppContext();
 
   const [currentCategory, setCurrentCategory] = useState("");
-  const [currentInput, setCurrentInput] = useState({
-    name: "",
-    desc: "",
-  });
-
+  const [inputName, setInputName] = useState({ name: "" });
+  const [richText, setRichText] = useState({ desc: "" });
   const { allActions } = isModal;
 
   useEffect(() => {
-    setCurrentInput({ name: "", desc: "" });
+    setInputName({ name: "" });
+    setRichText({ desc: "" });
     setCurrentCategory("");
+    // eslint-disable-next-line
   }, [categoryName]);
 
   useEffect(() => {
     if (allActions.changeCategory) {
+      getNotes(id, currentCategory);
       hideForm();
       stopEditing();
       changeCategory(currentCategory);
@@ -40,13 +46,17 @@ const SingleFavouriteBookEdit = () => {
     <Wrapper>
       <aside>
         <EditCategoryButtons
-          currentInput={currentInput}
+          id={id}
+          inputName={inputName}
+          richText={richText}
           setCurrentCategory={setCurrentCategory}
         />
+        <div className="underline"></div>
+        <CreateCategoryButtonsForm id={id} />
         <div>
           <button
             className="btn add-btn"
-            disabled={isFormVisible}
+            disabled={isFormVisible || categoryName.length === 0}
             onClick={() => showForm()}
           >
             add
@@ -55,11 +65,17 @@ const SingleFavouriteBookEdit = () => {
       </aside>
       <main>
         <EditForm
-          currentInput={currentInput}
-          setCurrentInput={setCurrentInput}
+          id={id}
+          inputName={inputName}
+          richText={richText}
+          setInputName={setInputName}
+          setRichText={setRichText}
           setCurrentCategory={setCurrentCategory}
         />
-        <EditSavedFields setCurrentInput={setCurrentInput} />
+        <EditSavedFields
+          setInputName={setInputName}
+          setRichText={setRichText}
+        />
       </main>
     </Wrapper>
   );
@@ -104,6 +120,13 @@ const Wrapper = styled.section`
     &:hover {
       color: red;
     }
+  }
+
+  .underline {
+    margin: 0.5rem 0 0.5rem 0.5rem;
+    width: 100%;
+    height: 2.5px;
+    background: goldenrod;
   }
 
   @media screen and (min-width: 1300px) {
