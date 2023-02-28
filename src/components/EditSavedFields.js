@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
+import parse from "html-react-parser";
 
-const EditSavedFields = ({ setCurrentInput }) => {
+const EditSavedFields = ({ setInputName, setRichText }) => {
   const {
     isModal,
     openModal,
     showForm,
-    inputList,
     deleteInput,
     editInput,
-    categoryName,
+    favouriteBookEdits,
   } = useAppContext();
   const { notification, allActions } = isModal;
 
@@ -18,7 +18,7 @@ const EditSavedFields = ({ setCurrentInput }) => {
 
   const message = "Are you sure you want to delete this field?";
 
-  const handleChange = async (id) => {
+  const deleteField = async (id) => {
     setButtonID(id);
     try {
       const payload = { message, actionType: "delete" };
@@ -31,21 +31,20 @@ const EditSavedFields = ({ setCurrentInput }) => {
     }
   };
 
-  const editField = async (id) => {
+  const editField = async (e) => {
     try {
-      const findCategory = await inputList.find(
-        (input) => input.category === categoryName
+      const parentContainer = e.target.parentElement.parentElement;
+      const parentIndex = parseInt(parentContainer.dataset.index);
+      const findInput = await favouriteBookEdits.find(
+        (book) => book.id === parentIndex
       );
+      let { id: editID, name, desc } = findInput;
 
-      const { inputs } = findCategory;
-
-      const findInput = await inputs.find((input) => input.id === id);
-
-      const { name, desc } = findInput;
-
-      setCurrentInput({ name, desc });
       await showForm();
-      await editInput(id);
+      await editInput(editID);
+
+      setInputName({ name });
+      setRichText({ desc: parse(desc) });
     } catch (error) {
       console.log(error);
     }
@@ -58,38 +57,30 @@ const EditSavedFields = ({ setCurrentInput }) => {
 
   return (
     <Wrapper>
-      {inputList.map((input) => {
-        const { category, inputs } = input;
-
-        if (category === categoryName) {
-          return inputs.map((field, i) => {
-            const { id, name, desc } = field;
-
-            return (
-              <div className="container" key={i}>
-                <article>
-                  <h3>index : {id}</h3>
-                  <h4>{name}</h4>
-                  <div
-                    style={{ overflowWrap: "break-word" }}
-                    dangerouslySetInnerHTML={{ __html: desc }}
-                  ></div>
-                </article>
-                <footer>
-                  <button className="btn" onClick={() => handleChange(id)}>
-                    delete
-                  </button>
-                  <button className="btn" onClick={() => editField(id)}>
-                    edit
-                  </button>
-                </footer>
-              </div>
-            );
-          });
-        } else {
-          return null;
-        }
-      })}
+      {favouriteBookEdits &&
+        favouriteBookEdits.map((edit, i) => {
+          const { id, name, desc } = edit;
+          return (
+            <div className="notes-container" key={i} data-index={i}>
+              <article>
+                <h3>{id + 1}</h3>
+                <h4>{name}</h4>
+                <div
+                  style={{ overflowWrap: "break-word" }}
+                  dangerouslySetInnerHTML={{ __html: parse(desc) }}
+                ></div>
+              </article>
+              <footer>
+                <button className="btn" onClick={() => deleteField(id)}>
+                  delete
+                </button>
+                <button className="btn" onClick={(e) => editField(e)}>
+                  edit
+                </button>
+              </footer>
+            </div>
+          );
+        })}
     </Wrapper>
   );
 };
@@ -99,12 +90,20 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 1rem 2rem;
 
-  .container {
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+  .notes-container {
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
     height: fit-content;
+    border: solid 1px rebeccapurple;
     border-radius: 15px;
     padding: 0.5rem;
     margin: 0.25rem;
+    position: relative;
+    h3 {
+      padding: 0.5rem 1rem;
+      position: absolute;
+      top: 5px;
+      left: 5px;
+    }
 
     article {
       width: 100%;
