@@ -29,11 +29,8 @@ import {
   CHANGE_CATEGORY,
   SHOW_FORM,
   HIDE_FORM,
-  UPDATE_INPUT_LIST,
-  DELETE_INPUT,
   EDIT_INPUT,
   STOP_EDITING,
-  FIND_INPUTS_INDEX,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -346,6 +343,18 @@ const app_reducer = (state, action) => {
   // EDIT FAVOURITE BOOK FUNCTIONS
   // **************
 
+  if (action.type === "fetch_categories") {
+    return {
+      ...state,
+      favouriteBookCategories: action.payload,
+      favouriteBookEdits: [],
+    };
+  }
+
+  if (action.type === "aaa") {
+    return { ...state, favouriteBookEdits: action.payload };
+  }
+
   if (action.type === CHANGE_CATEGORY) {
     return { ...state, categoryName: action.payload };
   }
@@ -358,108 +367,6 @@ const app_reducer = (state, action) => {
     return { ...state, isFormVisible: false };
   }
 
-  if (action.type === UPDATE_INPUT_LIST) {
-    const { inputList, isEditing } = state;
-    const { category, inputs } = action.payload;
-    const { id: editID } = isEditing;
-
-    let currentInput = inputs[0];
-
-    // if inputList was empty (e.g. after page load), create first object
-    if (inputList.length === 0) {
-      return { ...state, inputList: [{ category, inputs }] };
-    }
-
-    let findInput = inputList.find((input) => input.category === category);
-
-    // if category wasn't found, create first instance
-    if (!findInput) {
-      return { ...state, inputList: [...inputList, { category, inputs }] };
-    }
-
-    // if category was found, but currently being edited
-    if (isEditing.status) {
-      currentInput.id = editID;
-      const { inputs } = findInput;
-
-      // find object that is being edited & it's values
-      const editedInputs = inputs.map((input) => {
-        if (input.id === editID) {
-          const { name, desc, id } = currentInput;
-          const obj = { name, desc, id };
-          return obj;
-        } else {
-          return input;
-        }
-      });
-
-      // find category that was edited
-      const editedList = inputList.map((input) => {
-        if (input.category === category) {
-          const obj = { ...input, inputs: editedInputs };
-          return obj;
-        } else {
-          return input;
-        }
-      });
-
-      return {
-        ...state,
-        isEditing: { status: false, id: null },
-        inputList: editedList,
-      };
-    }
-
-    // if category was found and currently not being edited
-    const newList = inputList.map((input, i) => {
-      if (input.category === category) {
-        const obj = {
-          ...input,
-          inputs: [...input.inputs, currentInput],
-        };
-        return obj;
-      } else {
-        return input;
-      }
-    });
-
-    return {
-      ...state,
-      inputList: newList,
-      isEditing: { status: false, id: null },
-    };
-  }
-
-  if (action.type === DELETE_INPUT) {
-    const id = action.payload;
-    const { inputList, categoryName } = state;
-
-    const findInput = inputList.find(
-      (input) => input.category === categoryName
-    );
-    const { inputs } = findInput;
-    let newList;
-
-    if (inputs.length === 1) {
-      newList = inputList.filter((input) => input.category !== categoryName);
-    } else {
-      newList = inputList.map((input) => {
-        if (input.category === categoryName) {
-          const obj = {
-            ...input,
-            inputs: input.inputs.filter((input) => input.id !== id),
-          };
-
-          return obj;
-        } else {
-          return input;
-        }
-      });
-    }
-
-    return { ...state, inputList: newList };
-  }
-
   if (action.type === EDIT_INPUT) {
     const id = action.payload;
     return { ...state, isEditing: { status: true, id } };
@@ -467,20 +374,6 @@ const app_reducer = (state, action) => {
 
   if (action.type === STOP_EDITING) {
     return { ...state, isEditing: { status: false, id: null } };
-  }
-
-  if (action.type === FIND_INPUTS_INDEX) {
-    const { categoryName, inputList } = state;
-
-    let findInput = inputList.find((input) => input.category === categoryName);
-
-    if (findInput) {
-      for (let i = 0; i < findInput.inputs.length; i++) {
-        findInput.inputs[i].id = i + 1;
-      }
-    }
-
-    return { ...state };
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);
