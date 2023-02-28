@@ -34,11 +34,8 @@ import {
   CHANGE_CATEGORY,
   SHOW_FORM,
   HIDE_FORM,
-  UPDATE_INPUT_LIST,
-  DELETE_INPUT,
   EDIT_INPUT,
   STOP_EDITING,
-  FIND_INPUTS_INDEX,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -85,9 +82,10 @@ const initialState = {
   allFavouriteBookIDs: [],
   numberOfPages: null,
   singleFavouriteBook: [],
+  favouriteBookCategories: [],
+  favouriteBookEdits: [],
   categoryName: "places",
   isFormVisible: false,
-  inputList: [],
   isEditing: { status: false, id: null },
 };
 
@@ -315,6 +313,28 @@ export const AppProvider = ({ children }) => {
   // EDIT FAVOURITE BOOK FUNCTIONS
   // **************
 
+  const getAllCategories = async (id) => {
+    try {
+      const response = await axios(`/api/v1/edit/getAllCategories/${id}`);
+      const { categories } = await response.data;
+      dispatch({ type: "fetch_categories", payload: categories });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getNotes = async (id, category) => {
+    try {
+      const response = await axios(
+        `/api/v1/edit/getAllNotes/${id}?category=${category}`
+      );
+      const { inputs } = await response.data;
+      dispatch({ type: "aaa", payload: inputs });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const changeCategory = (title) => {
     dispatch({ type: CHANGE_CATEGORY, payload: title });
   };
@@ -327,33 +347,19 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: HIDE_FORM });
   };
 
-  const updateInputList = (input) => {
-    dispatch({ type: UPDATE_INPUT_LIST, payload: input });
-  };
-
-  const deleteInput = (id) => {
-    dispatch({ type: DELETE_INPUT, payload: id });
-  };
-
   const editInput = (id) => {
     dispatch({ type: EDIT_INPUT, payload: id });
   };
+
+  const deleteInput = async (id) => {};
 
   const stopEditing = () => {
     dispatch({ type: STOP_EDITING });
   };
 
-  const findInputsIndex = () => {
-    dispatch({ type: FIND_INPUTS_INDEX });
-  };
-
   useEffect(() => {
     showCurrentUser();
   }, []);
-
-  useEffect(() => {
-    findInputsIndex();
-  }, [state.inputList]);
 
   useEffect(() => {
     if (state.user.email.length > 0) {
@@ -403,12 +409,13 @@ export const AppProvider = ({ children }) => {
         fetchSingleBookFromMongoDB,
         changeToAddButton,
         changeToRemoveButton,
+        getAllCategories,
+        getNotes,
         changeCategory,
         showForm,
         hideForm,
-        updateInputList,
-        deleteInput,
         editInput,
+        deleteInput,
         stopEditing,
       }}
     >
