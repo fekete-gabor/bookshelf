@@ -5,7 +5,12 @@ import styled from "styled-components";
 import useMediaQuery from "../utils/mediaQuery";
 import { gsap } from "gsap/dist/gsap";
 
-const BookCategoryButtons = ({ currentInput, setCurrentCategory }) => {
+const EditCategoryButtons = ({
+  id,
+  inputName,
+  richText,
+  setCurrentCategory,
+}) => {
   const {
     isModal,
     openModal,
@@ -14,6 +19,8 @@ const BookCategoryButtons = ({ currentInput, setCurrentCategory }) => {
     isFormVisible,
     hideForm,
     stopEditing,
+    favouriteBookCategories,
+    getNotes,
   } = useAppContext();
 
   const message =
@@ -24,7 +31,8 @@ const BookCategoryButtons = ({ currentInput, setCurrentCategory }) => {
 
   const changeTitle = async (e) => {
     try {
-      const { name, desc } = currentInput;
+      const { name } = inputName;
+      const { desc } = richText;
       if (
         isFormVisible &&
         notification &&
@@ -37,6 +45,7 @@ const BookCategoryButtons = ({ currentInput, setCurrentCategory }) => {
       await hideForm();
       await stopEditing();
       await changeCategory(e.target.dataset.title);
+      await getNotes(id, e.target.dataset.title);
     } catch (error) {
       console.log(error);
     }
@@ -64,54 +73,21 @@ const BookCategoryButtons = ({ currentInput, setCurrentCategory }) => {
 
   return (
     <Wrapper>
-      <CustomButton
-        name="places"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="characters"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="chapters"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="items"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="definitions"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="dates"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="events"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="factions"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
-      <CustomButton
-        name="my rating"
-        className="btn category-btn"
-        handleChange={changeTitle}
-      />
+      {favouriteBookCategories &&
+        favouriteBookCategories.map((category, i) => {
+          return (
+            <CustomButton
+              key={i}
+              name={category}
+              className="btn category-btn"
+              handleChange={changeTitle}
+            />
+          );
+        })}
     </Wrapper>
   );
 };
+
 const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -158,4 +134,4 @@ const Wrapper = styled.div`
     }
   }
 `;
-export default BookCategoryButtons;
+export default EditCategoryButtons;
