@@ -1,63 +1,74 @@
+import axios from "axios";
 import { CustomInput, CustomTextArea } from "./index";
 import { useAppContext } from "../context/app_context";
+import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
-import { useEffect } from "react";
 
-const EditForm = ({ currentInput, setCurrentInput, setCurrentCategory }) => {
+const EditForm = ({
+  id,
+  inputName,
+  richText,
+  setInputName,
+  setRichText,
+  setCurrentCategory,
+}) => {
   const {
     isEditing,
     stopEditing,
     isFormVisible,
     hideForm,
-    updateInputList,
     categoryName,
+    getNotes,
   } = useAppContext();
 
   const resetInput = async () => {
     try {
       await stopEditing();
       await hideForm();
-      setCurrentInput({ name: "", desc: "" });
+      setInputName({ name: "" });
+      setRichText({ desc: "" });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleChange = (e) => {
-    if (e?.target?.name !== undefined) {
-      setCurrentInput({ ...currentInput, name: e.target.value });
-    } else {
-      setCurrentInput({ ...currentInput, desc: e });
-    }
+  const inputNameHandleChange = (e) => {
+    setInputName({ ...inputName, name: e.target.value });
+  };
+
+  const richTextHandleChange = (e) => {
+    setRichText({ desc: e });
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await updateInputList({
-        category: categoryName,
-        inputs: [currentInput],
-      });
-      setCurrentInput({ name: "", desc: "" });
+      const { status, id: editID } = isEditing;
+
+      const url = !status
+        ? `/api/v1/edit/createEdits/${id}`
+        : `/api/v1/edit/${id}`;
+
+      const payload = { categoryName, inputName, richText };
+
+      let response = !status
+        ? await axios.post(url, payload)
+        : await axios.patch(url, { ...payload, editID, id });
+
+      const { msg } = await response.data;
+      alertMessages("success", msg);
+
+      await getNotes(id, categoryName);
+      await stopEditing();
+
+      setInputName({ name: "" });
+      setRichText({ desc: "" });
       setCurrentCategory("");
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    const { desc } = currentInput;
-    if (desc.startsWith("<p><br></p>") && !isEditing.status) {
-      // Quill automatically injects a blank paragraph on render & on page load,
-      // this useEffect replaces it with an empty value
-      setCurrentInput({
-        name: "",
-        desc: currentInput.desc
-          .replace(/(^([ ]*<p><br><\/p>)*)|((<p><br><\/p>)*[ ]*$)/gi, "")
-          .trim(" "),
-      });
-    }
-  }, [currentInput, setCurrentInput, isEditing.status]);
 
   if (isFormVisible) {
     return (
@@ -67,21 +78,23 @@ const EditForm = ({ currentInput, setCurrentInput, setCurrentCategory }) => {
             type="text"
             name="name"
             label="name"
-            handleChange={handleChange}
-            value={currentInput.name}
+            handleChange={inputNameHandleChange}
+            value={inputName.name}
           />
           <CustomTextArea
             type="text"
             name="desc"
             label="description"
-            handleChange={handleChange}
-            value={currentInput.desc}
+            handleChange={richTextHandleChange}
+            value={richText.desc}
           />
           <button
             className="btn"
             type="submit"
             disabled={
-              currentInput.name.length === 0 || currentInput.desc.length === 0
+              inputName.name.length === 0 ||
+              richText.desc.startsWith("<p><br></p>") ||
+              richText.desc.length === 0
             }
           >
             save
@@ -101,7 +114,8 @@ const Wrapper = styled.div`
 
   form {
     margin: 0 auto;
-    width: 55%;
+    width: 100%;
+    max-width: 650px;
   }
 
   .form-input {
@@ -116,7 +130,7 @@ const Wrapper = styled.div`
       padding: 0.5rem;
     }
     input {
-      width: 50%;
+      width: 100%;
       border: solid 1px plum;
       border-radius: 15px;
       transition: var(--transition);
@@ -126,10 +140,18 @@ const Wrapper = styled.div`
       }
     }
     .textarea {
-      width: 75%;
+      width: 100%;
       max-width: 700px;
       background-color: white;
       margin: 1rem 0;
+    }
+  }
+
+  @media screen and (min-width: 550px) {
+    .form-input {
+      input {
+        width: 50%;
+      }
     }
   }
 `;
