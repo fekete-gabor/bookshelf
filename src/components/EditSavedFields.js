@@ -98,6 +98,8 @@ const Wrapper = styled.div`
     padding: 0.5rem;
     margin: 0.25rem;
     position: relative;
+    display: grid;
+    gap: 2rem;
     h3 {
       padding: 0.5rem 1rem;
       position: absolute;
@@ -106,6 +108,8 @@ const Wrapper = styled.div`
     }
 
     article {
+      display: grid;
+      gap: 3rem;
       width: 100%;
       blockquote {
         color: dodgerblue;
