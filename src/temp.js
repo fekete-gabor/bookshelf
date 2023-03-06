@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const ObjectId = require("mongoose").Types.ObjectId;
 const Edit = require("../models/EditModel");
 
 const getAllCategories = async (req, res) => {
@@ -99,7 +99,7 @@ const createCategoryBtn = async (req, res) => {
   return res.status(200).json({ success: true, book });
 };
 
-const createEdits = async (req, res) => {
+const createNote = async (req, res) => {
   const { userID } = req.user;
   const { id: bookID } = req.params;
   const { categoryName, inputName, richText } = req.body;
@@ -125,10 +125,6 @@ const createEdits = async (req, res) => {
     desc: richText.desc,
   });
 
-  for (let i = 0; i < findCategory.inputs.length; i++) {
-    findCategory.inputs[i].id = i;
-  }
-
   await book.save();
 
   res
@@ -136,7 +132,7 @@ const createEdits = async (req, res) => {
     .json({ success: true, book, msg: "Notes successfully created!" });
 };
 
-const updateEdits = async (req, res) => {
+const updateNote = async (req, res) => {
   const { userID } = req.user;
   const { id: bookID } = req.params;
   const { categoryName, inputName, richText, editID } = req.body;
@@ -174,15 +170,29 @@ const updateEdits = async (req, res) => {
     .json({ success: true, book, msg: "Field successfully updated!" });
 };
 
-const deleteEdits = async (req, res) => {
-  res.status(200).send("delete edits route");
+const deleteNote = async (req, res) => {
+  const { userID } = req.user;
+  const { id: bookID } = req.params;
+  const { id: btnID, category } = req.query;
+
+  if (!bookID) {
+    return res.status(404).send(`No book with id of ${bookID}`);
+  }
+
+  if (!userID) {
+    return res
+      .status(401)
+      .send("User not found, please provide valid credentials!");
+  }
+
+  res.status(200).json({ success: true, msg: "field successfully removed!" });
 };
 
 module.exports = {
   getAllCategories,
   getAllNotes,
   createCategoryBtn,
-  createEdits,
-  updateEdits,
-  deleteEdits,
+  createNote,
+  updateNote,
+  deleteNote,
 };
