@@ -19,15 +19,12 @@ const CreateCategoryButtonsForm = ({ id }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `/api/v1/edit/createCategoryBtn/${id}`,
-        fieldName
-      );
+      await axios.post(`/api/v1/edit/createCategory/${id}`, fieldName);
       await getAllCategories(id);
       setFieldName({ name: "" });
-      alertMessages("error", response.data);
     } catch (error) {
       console.log(error);
+      alertMessages("error", error.response.data);
     }
   };
 
@@ -37,7 +34,7 @@ const CreateCategoryButtonsForm = ({ id }) => {
         <CustomInput
           name="name"
           type="text"
-          label="add field"
+          label="add category"
           value={fieldName.name}
           handleChange={handleChange}
         />
@@ -57,6 +54,9 @@ const Wrapper = styled.div`
     display: grid;
     margin: 0.5rem auto;
     padding: 0.5rem 0.25rem;
+    border: solid 1px slategrey;
+    border-radius: 15px;
+    padding: 0.5rem 0.75rem;
   }
 
   label {
@@ -73,6 +73,15 @@ const Wrapper = styled.div`
       background: gold;
       color: #222;
       border: solid 1px #222;
+    }
+  }
+
+  @media screen and (min-width: 1300px) {
+    text-align: left;
+
+    input {
+      margin: 0.5rem 0;
+      width: 100%;
     }
   }
 `;
