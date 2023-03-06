@@ -16,6 +16,7 @@ const EditCategoryButtons = ({
     openModal,
     categoryName,
     changeCategory,
+    deleteCategory,
     isFormVisible,
     hideForm,
     stopEditing,
@@ -23,11 +24,10 @@ const EditCategoryButtons = ({
     getNotes,
   } = useAppContext();
 
-  const message =
-    "You have an unsaved field, if you continue it's values will be lost. Do you want to proceed?";
+  let message;
   const mediaQuery = useMediaQuery("(min-width: 1300px)");
 
-  const { notification } = isModal;
+  const { notification, allActions } = isModal;
 
   const changeTitle = async (e) => {
     try {
@@ -38,6 +38,8 @@ const EditCategoryButtons = ({
         notification &&
         (name.length !== 0 || desc.length !== 0)
       ) {
+        message =
+          "You have an unsaved field, if you continue it's values will be lost. Do you want to proceed?";
         setCurrentCategory(e.target.dataset.title);
         return await openModal({ message, actionType: "changeCategory" });
       }
@@ -51,16 +53,46 @@ const EditCategoryButtons = ({
     }
   };
 
+  const deleteField = async () => {
+    try {
+      if (notification) {
+        message = "Are you sure you want to delete this category?";
+        return await openModal({ message, actionType: "deleteCategory" });
+      }
+
+      await deleteCategory(id, categoryName);
+      await changeCategory("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (allActions.deleteCategory) {
+      deleteCategory(id, categoryName);
+      changeCategory("");
+    }
+    // eslint-disable-next-line
+  }, [allActions.deleteCategory]);
+
   useEffect(() => {
     if (mediaQuery) {
       gsap.utils.toArray(".category-btn-container").forEach((container) => {
         const categoryBtn = container.children[0];
         const category = categoryBtn.dataset.title;
         const addBtn = container.children[1];
-        gsap.set(addBtn, { autoAlpha: 0, x: "-50px" });
+        const removeBtn = container.children[2];
+        gsap.set([addBtn, removeBtn], { autoAlpha: 0, x: "-50px" });
+
+        const tl = gsap.timeline();
 
         if (category === categoryName) {
-          gsap.to(addBtn, {
+          tl.to(addBtn, {
+            duration: 0.25,
+            ease: "Expo.easeOut",
+            x: "0px",
+            autoAlpha: 1,
+          }).to(removeBtn, {
             duration: 0.25,
             ease: "Expo.easeOut",
             x: "0px",
@@ -73,39 +105,48 @@ const EditCategoryButtons = ({
 
   return (
     <Wrapper>
-      {favouriteBookCategories &&
-        favouriteBookCategories.map((category, i) => {
-          return (
-            <CustomButton
-              key={i}
-              name={category}
-              className="btn category-btn"
-              handleChange={changeTitle}
-            />
-          );
-        })}
+      <div>
+        <h4>categories</h4>
+      </div>
+      <div className="container">
+        {favouriteBookCategories &&
+          favouriteBookCategories.map((category, i) => {
+            return (
+              <CustomButton
+                key={i}
+                name={category}
+                className="btn category-btn"
+                changeTitle={changeTitle}
+                deleteField={deleteField}
+              />
+            );
+          })}
+      </div>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
   .active-btn {
     background: yellowgreen;
     z-index: 2;
   }
 
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
   .category-btn-container {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     transition: var(--transition);
-    .add-icon {
+    .add-icon,
+    .delete-icon {
       opacity: 0;
       background: dodgerblue;
       color: whitesmoke;
@@ -115,22 +156,42 @@ const Wrapper = styled.div`
       display: none;
       z-index: 1;
       &:hover {
-        background: salmon;
+        background: yellowgreen;
+      }
+    }
+    .delete-icon {
+      background: tomato;
+      &:hover {
+        background: red;
       }
     }
   }
 
+  h4 {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding: 0 0.75rem;
+  }
+
   @media screen and (min-width: 1300px) {
-    display: grid;
+    .container {
+      display: grid;
+    }
 
     .category-btn-container {
       gap: 1rem;
-      .add-icon {
+      .add-icon,
+      .delete-icon {
         display: block;
-        &:hover {
-          background: salmon;
-        }
       }
+    }
+
+    h4 {
+      text-align: left;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      padding: 0 0.75rem;
     }
   }
 `;
