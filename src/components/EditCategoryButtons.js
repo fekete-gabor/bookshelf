@@ -177,6 +177,7 @@ const Wrapper = styled.div`
   @media screen and (min-width: 1300px) {
     .container {
       display: grid;
+      justify-content: flex-start;
     }
 
     .category-btn-container {
