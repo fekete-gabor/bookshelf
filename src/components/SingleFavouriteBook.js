@@ -100,19 +100,7 @@ const SingleFavouriteBook = () => {
         </div>
       ) : (
         <div className="edit-container">
-          <article className="edit-title-container">
-            <h4>now editing:</h4>
-            {authors.map((author, i) => {
-              return (
-                <h4 key={i}>
-                  {author}
-                  {authors.length - 1 === i ? null : ","}
-                </h4>
-              );
-            })}
-            <h4>- {title}</h4>
-          </article>
-          <SingleFavouriteBookEdit id={id} />
+          <SingleFavouriteBookEdit id={id} authors={authors} title={title} />
         </div>
       )}
     </Wrapper>
@@ -160,7 +148,7 @@ const Wrapper = styled.div`
   .category-container {
     display: flex;
     justify-content: center;
-    margin: 5rem 0 2rem 0;
+    margin: 2rem 0;
   }
 
   .edit-container {
@@ -168,30 +156,6 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    article {
-      gap: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      h4:first-of-type {
-        color: #222;
-      }
-      h4 {
-        padding: 1rem 0;
-        color: dodgerblue;
-      }
-    }
-  }
-
-  .edit-title-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: unset;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: linear-gradient(rgba(0, 0, 0, 0.075), rgba(0, 0, 0, 0.075));
-    padding: 0.5rem 1rem;
-    border-radius: 15px;
   }
 
   .active-btn {
