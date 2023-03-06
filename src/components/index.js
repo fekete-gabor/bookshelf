@@ -16,6 +16,8 @@ import CustomDescription from "./CustomDescription";
 import SearchFavouriteResults from "./SearchFavouriteResults";
 import SingleFavouriteBook from "./SingleFavouriteBook";
 import SingleFavouriteBookEdit from "./SingleFavouriteBookEdit";
+import SingleFavouriteBookRating from "./SingleFavouriteBookRating";
+import CustomStarIcon from "./CustomStarIcon";
 import CreateCategoryButtonsForm from "./CreateCategoryButtonsForm";
 import EditCategoryButtons from "./EditCategoryButtons";
 import EditForm from "./EditForm";
@@ -42,6 +44,8 @@ export {
   SearchFavouriteResults,
   SingleFavouriteBook,
   SingleFavouriteBookEdit,
+  SingleFavouriteBookRating,
+  CustomStarIcon,
   CreateCategoryButtonsForm,
   EditCategoryButtons,
   EditForm,
