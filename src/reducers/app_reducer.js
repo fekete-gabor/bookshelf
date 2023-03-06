@@ -115,6 +115,22 @@ const app_reducer = (state, action) => {
           ...state.isModal,
           allActions: {
             changeCategory: true,
+            deleteCategory: false,
+            removeFromFavourite: false,
+            delete: false,
+          },
+        },
+      };
+    }
+
+    if (isModal.actionName === "deleteCategory") {
+      return {
+        ...state,
+        isModal: {
+          ...state.isModal,
+          allActions: {
+            changeCategory: false,
+            deleteCategory: true,
             removeFromFavourite: false,
             delete: false,
           },
@@ -129,6 +145,7 @@ const app_reducer = (state, action) => {
           ...state.isModal,
           allActions: {
             changeCategory: false,
+            deleteCategory: false,
             removeFromFavourite: true,
             delete: false,
           },
@@ -143,6 +160,7 @@ const app_reducer = (state, action) => {
           ...state.isModal,
           allActions: {
             changeCategory: false,
+            deleteCategory: false,
             removeFromFavourite: false,
             delete: true,
           },
@@ -161,6 +179,7 @@ const app_reducer = (state, action) => {
         alertMessage: "",
         allActions: {
           changeCategory: false,
+          deleteCategory: false,
           removeFromFavourite: false,
           delete: false,
         },
@@ -355,8 +374,16 @@ const app_reducer = (state, action) => {
     return { ...state, favouriteBookEdits: action.payload };
   }
 
+  if (action.type === "ddd") {
+    return { ...state, favouriteBookEdits: action.payload };
+  }
+
   if (action.type === CHANGE_CATEGORY) {
     return { ...state, categoryName: action.payload };
+  }
+
+  if (action.type === "dsa") {
+    return { ...state, favouriteBookCategories: action.payload };
   }
 
   if (action.type === SHOW_FORM) {
@@ -370,6 +397,16 @@ const app_reducer = (state, action) => {
   if (action.type === EDIT_INPUT) {
     const id = action.payload;
     return { ...state, isEditing: { status: true, id } };
+  }
+
+  if (action.type === "2") {
+    return {
+      ...state,
+      singleFavouriteBook: {
+        ...state.singleFavouriteBook,
+        userRating: action.payload,
+      },
+    };
   }
 
   if (action.type === STOP_EDITING) {
