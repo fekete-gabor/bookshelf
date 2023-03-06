@@ -52,6 +52,7 @@ const initialState = {
     actionName: "",
     allActions: {
       changeCategory: false,
+      deleteCategory: false,
       removeFromFavourite: false,
       delete: false,
     },
@@ -339,6 +340,19 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: CHANGE_CATEGORY, payload: title });
   };
 
+  const deleteCategory = async (id, category) => {
+    try {
+      const response = await axios.delete(
+        `/api/v1/edit/deleteCategory/${id}?category=${category}`
+      );
+      const { categories } = await response.data;
+      dispatch({ type: "dsa", payload: categories });
+      alertMessages("success", response.data.msg);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const showForm = () => {
     dispatch({ type: SHOW_FORM });
   };
@@ -351,7 +365,31 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: EDIT_INPUT, payload: id });
   };
 
-  const deleteInput = async (id) => {};
+  const deleteInput = async (bookID, id, category) => {
+    try {
+      const response = await axios.delete(
+        `/api/v1/edit/${bookID}?id=${id}&category=${category}`
+      );
+      const { inputs } = await response.data;
+      dispatch({ type: "ddd", payload: inputs });
+      alertMessages("success", response.data.msg);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const rateBook = async (id, index) => {
+    try {
+      const response = await axios.post(
+        `/api/v1/bookshelf/rateBook/${id}?index=${index}`
+      );
+      const { stars } = await response.data;
+      dispatch({ type: "2", payload: stars });
+      alertMessages("success", response.data.msg);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const stopEditing = () => {
     dispatch({ type: STOP_EDITING });
@@ -412,10 +450,12 @@ export const AppProvider = ({ children }) => {
         getAllCategories,
         getNotes,
         changeCategory,
+        deleteCategory,
         showForm,
         hideForm,
         editInput,
         deleteInput,
+        rateBook,
         stopEditing,
       }}
     >
