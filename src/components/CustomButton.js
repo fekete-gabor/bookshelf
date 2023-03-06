@@ -1,7 +1,7 @@
-import { IoMdAdd } from "../utils/icons";
+import { IoMdAdd, IoIosTrash } from "../utils/icons";
 import { useAppContext } from "../context/app_context";
 
-const CustomButton = ({ name, className, handleChange }) => {
+const CustomButton = ({ name, className, changeTitle, deleteField }) => {
   const { categoryName, showForm } = useAppContext();
 
   return (
@@ -11,11 +11,12 @@ const CustomButton = ({ name, className, handleChange }) => {
           categoryName === name ? `${className} active-btn` : className
         }
         data-title={name}
-        onClick={handleChange}
+        onClick={changeTitle}
       >
         {name}
       </button>
       <IoMdAdd onClick={() => showForm()} className="add-icon" />
+      <IoIosTrash onClick={() => deleteField()} className="delete-icon" />
     </div>
   );
 };
