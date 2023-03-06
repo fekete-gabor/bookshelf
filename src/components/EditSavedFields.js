@@ -3,11 +3,12 @@ import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 import parse from "html-react-parser";
 
-const EditSavedFields = ({ setInputName, setRichText }) => {
+const EditSavedFields = ({ id: bookID, setInputName, setRichText }) => {
   const {
     isModal,
     openModal,
     showForm,
+    categoryName,
     deleteInput,
     editInput,
     favouriteBookEdits,
@@ -25,7 +26,7 @@ const EditSavedFields = ({ setInputName, setRichText }) => {
 
       if (notification) return await openModal(payload);
 
-      await deleteInput(id);
+      await deleteInput(bookID, id, categoryName);
     } catch (error) {
       console.log(error);
     }
@@ -34,12 +35,11 @@ const EditSavedFields = ({ setInputName, setRichText }) => {
   const editField = async (e) => {
     try {
       const parentContainer = e.target.parentElement.parentElement;
-      const parentIndex = parseInt(parentContainer.dataset.index);
+      const parentID = parentContainer.dataset.id;
       const findInput = await favouriteBookEdits.find(
-        (book) => book.id === parentIndex
+        (book) => book.id === parentID
       );
       let { id: editID, name, desc } = findInput;
-
       await showForm();
       await editInput(editID);
 
@@ -51,7 +51,7 @@ const EditSavedFields = ({ setInputName, setRichText }) => {
   };
 
   useEffect(() => {
-    if (allActions.delete) deleteInput(buttonID);
+    if (allActions.delete) deleteInput(bookID, buttonID, categoryName);
     // eslint-disable-next-line
   }, [allActions.delete]);
 
@@ -61,9 +61,9 @@ const EditSavedFields = ({ setInputName, setRichText }) => {
         favouriteBookEdits.map((edit, i) => {
           const { id, name, desc } = edit;
           return (
-            <div className="notes-container" key={i} data-index={i}>
+            <div className="notes-container" key={i} data-id={id}>
               <article>
-                <h3>{id + 1}</h3>
+                <h3>{i}</h3>
                 <h4>{name}</h4>
                 <div
                   style={{ overflowWrap: "break-word" }}
