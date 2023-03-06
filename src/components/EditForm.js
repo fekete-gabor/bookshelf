@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import axios from "axios";
 import { CustomInput, CustomTextArea } from "./index";
 import { useAppContext } from "../context/app_context";
@@ -47,14 +48,14 @@ const EditForm = ({
       const { status, id: editID } = isEditing;
 
       const url = !status
-        ? `/api/v1/edit/createEdits/${id}`
+        ? `/api/v1/edit/createNotes/${id}`
         : `/api/v1/edit/${id}`;
 
       const payload = { categoryName, inputName, richText };
 
       let response = !status
         ? await axios.post(url, payload)
-        : await axios.patch(url, { ...payload, editID, id });
+        : await axios.patch(url, { inputName, richText, editID, id });
 
       const { msg } = await response.data;
       alertMessages("success", msg);
@@ -69,6 +70,19 @@ const EditForm = ({
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const { desc } = richText;
+    if (desc.startsWith("<p><br></p>") && !isEditing.status) {
+      // Quill automatically injects a blank paragraph on render & on page load,
+      // this useEffect replaces it with an empty value
+      setRichText({
+        desc: richText.desc
+          .replace(/(^([ ]*<p><br><\/p>)*)|((<p><br><\/p>)*[ ]*$)/gi, "")
+          .trim(" "),
+      });
+    }
+  }, [richText, setRichText, isEditing.status]);
 
   if (isFormVisible) {
     return (
@@ -91,16 +105,12 @@ const EditForm = ({
           <button
             className="btn"
             type="submit"
-            disabled={
-              inputName.name.length === 0 ||
-              richText.desc.startsWith("<p><br></p>") ||
-              richText.desc.length === 0
-            }
+            disabled={inputName.name.length === 0 || richText.desc.length === 0}
           >
             save
           </button>
           <button className="btn" type="button" onClick={() => resetInput()}>
-            remove
+            close
           </button>
         </form>
       </Wrapper>
