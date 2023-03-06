@@ -4,11 +4,12 @@ import {
   CreateCategoryButtonsForm,
   EditForm,
   EditSavedFields,
+  SingleFavouriteBookRating,
 } from "../components";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
-const SingleFavouriteBookEdit = ({ id }) => {
+const SingleFavouriteBookEdit = ({ id, authors, title }) => {
   const {
     isModal,
     categoryName,
@@ -45,14 +46,29 @@ const SingleFavouriteBookEdit = ({ id }) => {
   return (
     <Wrapper>
       <aside>
+        <article className="edit-title-container">
+          <h4>now editing:</h4>
+          {authors.map((author, i) => {
+            return (
+              <h4 key={i}>
+                {author}
+                {authors.length - 1 === i ? null : ","}
+              </h4>
+            );
+          })}
+          <p>- {title}</p>
+        </article>
+        <div className="underline"></div>
+        <SingleFavouriteBookRating id={id} />
+        <div className="underline"></div>
+        <CreateCategoryButtonsForm id={id} />
+        <div className="underline"></div>
         <EditCategoryButtons
           id={id}
           inputName={inputName}
           richText={richText}
           setCurrentCategory={setCurrentCategory}
         />
-        <div className="underline"></div>
-        <CreateCategoryButtonsForm id={id} />
         <div>
           <button
             className="btn add-btn"
@@ -73,6 +89,7 @@ const SingleFavouriteBookEdit = ({ id }) => {
           setCurrentCategory={setCurrentCategory}
         />
         <EditSavedFields
+          id={id}
           setInputName={setInputName}
           setRichText={setRichText}
         />
@@ -82,7 +99,8 @@ const SingleFavouriteBookEdit = ({ id }) => {
 };
 
 const Wrapper = styled.section`
-  min-height: 100vh;
+  overflow-x: hidden;
+  min-height: 500vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -91,6 +109,20 @@ const Wrapper = styled.section`
 
   aside {
     display: grid;
+  }
+
+  .edit-title-container {
+    display: grid;
+    text-align: center;
+    padding: 0 1rem;
+    max-width: 300px;
+    h4:first-of-type {
+      color: #222;
+    }
+    h4 {
+      margin: 0 0 0.5rem 0;
+      color: dodgerblue;
+    }
   }
 
   main {
@@ -123,24 +155,53 @@ const Wrapper = styled.section`
   }
 
   .underline {
-    margin: 0.5rem 0 0.5rem 0.5rem;
-    width: 100%;
-    height: 2.5px;
-    background: goldenrod;
+    overflow: hidden;
+    margin: 1.5rem auto;
+    width: 45vw;
+    height: 2px;
+    background: #999;
   }
 
   @media screen and (min-width: 1300px) {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: flex-start;
+    overflow-x: unset;
 
     aside {
+      overflow-y: scroll;
+      overflow-x: hidden;
       display: grid;
       position: sticky;
-      top: 50%;
+      top: 55%;
       transform: translateY(-50%);
       width: fit-content;
-      height: fit-content;
+      padding-right: 2rem;
+      max-height: 680px;
+
+      ::-webkit-scrollbar {
+        width: 2px;
+      }
+
+      /* Track */
+      ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px #999;
+        border-radius: 10px;
+      }
+
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: orangered;
+      }
+    }
+
+    .edit-title-container {
+      text-align: left;
+    }
+
+    .underline {
+      width: 120%;
     }
 
     .add-btn {
