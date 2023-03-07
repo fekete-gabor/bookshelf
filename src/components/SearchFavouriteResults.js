@@ -52,13 +52,13 @@ const SearchFavouriteResults = () => {
     setBookID(id);
     try {
       const message =
-        "Are you sure you want to remove this book from your favourites?";
+        "Are you sure you want to remove this book from your shelf?";
       const actionType = "removeFromFavourite";
       const payload = { message, actionType };
 
       if (notification) return await openModal(payload);
 
-      alertMessages("error", "Removed from favourites!");
+      alertMessages("error", "Removed from shelf!");
       await removeFromFavourite(id);
       await fetchAllFavouriteBooks();
     } catch (error) {
