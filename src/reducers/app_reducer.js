@@ -26,11 +26,19 @@ import {
   FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
   FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
   FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  FETCH_ALL_CATEGORY_BTNS,
+  FETCH_ALL_NOTES,
+  DELETE_CATEGORY_BTN,
+  DELETE_NOTE,
+  RATE_BOOK,
   CHANGE_CATEGORY,
   SHOW_FORM,
   HIDE_FORM,
   EDIT_INPUT,
   STOP_EDITING,
+  FETCH_ALL_IDS_FROM_MONGODB_PENDING,
+  FETCH_ALL_IDS_FROM_MONGODB_SUCCESSFUL,
+  FETCH_ALL_IDS_FROM_MONGODB_REJECTED,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -323,6 +331,24 @@ const app_reducer = (state, action) => {
     return { ...state, isLoading: false, isError: true };
   }
 
+  if (action.type === FETCH_ALL_IDS_FROM_MONGODB_PENDING) {
+    return { ...state, isLoading: true, isError: false };
+  }
+
+  if (action.type === FETCH_ALL_IDS_FROM_MONGODB_SUCCESSFUL) {
+    return {
+      ...state,
+      isLoading: false,
+      isError: false,
+      allFavouriteBookIDs: action.payload,
+    };
+  }
+
+  if (action.type === FETCH_ALL_IDS_FROM_MONGODB_REJECTED) {
+    console.log(action.payload.message);
+    return { ...state, isLoading: false, isError: true };
+  }
+
   if (action.type === CHANGE_FAVOURITE_ICON_ON_LOAD) {
     const favouriteIDs = state.allFavouriteBookIDs && [
       ...new Set(state.allFavouriteBookIDs.map((id) => id)),
@@ -362,7 +388,7 @@ const app_reducer = (state, action) => {
   // EDIT FAVOURITE BOOK FUNCTIONS
   // **************
 
-  if (action.type === "fetch_categories") {
+  if (action.type === FETCH_ALL_CATEGORY_BTNS) {
     return {
       ...state,
       favouriteBookCategories: action.payload,
@@ -370,11 +396,11 @@ const app_reducer = (state, action) => {
     };
   }
 
-  if (action.type === "aaa") {
+  if (action.type === FETCH_ALL_NOTES) {
     return { ...state, favouriteBookEdits: action.payload };
   }
 
-  if (action.type === "ddd") {
+  if (action.type === DELETE_NOTE) {
     return { ...state, favouriteBookEdits: action.payload };
   }
 
@@ -382,7 +408,7 @@ const app_reducer = (state, action) => {
     return { ...state, categoryName: action.payload };
   }
 
-  if (action.type === "dsa") {
+  if (action.type === DELETE_CATEGORY_BTN) {
     return { ...state, favouriteBookCategories: action.payload };
   }
 
@@ -399,7 +425,7 @@ const app_reducer = (state, action) => {
     return { ...state, isEditing: { status: true, id } };
   }
 
-  if (action.type === "2") {
+  if (action.type === RATE_BOOK) {
     return {
       ...state,
       singleFavouriteBook: {
