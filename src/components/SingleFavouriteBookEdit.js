@@ -69,13 +69,14 @@ const SingleFavouriteBookEdit = ({ id, authors, title }) => {
           richText={richText}
           setCurrentCategory={setCurrentCategory}
         />
+        <div className="underline last-ul"></div>
         <div>
           <button
             className="btn add-btn"
             disabled={isFormVisible || categoryName.length === 0}
             onClick={() => showForm()}
           >
-            add
+            add note
           </button>
         </div>
       </aside>
@@ -100,7 +101,7 @@ const SingleFavouriteBookEdit = ({ id, authors, title }) => {
 
 const Wrapper = styled.section`
   overflow-x: hidden;
-  min-height: 500vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -115,6 +116,7 @@ const Wrapper = styled.section`
     display: grid;
     text-align: center;
     padding: 0 1rem;
+    margin: 0 auto;
     max-width: 300px;
     h4:first-of-type {
       color: #222;
@@ -162,6 +164,10 @@ const Wrapper = styled.section`
     background: #999;
   }
 
+  .last-ul {
+    display: block;
+  }
+
   @media screen and (min-width: 1300px) {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -202,6 +208,10 @@ const Wrapper = styled.section`
 
     .underline {
       width: 120%;
+    }
+
+    .last-ul {
+      display: none;
     }
 
     .add-btn {
