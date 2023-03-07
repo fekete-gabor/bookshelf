@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { formatSearchValues } from "../utils/formatSearchValues";
 import { fetchLimit } from "../utils/fetchLimit";
 import { useAppContext } from "../context/app_context";
-import { SlMagnifier } from "../utils/icons";
+import { SlMagnifier, SlClose } from "../utils/icons";
 import CustomInput from "./CustomInput";
 import styled from "styled-components";
 
@@ -17,6 +18,8 @@ const SearchForm = ({ fetchFromGoogle }) => {
     fetchAllBooksFromGoogle,
     fetchAllFavouriteBooks,
   } = useAppContext();
+
+  const [reset, setReset] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -36,12 +39,27 @@ const SearchForm = ({ fetchFromGoogle }) => {
     if (e.target.name === "title") setSearchTerm(value);
   };
 
+  const resetSearch = () => {
+    setSearchAuthor("");
+    setSearchTerm("");
+    setMaxResults(10);
+    if (!fetchFromGoogle) setReset(true);
+  };
+
+  useEffect(() => {
+    if (!fetchFromGoogle) {
+      fetchAllFavouriteBooks();
+      setReset(false);
+    }
+    // eslint-disable-next-line
+  }, [reset]);
+
   return (
     <Wrapper>
       <form onSubmit={onSubmit} className="form">
         <select
           onChange={(e) => setMaxResults(parseInt(e.target.value))}
-          defaultValue={maxResults}
+          value={maxResults}
         >
           {fetchLimit}
         </select>
@@ -57,25 +75,23 @@ const SearchForm = ({ fetchFromGoogle }) => {
           value={searchTerm}
           handleChange={handleChange}
         />
-        <button
-          type="submit"
-          className={`${
-            fetchFromGoogle &&
-            searchAuthor.length === 0 &&
-            searchTerm.length === 0
-              ? "submit-btn disabled"
-              : "submit-btn"
-          }`}
-          onClick={(e) => onSubmit(e)}
-          disabled={
-            onLoading ||
-            (fetchFromGoogle &&
-              searchAuthor.length === 0 &&
-              searchTerm.length === 0)
-          }
-        >
-          <SlMagnifier />
-        </button>
+        <div className="btn-container">
+          <button
+            type="submit"
+            className="submit-btn"
+            onClick={(e) => onSubmit(e)}
+            disabled={onLoading}
+          >
+            <SlMagnifier />
+          </button>
+          <button
+            type="button"
+            className="reset-btn"
+            onClick={() => resetSearch()}
+          >
+            <SlClose />
+          </button>
+        </div>
       </form>
     </Wrapper>
   );
@@ -126,7 +142,16 @@ const Wrapper = styled.div`
     }
   }
 
-  .submit-btn {
+  .btn-container {
+    display: flex;
+    width: fit-content;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .submit-btn,
+  .reset-btn {
     cursor: pointer;
     width: fit-content;
     margin: 0 auto;
@@ -169,9 +194,22 @@ const Wrapper = styled.div`
       }
     }
 
-    .submit-btn {
+    .btn-container {
+      gap: 0;
+    }
+
+    .reset-btn {
       border-top-right-radius: 15px;
       border-bottom-right-radius: 15px;
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+      padding: 0 1rem;
+    }
+
+    .submit-btn {
+      border-right: solid 2px salmon;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
       border-top-left-radius: 0;
       padding: 0 1rem;
