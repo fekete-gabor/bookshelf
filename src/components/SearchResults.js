@@ -17,7 +17,7 @@ const SearchResults = () => {
     openModal,
     allBooks,
     fetchSingleBookFromGoogle,
-    fetchAllFavouriteBooks,
+    fetchUniqueIDs,
     createBookPayload,
     removeFromFavourite,
     changeToAddButton,
@@ -33,7 +33,7 @@ const SearchResults = () => {
   }, []);
 
   useEffect(() => {
-    fetchAllFavouriteBooks();
+    fetchUniqueIDs();
     // eslint-disable-next-line
   }, []);
 
