@@ -11,7 +11,7 @@ const SingleBook = () => {
     isLoading,
     isError,
     fetchSingleBookFromGoogle,
-    fetchAllFavouriteBooks,
+    fetchUniqueIDs,
     singleBook,
   } = useAppContext();
 
@@ -25,7 +25,7 @@ const SingleBook = () => {
 
   const fetchBooks = async (id) => {
     try {
-      await fetchAllFavouriteBooks();
+      await fetchUniqueIDs();
       await fetchSingleBookFromGoogle(id);
     } catch (err) {
       console.log(err);
