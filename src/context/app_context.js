@@ -31,11 +31,19 @@ import {
   FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
   FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
   FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  FETCH_ALL_CATEGORY_BTNS,
+  FETCH_ALL_NOTES,
+  DELETE_CATEGORY_BTN,
+  DELETE_NOTE,
+  RATE_BOOK,
   CHANGE_CATEGORY,
   SHOW_FORM,
   HIDE_FORM,
   EDIT_INPUT,
   STOP_EDITING,
+  FETCH_ALL_IDS_FROM_MONGODB_PENDING,
+  FETCH_ALL_IDS_FROM_MONGODB_SUCCESSFUL,
+  FETCH_ALL_IDS_FROM_MONGODB_REJECTED,
   CHANGE_FAVOURITE_ICON_ON_LOAD,
   ADD_FAVOURITE_ICON,
   REMOVE_FAVOURITE_ICON,
@@ -272,6 +280,21 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchUniqueIDs = async () => {
+    dispatch({ type: FETCH_ALL_IDS_FROM_MONGODB_PENDING });
+    try {
+      const response = await axios.get(`/api/v1/bookshelf/getUniqueIDs`);
+      const { allUniqueIDs } = await response.data;
+      dispatch({
+        type: FETCH_ALL_IDS_FROM_MONGODB_SUCCESSFUL,
+        payload: allUniqueIDs,
+      });
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: FETCH_ALL_IDS_FROM_MONGODB_REJECTED });
+    }
+  };
+
   const fetchSingleBookFromMongoDB = async (id) => {
     dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING });
     try {
@@ -318,7 +341,7 @@ export const AppProvider = ({ children }) => {
     try {
       const response = await axios(`/api/v1/edit/getAllCategories/${id}`);
       const { categories } = await response.data;
-      dispatch({ type: "fetch_categories", payload: categories });
+      dispatch({ type: FETCH_ALL_CATEGORY_BTNS, payload: categories });
     } catch (error) {
       console.log(error);
     }
@@ -330,7 +353,7 @@ export const AppProvider = ({ children }) => {
         `/api/v1/edit/getAllNotes/${id}?category=${category}`
       );
       const { inputs } = await response.data;
-      dispatch({ type: "aaa", payload: inputs });
+      dispatch({ type: FETCH_ALL_NOTES, payload: inputs });
     } catch (error) {
       console.log(error);
     }
@@ -346,7 +369,7 @@ export const AppProvider = ({ children }) => {
         `/api/v1/edit/deleteCategory/${id}?category=${category}`
       );
       const { categories } = await response.data;
-      dispatch({ type: "dsa", payload: categories });
+      dispatch({ type: DELETE_CATEGORY_BTN, payload: categories });
       alertMessages("success", response.data.msg);
     } catch (error) {
       console.log(error);
@@ -371,7 +394,7 @@ export const AppProvider = ({ children }) => {
         `/api/v1/edit/${bookID}?id=${id}&category=${category}`
       );
       const { inputs } = await response.data;
-      dispatch({ type: "ddd", payload: inputs });
+      dispatch({ type: DELETE_NOTE, payload: inputs });
       alertMessages("success", response.data.msg);
     } catch (error) {
       console.log(error);
@@ -384,7 +407,7 @@ export const AppProvider = ({ children }) => {
         `/api/v1/bookshelf/rateBook/${id}?index=${index}`
       );
       const { stars } = await response.data;
-      dispatch({ type: "2", payload: stars });
+      dispatch({ type: RATE_BOOK, payload: stars });
       alertMessages("success", response.data.msg);
     } catch (error) {
       console.log(error);
@@ -410,7 +433,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     findAllFavouritedBooks();
     // eslint-disable-next-line
-  }, [state.allBooks, state.allFavouriteBooks]);
+  }, [state.allBooks, state.allFavouriteBookIDs]);
 
   useEffect(() => {
     saveBookPayload();
@@ -445,6 +468,7 @@ export const AppProvider = ({ children }) => {
         removeFromFavourite,
         fetchAllFavouriteBooks,
         fetchSingleBookFromMongoDB,
+        fetchUniqueIDs,
         changeToAddButton,
         changeToRemoveButton,
         getAllCategories,
