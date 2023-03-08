@@ -245,10 +245,10 @@ const app_reducer = (state, action) => {
     } = data;
     const image = data?.imageLinks?.thumbnail;
 
-    const favouriteIDs =
-      state.allFavouriteBooks && state.allFavouriteBooks.map((book) => book.id);
-    const book = favouriteIDs && favouriteIDs.find((bookID) => bookID === id);
-    const favourite = book ? true : false;
+    const temp =
+      state.allFavouriteBookIDs &&
+      state.allFavouriteBookIDs.find((bookID) => bookID === id);
+    const favourite = temp ? true : false;
 
     return {
       ...state,
@@ -296,14 +296,13 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === FETCH_ALL_BOOKS_FROM_MONGODB_SUCCESSFUL) {
-    const { books, numberOfPages, allUniqueIDs } = action.payload;
+    const { books, numberOfPages } = action.payload;
 
     return {
       ...state,
       isLoading: false,
       isError: false,
       allFavouriteBooks: books,
-      allFavouriteBookIDs: allUniqueIDs,
       numberOfPages,
     };
   }
@@ -350,20 +349,17 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === CHANGE_FAVOURITE_ICON_ON_LOAD) {
-    const favouriteIDs = state.allFavouriteBookIDs && [
-      ...new Set(state.allFavouriteBookIDs.map((id) => id)),
-    ];
-
-    // eslint-disable-next-line
-    state.allBooks.map((book) => {
-      const findFavourite =
-        favouriteIDs && favouriteIDs.find((id) => id === book.id);
-
-      book.volumeInfo = {
-        ...book.volumeInfo,
-        favourite: findFavourite ? true : false,
-      };
-    });
+    for (let i = 0; i < state.allBooks.length; i++) {
+      let temp;
+      state.allFavouriteBookIDs.find((id) => {
+        if (id === state.allBooks[i].id) {
+          temp = state.allBooks[i].volumeInfo.favourite = true;
+        } else {
+          temp = state.allBooks[i].volumeInfo.favourite = false;
+        }
+        return temp;
+      });
+    }
 
     return { ...state };
   }
