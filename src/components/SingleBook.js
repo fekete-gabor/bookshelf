@@ -7,13 +7,8 @@ import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const SingleBook = () => {
-  const {
-    isLoading,
-    isError,
-    fetchSingleBookFromGoogle,
-    fetchUniqueIDs,
-    singleBook,
-  } = useAppContext();
+  const { isError, fetchSingleBookFromGoogle, fetchUniqueIDs, singleBook } =
+    useAppContext();
 
   const { id } = useParams();
 
@@ -36,14 +31,6 @@ const SingleBook = () => {
     fetchBooks(id);
     // eslint-disable-next-line
   }, []);
-
-  if (isLoading) {
-    return (
-      <Wrapper>
-        <h1>Loading...</h1>
-      </Wrapper>
-    );
-  }
 
   if (isError) {
     return <Navigate to="/error" />;
