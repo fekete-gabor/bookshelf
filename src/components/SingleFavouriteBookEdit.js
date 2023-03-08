@@ -204,6 +204,7 @@ const Wrapper = styled.section`
 
     .edit-title-container {
       text-align: left;
+      margin: 0;
     }
 
     .underline {
