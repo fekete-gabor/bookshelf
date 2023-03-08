@@ -1,8 +1,18 @@
+import { useEffect } from "react";
 import bg from "../assets/bg.jpg";
+import { useAppContext } from "../context/app_context";
 import { SearchForm, SearchResults } from "../components";
 import styled from "styled-components";
 
 const SearchPage = () => {
+  const { fetchAllBooksFromGoogle, fetchUniqueIDs } = useAppContext();
+
+  useEffect(() => {
+    fetchAllBooksFromGoogle();
+    fetchUniqueIDs();
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <Wrapper>
       <div
