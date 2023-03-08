@@ -212,10 +212,12 @@ export const AppProvider = ({ children }) => {
   const fetchAllBooksFromGoogle = async () => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_PENDING });
     try {
-      const url = await constructUrl();
-      const response = await axios(url);
-      const payload = await response.data.items;
-      dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL, payload });
+      if (searchAuthor || searchTerm) {
+        const url = await constructUrl();
+        const response = await axios(url);
+        const payload = await response.data.items;
+        dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL, payload });
+      }
     } catch (error) {
       dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_REJECTED, payload: error });
     }
@@ -421,14 +423,6 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     showCurrentUser();
   }, []);
-
-  useEffect(() => {
-    if (state.user.email.length > 0) {
-      fetchAllBooksFromGoogle();
-      fetchAllFavouriteBooks();
-    }
-    // eslint-disable-next-line
-  }, [state.user]);
 
   useEffect(() => {
     findAllFavouritedBooks();
