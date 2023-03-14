@@ -2,6 +2,7 @@ import { navLinks } from "../utils/navLinks";
 import axios from "axios";
 import { alertMessages } from "../utils/alertMessages";
 import {
+  AiFillPicture,
   FaBars,
   FaWindowClose,
   ImExit,
@@ -18,6 +19,7 @@ const Navbar = () => {
     isSidebar,
     openSidebar,
     closeSidebar,
+    backgroundsIsVisible,
     isModal,
     changeUserNotifications,
   } = useAppContext();
@@ -36,7 +38,7 @@ const Navbar = () => {
 
   return (
     <Wrapper className="navbar">
-      <div>
+      <div className="brand-container">
         <Link to="/" className="brand" onClick={() => closeSidebar()}>
           bookshelf_
         </Link>
@@ -51,6 +53,7 @@ const Navbar = () => {
           ) : (
             <IoIosNotifications onClick={() => changeUserNotifications()} />
           )}
+          <AiFillPicture onClick={() => backgroundsIsVisible()} />
         </div>
         <div className="logout-container">
           <p>{user.name.charAt(0).toUpperCase()}</p>
@@ -59,7 +62,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div>
+      <div className="sidebar-container">
         {!isSidebar ? (
           <FaBars className="open-icon" onClick={() => openSidebar()} />
         ) : (
@@ -87,7 +90,8 @@ const Wrapper = styled.section`
   z-index: 999;
   transition: var(--transition);
 
-  div {
+  .sidebar-container,
+  .brand-container {
     padding: 1.5rem;
   }
 
@@ -103,6 +107,12 @@ const Wrapper = styled.section`
     align-items: center;
     padding: 0;
     margin: 0;
+  }
+
+  .notification-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   .logout-container {
@@ -199,6 +209,10 @@ const Wrapper = styled.section`
           text-transform: capitalize;
         }
       }
+    }
+
+    .notification-container {
+      padding: 1.5rem;
     }
 
     .logout-container {
