@@ -17,7 +17,6 @@ import Search from "./Search";
 import SingleBookPage from "./SingleBookPage";
 import SingleFavouriteBookPage from "./SingleFavouriteBookPage";
 import MyBookshelf from "./MyBookshelf";
-import HowToUse from "./HowToUse";
 
 export {
   Landing,
@@ -32,5 +31,4 @@ export {
   SingleBookPage,
   SingleFavouriteBookPage,
   MyBookshelf,
-  HowToUse,
 };
