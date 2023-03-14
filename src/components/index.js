@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import Backgrounds from "./Backgrounds";
 import Sidebar from "./Sidebar";
 import Modal from "./Modal";
 import Footer from "./Footer";
@@ -24,9 +25,11 @@ import EditForm from "./EditForm";
 import EditSavedFields from "./EditSavedFields";
 import Login from "./Login";
 import Register from "./Register";
+import HowToUse from "./HowToUse";
 
 export {
   Navbar,
+  Backgrounds,
   Sidebar,
   Modal,
   Footer,
@@ -52,4 +55,5 @@ export {
   EditSavedFields,
   Login,
   Register,
+  HowToUse,
 };
