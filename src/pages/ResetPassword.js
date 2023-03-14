@@ -169,7 +169,7 @@ const Wrapper = styled.section`
     }
 
     .form-container {
-      background: whitesmoke;
+      background: transparent;
       h3 {
         color: black;
       }
