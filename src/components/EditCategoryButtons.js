@@ -22,6 +22,7 @@ const EditCategoryButtons = ({
     stopEditing,
     favouriteBookCategories,
     getNotes,
+    getAllCategories,
   } = useAppContext();
 
   let message;
@@ -61,6 +62,7 @@ const EditCategoryButtons = ({
       }
 
       await deleteCategory(id, categoryName);
+      await getAllCategories(id);
       await changeCategory("");
     } catch (error) {
       console.log(error);
@@ -70,6 +72,7 @@ const EditCategoryButtons = ({
   useEffect(() => {
     if (allActions.deleteCategory) {
       deleteCategory(id, categoryName);
+      getAllCategories(id);
       changeCategory("");
     }
     // eslint-disable-next-line
