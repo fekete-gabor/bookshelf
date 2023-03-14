@@ -22,14 +22,27 @@ const Landing = () => {
       <div className="img-container">
         <img src={bg} alt="main" />
       </div>
-      <div className="form-container">
-        {form === "login" ? (
-          <Login form={form} setForm={setForm} />
-        ) : (
-          <Register form={form} setForm={setForm} />
-        )}
-        <Link to="/forgot-password">Forgot your password?</Link>
-      </div>
+      <article>
+        <div className="desc-container">
+          <h3>Welcome to bookshelf_</h3>
+          <p>
+            If you are like me, who tends to forget what I was reading 2 pages
+            ago, this app is for you!
+          </p>
+          <p>
+            Add your favourite books to your shelf. Afterwards you can create
+            custom categories & notes.
+          </p>
+        </div>
+        <div className="form-container">
+          {form === "login" ? (
+            <Login form={form} setForm={setForm} />
+          ) : (
+            <Register form={form} setForm={setForm} />
+          )}
+          <Link to="/forgot-password">Forgot your password?</Link>
+        </div>
+      </article>
     </Wrapper>
   );
 };
@@ -73,7 +86,40 @@ const Wrapper = styled.section`
     }
   }
 
+  article {
+    display: grid;
+    grid-template-rows: repeat(2, 0.5fr);
+    height: 100%;
+    max-width: 500px;
+    gap: 1rem;
+    z-index: 1;
+  }
+
+  .desc-container {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0rem;
+    text-align: center;
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55));
+    z-index: 1;
+    border-radius: 15px;
+    gap: 1rem;
+    h3,
+    p {
+      color: whitesmoke;
+    }
+    p {
+      font-size: 1.2rem;
+    }
+  }
+
   .form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     height: fit-content;
     padding: 2rem;
     border-radius: 15px;
@@ -115,7 +161,18 @@ const Wrapper = styled.section`
     border: solid 0.5px #222;
   }
 
-  @media screen and (min-width: 950px) {
+  @media screen and (min-width: 350px) {
+    article {
+      gap: 2rem;
+    }
+
+    .desc-container {
+      padding: 2rem 1rem;
+      gap: 2rem;
+    }
+  }
+
+  @media screen and (min-width: 1000px) {
     grid-template-columns: 60% 40%;
     place-content: unset;
 
@@ -123,8 +180,23 @@ const Wrapper = styled.section`
       position: unset;
     }
 
+    article {
+      height: fit-content;
+    }
+
+    .desc-container {
+      background: transparent;
+      box-shadow: 5px 5px 1px plum;
+      h3,
+      p {
+        color: black;
+      }
+    }
+
     .form-container {
-      background: whitesmoke;
+      height: 365px;
+      background: transparent;
+      box-shadow: 5px 5px 1px dodgerblue;
       h3 {
         color: black;
       }
