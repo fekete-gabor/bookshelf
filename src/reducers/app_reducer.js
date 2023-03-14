@@ -51,12 +51,13 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === FETCH_CURRENT_USER_SUCCESSFUL) {
-    const { name, notification, email } = action.payload;
+    const { name, notification, email, backgroundIndex } = action.payload;
     return {
       ...state,
       isLoading: false,
       isError: false,
       user: { name, email },
+      bgIndex: backgroundIndex,
       isModal: { ...state.isModal, notification },
     };
   }
@@ -193,6 +194,15 @@ const app_reducer = (state, action) => {
         },
       },
     };
+  }
+
+  if (action.type === "11") {
+    const { showBackgrounds } = state;
+    return { ...state, showBackgrounds: !showBackgrounds };
+  }
+
+  if (action.type === "a") {
+    return { ...state, bgIndex: action.payload };
   }
 
   if (action.type === CHANGE_USER_NOTIFICATION) {
@@ -351,14 +361,17 @@ const app_reducer = (state, action) => {
   if (action.type === CHANGE_FAVOURITE_ICON_ON_LOAD) {
     for (let i = 0; i < state.allBooks.length; i++) {
       let temp;
-      state.allFavouriteBookIDs.find((id) => {
-        if (id === state.allBooks[i].id) {
-          temp = state.allBooks[i].volumeInfo.favourite = true;
-        } else {
-          temp = state.allBooks[i].volumeInfo.favourite = false;
-        }
-        return temp;
-      });
+
+      state.allFavouriteBookIDs.length !== 0
+        ? state.allFavouriteBookIDs.find((id) => {
+            if (id === state.allBooks[i].id) {
+              temp = state.allBooks[i].volumeInfo.favourite = true;
+            } else {
+              temp = state.allBooks[i].volumeInfo.favourite = false;
+            }
+            return temp;
+          })
+        : (temp = state.allBooks[i].volumeInfo.favourite = false);
     }
 
     return { ...state };
