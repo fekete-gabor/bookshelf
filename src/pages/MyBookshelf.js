@@ -1,13 +1,18 @@
-import bg from "../assets/bg.jpg";
+import bgArray from "../utils/bgs";
+import { useAppContext } from "../context/app_context";
 import { SearchForm, SearchFavouriteResults } from "../components";
 import styled from "styled-components";
 
 const MyBookshelfPage = () => {
+  const { bgIndex } = useAppContext();
+
   return (
     <Wrapper>
       <div
         className="bg"
-        style={{ background: `url(${bg}) center/cover no-repeat` }}
+        style={{
+          background: `url(${bgArray[bgIndex]}) center/cover no-repeat`,
+        }}
       ></div>
       <SearchForm fetchFromGoogle={false} />
       <SearchFavouriteResults />
