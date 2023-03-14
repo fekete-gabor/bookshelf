@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import bg from "../assets/bg.jpg";
+import bgArray from "../utils/bgs";
 import { useAppContext } from "../context/app_context";
 import { SearchForm, SearchResults } from "../components";
 import styled from "styled-components";
 
 const SearchPage = () => {
-  const { fetchAllBooksFromGoogle, fetchUniqueIDs } = useAppContext();
+  const { fetchAllBooksFromGoogle, fetchUniqueIDs, bgIndex } = useAppContext();
 
   useEffect(() => {
     fetchAllBooksFromGoogle();
@@ -17,7 +17,9 @@ const SearchPage = () => {
     <Wrapper>
       <div
         className="bg"
-        style={{ background: `url(${bg}) center/cover no-repeat` }}
+        style={{
+          background: `url(${bgArray[bgIndex]}) center/cover no-repeat`,
+        }}
       ></div>
       <SearchForm fetchFromGoogle={true} />
       <SearchResults />
