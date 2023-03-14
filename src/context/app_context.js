@@ -70,6 +70,8 @@ const initialState = {
     name: "",
     email: "",
   },
+  bgIndex: null,
+  showBackgrounds: false,
   allBooks: [],
   singleBook: {
     id: "",
@@ -100,7 +102,7 @@ const initialState = {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [searchAuthor, setSearchAuthor] = useState("mark+lawrence");
+  const [searchAuthor, setSearchAuthor] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [maxResults, setMaxResults] = useState(10);
   const [page, setPage] = useState(1);
@@ -165,6 +167,23 @@ export const AppProvider = ({ children }) => {
 
   const closeModal = () => {
     dispatch({ type: CLOSE_MODAL });
+  };
+
+  const backgroundsIsVisible = () => {
+    dispatch({ type: "11" });
+  };
+
+  const changeBackgroundIndex = async (index) => {
+    try {
+      const { user } = state;
+      const url = `/api/v1/auth/changeBackgroundIndex`;
+      const payload = { email: user.email, index };
+      const response = await axios.patch(url, payload);
+      const { backgroundIndex } = await response.data;
+      dispatch({ type: "a", payload: backgroundIndex });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const changeUserNotifications = async () => {
@@ -323,7 +342,7 @@ export const AppProvider = ({ children }) => {
   // CHANGE FAVOURITE BOOK'S ICONS
   // **************
 
-  const findAllFavouritedBooks = () => {
+  const findAllFavouriteBooks = () => {
     dispatch({ type: CHANGE_FAVOURITE_ICON_ON_LOAD });
   };
 
@@ -425,7 +444,7 @@ export const AppProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    findAllFavouritedBooks();
+    findAllFavouriteBooks();
     // eslint-disable-next-line
   }, [state.allBooks, state.allFavouriteBookIDs]);
 
@@ -446,6 +465,8 @@ export const AppProvider = ({ children }) => {
         openModal,
         runModalFunctions,
         closeModal,
+        backgroundsIsVisible,
+        changeBackgroundIndex,
         changeUserNotifications,
         maxResults,
         searchTerm,
