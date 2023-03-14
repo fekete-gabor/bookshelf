@@ -6,6 +6,7 @@ import {
   AiOutlineHeart,
   AiFillStar,
   AiOutlineStar,
+  AiFillPicture,
 } from "react-icons/ai";
 import { MdOutlineOpenInNew } from "react-icons/md";
 import { ImExit } from "react-icons/im";
@@ -26,6 +27,7 @@ export {
   AiOutlineHeart,
   AiFillStar,
   AiOutlineStar,
+  AiFillPicture,
   MdOutlineOpenInNew,
   ImExit,
   IoIosNotificationsOff,
