@@ -1,9 +1,10 @@
+import { HowToUse } from "../components";
 import styled from "styled-components";
 
 const Home = () => {
   return (
     <Wrapper>
-      <h2>home</h2>
+      <HowToUse />
     </Wrapper>
   );
 };
