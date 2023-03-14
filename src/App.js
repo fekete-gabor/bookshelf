@@ -11,7 +11,6 @@ import {
   SingleBookPage,
   SingleFavouriteBookPage,
   MyBookshelf,
-  HowToUse,
 } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,7 +38,6 @@ const App = () => {
                 path="/my-bookshelf/:id"
                 element={<SingleFavouriteBookPage />}
               />
-              <Route path="/how-to-use" element={<HowToUse />} />
             </Route>
           </Route>
           {/* END OF PROTECTED ROUTES */}
