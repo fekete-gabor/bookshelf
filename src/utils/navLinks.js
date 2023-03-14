@@ -16,11 +16,6 @@ const links = [
     text: "my bookshelf",
     url: "/my-bookshelf",
   },
-  {
-    id: 4,
-    text: "how to use",
-    url: "/how-to-use",
-  },
 ];
 
 export const navLinks = links.map((link) => {
