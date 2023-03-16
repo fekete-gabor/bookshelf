@@ -11,6 +11,9 @@ import bg10 from "../assets/bg10.jpg";
 import bg11 from "../assets/bg11.jpg";
 import bg12 from "../assets/bg12.jpg";
 import bg13 from "../assets/bg13.jpg";
+import bg14 from "../assets/bg14.jpg";
+import bg15 from "../assets/bg15.jpg";
+import bg16 from "../assets/bg16.jpg";
 
 const tempArray = [
   bg1,
@@ -26,6 +29,9 @@ const tempArray = [
   bg11,
   bg12,
   bg13,
+  bg14,
+  bg15,
+  bg16,
 ];
 
 export default tempArray;
