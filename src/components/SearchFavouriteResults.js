@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import notFound from "../assets/404.png";
 import { AiFillHeart, MdOutlineOpenInNew } from "../utils/icons";
 import { Link } from "react-router-dom";
+import { Spinner } from "./index";
 import { useAppContext } from "../context/app_context";
 import { alertMessages } from "../utils/alertMessages";
 import styled from "styled-components";
@@ -77,7 +78,7 @@ const SearchFavouriteResults = () => {
   if (isLoading) {
     return (
       <Wrapper>
-        <h2>Loading...</h2>
+        <Spinner />
       </Wrapper>
     );
   }
@@ -246,7 +247,7 @@ const Wrapper = styled.div`
       border-radius: 15px;
       border: none;
       color: whitesmoke;
-      margin: 0 1rem;
+      margin: 0 0.25rem;
       transition: var(--transition);
       &:hover {
         background: var(--primary-clr-2);
