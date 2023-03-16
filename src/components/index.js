@@ -3,6 +3,7 @@ import Backgrounds from "./Backgrounds";
 import Sidebar from "./Sidebar";
 import Modal from "./Modal";
 import Footer from "./Footer";
+import Spinner from "./Spinner";
 import Error from "./Error";
 import ScrollTop from "./ScrollTop";
 import CustomInput from "./CustomInput";
@@ -33,6 +34,7 @@ export {
   Sidebar,
   Modal,
   Footer,
+  Spinner,
   Error,
   ScrollTop,
   CustomInput,
