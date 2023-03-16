@@ -1,14 +1,19 @@
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { SingleBookButtons, SingleBookDescriptions } from "./index";
+import { SingleBookButtons, SingleBookDescriptions, Spinner } from "./index";
 import notFound from "../assets/404.png";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/app_context";
 import styled from "styled-components";
 
 const SingleBook = () => {
-  const { isError, fetchSingleBookFromGoogle, fetchUniqueIDs, singleBook } =
-    useAppContext();
+  const {
+    isError,
+    isLoading,
+    fetchSingleBookFromGoogle,
+    fetchUniqueIDs,
+    singleBook,
+  } = useAppContext();
 
   const { id } = useParams();
 
@@ -34,6 +39,14 @@ const SingleBook = () => {
 
   if (isError) {
     return <Navigate to="/error" />;
+  }
+
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <Spinner />
+      </Wrapper>
+    );
   }
 
   return (
