@@ -8,15 +8,15 @@ const HowToUse = () => {
   if (!mediaQuery) {
     return (
       <Wrapper>
-        <div className="">
+        <div>
           <h2>how to use</h2>
         </div>
-        <div className="">
+        <div>
           {array.map((item) => {
             const { id, img, text } = item;
 
             return (
-              <div className="q sm-border" key={id}>
+              <div className="container sm-border" key={id}>
                 <article>
                   <h3>step {id}</h3>
                   <p>{text}</p>
@@ -34,15 +34,15 @@ const HowToUse = () => {
 
   return (
     <Wrapper>
-      <div className="">
+      <div className="title">
         <h2>how to use</h2>
       </div>
-      <div className="">
+      <div>
         {array.map((item) => {
           const { id, img, text } = item;
           if (id % 2 === 0) {
             return (
-              <div className="q even" key={id}>
+              <div className="container even" key={id}>
                 <header>
                   <img src={img} alt={text} />
                 </header>
@@ -54,7 +54,7 @@ const HowToUse = () => {
             );
           } else {
             return (
-              <div className="q odd" key={id}>
+              <div className="container odd" key={id}>
                 <article>
                   <h3>step {id}</h3>
                   <p>{text}</p>
@@ -73,13 +73,13 @@ const HowToUse = () => {
 };
 
 const Wrapper = styled.section`
-  .border {
-    padding: 1rem 0;
-    margin: 0 auto;
-    width: 75vw;
-    box-shadow: -3px 3px 3px darkgoldenrod;
+  .title {
+    padding: 4rem 0 7rem 0;
+    text-align: center;
+    text-decoration: underline hotpink;
   }
-  .q {
+
+  .container {
     width: 95vw;
     display: grid;
     margin: 0rem auto;
@@ -97,6 +97,13 @@ const Wrapper = styled.section`
     }
   }
 
+  .border {
+    padding: 1rem 0;
+    margin: 0 auto;
+    width: 75vw;
+    box-shadow: -3px 3px 3px darkgoldenrod;
+  }
+
   .sm-border {
     text-align: center;
     box-shadow: 3px 3px 3px dodgerblue;
@@ -104,7 +111,7 @@ const Wrapper = styled.section`
   }
 
   @media screen and (min-width: 1000px) {
-    .q,
+    .container,
     .border {
       width: 100%;
       max-width: 75vw;
