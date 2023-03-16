@@ -78,9 +78,20 @@ const SearchForm = ({ fetchFromGoogle }) => {
         <div className="btn-container">
           <button
             type="submit"
-            className="submit-btn"
+            className={
+              fetchFromGoogle &&
+              searchAuthor.length === 0 &&
+              searchTerm.length === 0
+                ? "disabled submit-btn"
+                : "submit-btn"
+            }
             onClick={(e) => onSubmit(e)}
-            disabled={onLoading}
+            disabled={
+              onLoading ||
+              (fetchFromGoogle &&
+                searchAuthor.length === 0 &&
+                searchTerm.length === 0)
+            }
           >
             <SlMagnifier />
           </button>
@@ -174,6 +185,7 @@ const Wrapper = styled.div`
   }
 
   .disabled {
+    cursor: not-allowed;
     color: white;
     background: gray;
     opacity: 0.5;
