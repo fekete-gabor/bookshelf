@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import notFound from "../assets/404.png";
 import { Link, Navigate } from "react-router-dom";
+import { Spinner } from "./index";
 import {
   AiFillHeart,
   AiOutlineHeart,
@@ -12,6 +13,7 @@ import styled from "styled-components";
 
 const SearchResults = () => {
   const {
+    isLoading,
     isError,
     isModal,
     openModal,
@@ -79,6 +81,14 @@ const SearchResults = () => {
 
   if (isError) {
     return <Navigate to="/error" />;
+  }
+
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <Spinner />
+      </Wrapper>
+    );
   }
 
   if (!allBooks) {
