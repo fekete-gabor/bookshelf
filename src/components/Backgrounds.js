@@ -8,22 +8,18 @@ import { gsap } from "gsap/dist/gsap";
 const Backgrounds = () => {
   const { backgroundsIsVisible, showBackgrounds, changeBackgroundIndex } =
     useAppContext();
-  const container = document.querySelector(".main-bg-container");
-
-  // additional if statements to prevent console warning
-  useEffect(() => {
-    if (container) gsap.set(container, { x: "+100%" });
-  }, [container]);
 
   useEffect(() => {
-    if (container) {
-      if (showBackgrounds) {
-        gsap.to(container, { x: "0%" });
-      } else {
-        gsap.to(container, { x: "+100%" });
-      }
+    gsap.set(".main-bg-container", { x: "+100%" });
+  }, []);
+
+  useEffect(() => {
+    if (showBackgrounds) {
+      gsap.to(".main-bg-container", { x: "0%" });
+    } else {
+      gsap.to(".main-bg-container", { x: "+100%" });
     }
-  }, [container, showBackgrounds]);
+  }, [showBackgrounds]);
 
   const handleChange = async (i) => {
     try {
@@ -68,6 +64,7 @@ const Wrapper = styled.div`
   top: 0;
   left: 0;
   z-index: 999;
+  overflow-y: scroll;
 
   .icon-container {
     cursor: pointer;
@@ -111,7 +108,7 @@ const Wrapper = styled.div`
 
   .img-container {
     width: 100%;
-    height: 100%;
+    height: 270px;
     overflow: hidden;
     border-radius: 15px;
     img {
