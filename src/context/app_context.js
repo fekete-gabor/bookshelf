@@ -441,7 +441,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     showCurrentUser();
-  }, []);
+  }, [state.user.email]);
 
   useEffect(() => {
     findAllFavouriteBooks();
