@@ -37,10 +37,8 @@ const Login = ({ form, setForm }) => {
     e.preventDefault();
     try {
       const response = await axios.post("/api/v1/auth/login", user);
-      const { name, notification } = response.data.user;
-      const { email } = user;
-
-      await saveUser({ name, notification, email });
+      const { name, email, notification, backgroundIndex } = response.data.user;
+      await saveUser({ name, email, notification, backgroundIndex });
       alertMessages("success", `Welcome back ${name}!`);
       setUser({ email: "", password: "" });
       navigateHome();
