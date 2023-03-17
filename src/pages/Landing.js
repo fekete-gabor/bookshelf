@@ -30,8 +30,8 @@ const Landing = () => {
             ago, this app is for you!
           </p>
           <p>
-            Add your favourite books to your shelf. Afterwards you can create
-            custom categories & notes.
+            Add your favourite books to your shelf, and create custom categories
+            & notes.
           </p>
         </div>
         <div className="form-container">
