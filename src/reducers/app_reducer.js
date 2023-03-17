@@ -81,11 +81,12 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === SAVE_USER) {
-    const { name, notification, email } = action.payload;
+    const { name, email, notification, backgroundIndex } = action.payload;
     return {
       ...state,
       user: { name, email },
       isModal: { ...state.isModal, notification },
+      bgIndex: backgroundIndex,
     };
   }
 
