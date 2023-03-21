@@ -10,9 +10,9 @@ const SingleFavouriteBookRating = ({ id }) => {
   const [msg, setMsg] = useState("not rated yet");
 
   const handleChange = async (e) => {
-    const index = e.target.parentElement.dataset.index;
+    const rating = e.target.parentElement.dataset.index;
 
-    await rateBook(id, index);
+    await rateBook(id, rating);
   };
 
   useEffect(() => {
