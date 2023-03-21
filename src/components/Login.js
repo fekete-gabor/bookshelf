@@ -38,7 +38,7 @@ const Login = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${APIUrl}/api/v1/auth/login`, user);
+      const response = await axios.post(`/api/v1/auth/login`, user);
       const { name, email, notification, backgroundIndex } = response.data.user;
       await saveUser({ name, email, notification, backgroundIndex });
       alertMessages("success", `Welcome back ${name}!`);
