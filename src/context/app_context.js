@@ -110,11 +110,12 @@ export const AppProvider = ({ children }) => {
   let path;
   const baseUrl = process.env.REACT_APP_BASE_URL;
   const key = process.env.REACT_APP_API_KEY;
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   const showCurrentUser = async () => {
     dispatch({ type: FETCH_CURRENT_USER_PENDING });
     try {
-      const response = await axios("/api/v1/auth/showCurrentUser");
+      const response = await axios(`${APIUrl}/api/v1/auth/showCurrentUser`);
       const payload = await response.data.user;
       dispatch({ type: FETCH_CURRENT_USER_SUCCESSFUL, payload });
     } catch (error) {
@@ -125,10 +126,7 @@ export const AppProvider = ({ children }) => {
   const verifyEmail = async (payload) => {
     dispatch({ type: VERIFY_EMAIL_PENDING });
     try {
-      await axios.post(
-        "http://localhost:5000/api/v1/auth/verifyEmail",
-        payload
-      );
+      await axios.post(`${APIUrl}/api/v1/auth/verifyEmail`, payload);
       dispatch({ type: VERIFY_EMAIL_SUCCESSFUL });
       alertMessages("success", "email successfully verified!");
     } catch (error) {
@@ -176,7 +174,7 @@ export const AppProvider = ({ children }) => {
   const changeBackgroundIndex = async (index) => {
     try {
       const { user } = state;
-      const url = `/api/v1/auth/changeBackgroundIndex`;
+      const url = `${APIUrl}/api/v1/auth/changeBackgroundIndex`;
       const payload = { email: user.email, index };
       const response = await axios.patch(url, payload);
       const { backgroundIndex } = await response.data;
@@ -189,7 +187,7 @@ export const AppProvider = ({ children }) => {
   const changeUserNotifications = async () => {
     const { user, isModal } = state;
     const payload = { email: user.email, notification: isModal.notification };
-    const url = "/api/v1/auth/changeUserNotifications";
+    const url = "${APIUrl}/api/v1/auth/changeUserNotifications";
     try {
       const response = await axios.patch(url, payload);
       const { message, notificationStatus } = await response.data;
@@ -269,7 +267,7 @@ export const AppProvider = ({ children }) => {
     try {
       if (state.bookPayload) {
         const { bookPayload } = state;
-        const url = "/api/v1/bookshelf";
+        const url = `${APIUrl}/api/v1/bookshelf`;
         await axios.post(url, bookPayload);
       }
     } catch (error) {
@@ -285,7 +283,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
     try {
       const response = await axios(
-        `/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`
+        `${APIUrl}/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`
       );
       const payload = await response.data;
       dispatch({
@@ -304,7 +302,9 @@ export const AppProvider = ({ children }) => {
   const fetchUniqueIDs = async () => {
     dispatch({ type: FETCH_ALL_IDS_FROM_MONGODB_PENDING });
     try {
-      const response = await axios.get(`/api/v1/bookshelf/getUniqueIDs`);
+      const response = await axios.get(
+        `${APIUrl}/api/v1/bookshelf/getUniqueIDs`
+      );
       const { allUniqueIDs } = await response.data;
       dispatch({
         type: FETCH_ALL_IDS_FROM_MONGODB_SUCCESSFUL,
@@ -319,7 +319,7 @@ export const AppProvider = ({ children }) => {
   const fetchSingleBookFromMongoDB = async (id) => {
     dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING });
     try {
-      const response = await axios(`/api/v1/bookshelf/${id}`);
+      const response = await axios(`${APIUrl}/api/v1/bookshelf/${id}`);
       const payload = await response.data.singleBook;
       dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL, payload });
     } catch (error) {
@@ -332,7 +332,7 @@ export const AppProvider = ({ children }) => {
 
   const removeFromFavourite = async (id) => {
     try {
-      await axios.delete(`/api/v1/bookshelf/${id}`);
+      await axios.delete(`${APIUrl}/api/v1/bookshelf/${id}`);
     } catch (error) {
       dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED, payload: error });
     }
@@ -360,7 +360,9 @@ export const AppProvider = ({ children }) => {
 
   const getAllCategories = async (id) => {
     try {
-      const response = await axios(`/api/v1/edit/getAllCategories/${id}`);
+      const response = await axios(
+        `${APIUrl}/api/v1/edit/getAllCategories/${id}`
+      );
       const { categories } = await response.data;
       dispatch({ type: FETCH_ALL_CATEGORY_BTNS, payload: categories });
     } catch (error) {
@@ -371,7 +373,7 @@ export const AppProvider = ({ children }) => {
   const getNotes = async (id, category) => {
     try {
       const response = await axios(
-        `/api/v1/edit/getAllNotes/${id}?category=${category}`
+        `${APIUrl}/api/v1/edit/getAllNotes/${id}?category=${category}`
       );
       const { inputs } = await response.data;
       dispatch({ type: FETCH_ALL_NOTES, payload: inputs });
@@ -387,7 +389,7 @@ export const AppProvider = ({ children }) => {
   const deleteCategory = async (id, category) => {
     try {
       const response = await axios.delete(
-        `/api/v1/edit/deleteCategory/${id}?category=${category}`
+        `${APIUrl}/api/v1/edit/deleteCategory/${id}?category=${category}`
       );
       const { categories } = await response.data;
       dispatch({ type: DELETE_CATEGORY_BTN, payload: categories });
@@ -412,7 +414,7 @@ export const AppProvider = ({ children }) => {
   const deleteInput = async (bookID, id, category) => {
     try {
       const response = await axios.delete(
-        `/api/v1/edit/${bookID}?id=${id}&category=${category}`
+        `${APIUrl}/api/v1/edit/${bookID}?id=${id}&category=${category}`
       );
       const { inputs } = await response.data;
       dispatch({ type: DELETE_NOTE, payload: inputs });
@@ -425,7 +427,7 @@ export const AppProvider = ({ children }) => {
   const rateBook = async (id, rating) => {
     try {
       const response = await axios.post(
-        `/api/v1/bookshelf/rateBook/${id}?rating=${rating}`
+        `${APIUrl}/api/v1/bookshelf/rateBook/${id}?rating=${rating}`
       );
       const { stars } = await response.data;
       dispatch({ type: RATE_BOOK, payload: stars });
