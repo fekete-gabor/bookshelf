@@ -12,6 +12,7 @@ const ResetPassword = () => {
     newPassword: "",
     confirmPassword: "",
   });
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
 
@@ -27,7 +28,7 @@ const ResetPassword = () => {
       const { newPassword, confirmPassword } = user;
       const payload = { token, email, newPassword, confirmPassword };
       const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/resetPassword",
+        `${APIUrl}/api/v1/auth/resetPassword`,
         payload
       );
       setUser({ newPassword: "", confirmPassword: "" });

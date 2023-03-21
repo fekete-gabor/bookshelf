@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 const CreateCategoryButtonsForm = ({ id }) => {
   const { getAllCategories } = useAppContext();
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   const [fieldName, setFieldName] = useState({
     name: "",
@@ -19,7 +20,7 @@ const CreateCategoryButtonsForm = ({ id }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/v1/edit/createCategory/${id}`, fieldName);
+      await axios.post(`${APIUrl}/api/v1/edit/createCategory/${id}`, fieldName);
       await getAllCategories(id);
       setFieldName({ name: "" });
     } catch (error) {

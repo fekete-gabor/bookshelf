@@ -21,6 +21,7 @@ const EditForm = ({
     categoryName,
     getNotes,
   } = useAppContext();
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   const resetInput = async () => {
     try {
@@ -48,8 +49,8 @@ const EditForm = ({
       const { status, id: editID } = isEditing;
 
       const url = !status
-        ? `/api/v1/edit/createNotes/${id}`
-        : `/api/v1/edit/${id}`;
+        ? `${APIUrl}/api/v1/edit/createNotes/${id}`
+        : `${APIUrl}/api/v1/edit/${id}`;
 
       const payload = { categoryName, inputName, richText };
 

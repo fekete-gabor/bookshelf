@@ -10,6 +10,7 @@ const ForgotPassword = () => {
   const [user, setUser] = useState({
     email: "",
   });
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   const handleChange = (e) => {
     const inputName = e.target.name;
@@ -22,7 +23,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/forgotPassword",
+        `${APIUrl}/api/v1/auth/forgotPassword`,
         user
       );
       setUser({ email: "" });

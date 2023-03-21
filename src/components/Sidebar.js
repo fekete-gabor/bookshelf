@@ -10,6 +10,7 @@ import { gsap } from "gsap/dist/gsap";
 const Sidebar = () => {
   const { removeUser, isSidebar, closeSidebar } = useAppContext();
   const mediaQuery = useMediaQuery("(min-width: 792px)");
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     if (mediaQuery) {
@@ -29,7 +30,7 @@ const Sidebar = () => {
 
   const logout = async () => {
     try {
-      const response = await axios.delete("/api/v1/auth/logout");
+      const response = await axios.delete(`${APIUrl}/api/v1/auth/logout`);
       await removeUser();
       alertMessages("success", `${response.data}`);
     } catch (error) {

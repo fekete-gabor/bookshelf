@@ -25,10 +25,11 @@ const Navbar = () => {
   } = useAppContext();
   const { notification } = isModal;
   const { removeUser } = useAppContext();
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   const logout = async () => {
     try {
-      const response = await axios.delete("/api/v1/auth/logout");
+      const response = await axios.delete(`${APIUrl}/api/v1/auth/logout`);
       await removeUser();
       alertMessages("success", `${response.data}`);
     } catch (error) {
