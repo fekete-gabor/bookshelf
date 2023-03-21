@@ -187,7 +187,7 @@ export const AppProvider = ({ children }) => {
   const changeUserNotifications = async () => {
     const { user, isModal } = state;
     const payload = { email: user.email, notification: isModal.notification };
-    const url = "${APIUrl}/api/v1/auth/changeUserNotifications";
+    const url = `${APIUrl}/api/v1/auth/changeUserNotifications`;
     try {
       const response = await axios.patch(url, payload);
       const { message, notificationStatus } = await response.data;
@@ -443,6 +443,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     showCurrentUser();
+    // eslint-disable-next-line
   }, [state.user.email]);
 
   useEffect(() => {
