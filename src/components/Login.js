@@ -7,7 +7,7 @@ import { useAppContext } from "../context/app_context";
 
 const Login = ({ form, setForm }) => {
   const { saveUser } = useAppContext();
-  // const APIUrl = process.env.REACT_APP_API_URL;
+  const APIUrl = process.env.REACT_APP_API_URL;
 
   const [user, setUser] = useState({
     email: "",
@@ -38,7 +38,7 @@ const Login = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`/api/v1/auth/login`, user);
+      const response = await axios.post(`${APIUrl}/api/v1/auth/login`, user);
       const { name, email, notification, backgroundIndex } = response.data.user;
       await saveUser({ name, email, notification, backgroundIndex });
       alertMessages("success", `Welcome back ${name}!`);
