@@ -422,10 +422,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const rateBook = async (id, index) => {
+  const rateBook = async (id, rating) => {
     try {
       const response = await axios.post(
-        `/api/v1/bookshelf/rateBook/${id}?index=${index}`
+        `/api/v1/bookshelf/rateBook/${id}?rating=${rating}`
       );
       const { stars } = await response.data;
       dispatch({ type: RATE_BOOK, payload: stars });
