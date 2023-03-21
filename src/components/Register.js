@@ -10,6 +10,8 @@ const Register = ({ form, setForm }) => {
     password: "",
   });
 
+  const APIUrl = process.env.REACT_APP_API_URL;
+
   const handleChange = (e) => {
     const inputName = e.target.name;
     const inputValue = e.target.value;
@@ -28,7 +30,7 @@ const Register = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/v1/auth/register", user);
+      const response = await axios.post(`${APIUrl}/api/v1/auth/register`, user);
       alertMessages("success", `${response.data.msg}`);
       setUser({ name: "", email: "", password: "" });
     } catch (error) {
