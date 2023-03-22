@@ -5,11 +5,21 @@ import { SearchForm, SearchResults } from "../components";
 import styled from "styled-components";
 
 const SearchPage = () => {
-  const { fetchAllBooksFromGoogle, fetchUniqueIDs, bgIndex } = useAppContext();
+  const { showCurrentUser, fetchAllBooksFromGoogle, fetchUniqueIDs, bgIndex } =
+    useAppContext();
+
+  const handleChange = async () => {
+    try {
+      await showCurrentUser();
+      await fetchAllBooksFromGoogle();
+      await fetchUniqueIDs();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    fetchAllBooksFromGoogle();
-    fetchUniqueIDs();
+    handleChange();
     // eslint-disable-next-line
   }, []);
 

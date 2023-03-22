@@ -510,7 +510,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     showCurrentUser();
     // eslint-disable-next-line
-  }, [state.user.email]);
+  }, []);
 
   useEffect(() => {
     findAllFavouriteBooks();
@@ -526,6 +526,7 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         ...state,
+        showCurrentUser,
         verifyEmail,
         saveUser,
         removeUser,
