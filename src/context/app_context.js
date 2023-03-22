@@ -486,6 +486,7 @@ export const AppProvider = ({ children }) => {
     try {
       const response = await axios.post(
         `${APIUrl}/api/v1/bookshelf/rateBook/${id}?rating=${rating}`,
+        {},
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
