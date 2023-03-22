@@ -115,9 +115,7 @@ export const AppProvider = ({ children }) => {
   const showCurrentUser = async () => {
     dispatch({ type: FETCH_CURRENT_USER_PENDING });
     try {
-      const response = await axios(`${APIUrl}/api/v1/auth/showCurrentUser`, {
-        withCredentials: true,
-      });
+      const response = await axios(`${APIUrl}/api/v1/auth/showCurrentUser`);
       const payload = await response.data.user;
       dispatch({ type: FETCH_CURRENT_USER_SUCCESSFUL, payload });
     } catch (error) {
@@ -128,9 +126,7 @@ export const AppProvider = ({ children }) => {
   const verifyEmail = async (payload) => {
     dispatch({ type: VERIFY_EMAIL_PENDING });
     try {
-      await axios.post(`${APIUrl}/api/v1/auth/verifyEmail`, payload, {
-        withCredentials: true,
-      });
+      await axios.post(`${APIUrl}/api/v1/auth/verifyEmail`, payload);
       dispatch({ type: VERIFY_EMAIL_SUCCESSFUL });
       alertMessages("success", "email successfully verified!");
     } catch (error) {
@@ -180,9 +176,7 @@ export const AppProvider = ({ children }) => {
       const { user } = state;
       const url = `${APIUrl}/api/v1/auth/changeBackgroundIndex`;
       const payload = { email: user.email, index };
-      const response = await axios.patch(url, payload, {
-        withCredentials: true,
-      });
+      const response = await axios.patch(url, payload);
       const { backgroundIndex } = await response.data;
       dispatch({ type: "a", payload: backgroundIndex });
     } catch (error) {
@@ -195,9 +189,7 @@ export const AppProvider = ({ children }) => {
     const payload = { email: user.email, notification: isModal.notification };
     const url = `${APIUrl}/api/v1/auth/changeUserNotifications`;
     try {
-      const response = await axios.patch(url, payload, {
-        withCredentials: true,
-      });
+      const response = await axios.patch(url, payload);
       const { message, notificationStatus } = await response.data;
       alertMessages("success", message);
       dispatch({ type: CHANGE_USER_NOTIFICATION, payload: notificationStatus });
@@ -276,9 +268,7 @@ export const AppProvider = ({ children }) => {
       if (state.bookPayload) {
         const { bookPayload } = state;
         const url = `${APIUrl}/api/v1/bookshelf`;
-        await axios.post(url, bookPayload, {
-          withCredentials: true,
-        });
+        await axios.post(url, bookPayload);
       }
     } catch (error) {
       console.log(error.response.data);
@@ -293,10 +283,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
     try {
       const response = await axios(
-        `${APIUrl}/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`,
-        {
-          withCredentials: true,
-        }
+        `${APIUrl}/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`
       );
       const payload = await response.data;
       dispatch({
@@ -316,10 +303,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_ALL_IDS_FROM_MONGODB_PENDING });
     try {
       const response = await axios.get(
-        `${APIUrl}/api/v1/bookshelf/getUniqueIDs`,
-        {
-          withCredentials: true,
-        }
+        `${APIUrl}/api/v1/bookshelf/getUniqueIDs`
       );
       const { allUniqueIDs } = await response.data;
       dispatch({
@@ -335,9 +319,7 @@ export const AppProvider = ({ children }) => {
   const fetchSingleBookFromMongoDB = async (id) => {
     dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING });
     try {
-      const response = await axios(`${APIUrl}/api/v1/bookshelf/${id}`, {
-        withCredentials: true,
-      });
+      const response = await axios(`${APIUrl}/api/v1/bookshelf/${id}`);
       const payload = await response.data.singleBook;
       dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL, payload });
     } catch (error) {
@@ -350,9 +332,7 @@ export const AppProvider = ({ children }) => {
 
   const removeFromFavourite = async (id) => {
     try {
-      await axios.delete(`${APIUrl}/api/v1/bookshelf/${id}`, {
-        withCredentials: true,
-      });
+      await axios.delete(`${APIUrl}/api/v1/bookshelf/${id}`);
     } catch (error) {
       dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED, payload: error });
     }
@@ -381,10 +361,7 @@ export const AppProvider = ({ children }) => {
   const getAllCategories = async (id) => {
     try {
       const response = await axios(
-        `${APIUrl}/api/v1/edit/getAllCategories/${id}`,
-        {
-          withCredentials: true,
-        }
+        `${APIUrl}/api/v1/edit/getAllCategories/${id}`
       );
       const { categories } = await response.data;
       dispatch({ type: FETCH_ALL_CATEGORY_BTNS, payload: categories });
@@ -396,10 +373,7 @@ export const AppProvider = ({ children }) => {
   const getNotes = async (id, category) => {
     try {
       const response = await axios(
-        `${APIUrl}/api/v1/edit/getAllNotes/${id}?category=${category}`,
-        {
-          withCredentials: true,
-        }
+        `${APIUrl}/api/v1/edit/getAllNotes/${id}?category=${category}`
       );
       const { inputs } = await response.data;
       dispatch({ type: FETCH_ALL_NOTES, payload: inputs });
@@ -415,10 +389,7 @@ export const AppProvider = ({ children }) => {
   const deleteCategory = async (id, category) => {
     try {
       const response = await axios.delete(
-        `${APIUrl}/api/v1/edit/deleteCategory/${id}?category=${category}`,
-        {
-          withCredentials: true,
-        }
+        `${APIUrl}/api/v1/edit/deleteCategory/${id}?category=${category}`
       );
       const { categories } = await response.data;
       dispatch({ type: DELETE_CATEGORY_BTN, payload: categories });
@@ -443,10 +414,7 @@ export const AppProvider = ({ children }) => {
   const deleteInput = async (bookID, id, category) => {
     try {
       const response = await axios.delete(
-        `${APIUrl}/api/v1/edit/${bookID}?id=${id}&category=${category}`,
-        {
-          withCredentials: true,
-        }
+        `${APIUrl}/api/v1/edit/${bookID}?id=${id}&category=${category}`
       );
       const { inputs } = await response.data;
       dispatch({ type: DELETE_NOTE, payload: inputs });
@@ -459,10 +427,7 @@ export const AppProvider = ({ children }) => {
   const rateBook = async (id, rating) => {
     try {
       const response = await axios.post(
-        `${APIUrl}/api/v1/bookshelf/rateBook/${id}?rating=${rating}`,
-        {
-          withCredentials: true,
-        }
+        `${APIUrl}/api/v1/bookshelf/rateBook/${id}?rating=${rating}`
       );
       const { stars } = await response.data;
       dispatch({ type: RATE_BOOK, payload: stars });
