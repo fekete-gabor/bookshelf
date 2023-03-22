@@ -26,6 +26,8 @@ import {
   FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
   FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
   FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  BACKGROUND_IS_VISIBLE,
+  CHANGE_BACKGROUND_INDEX,
   FETCH_ALL_CATEGORY_BTNS,
   FETCH_ALL_NOTES,
   DELETE_CATEGORY_BTN,
@@ -197,12 +199,12 @@ const app_reducer = (state, action) => {
     };
   }
 
-  if (action.type === "11") {
+  if (action.type === BACKGROUND_IS_VISIBLE) {
     const { showBackgrounds } = state;
     return { ...state, showBackgrounds: !showBackgrounds };
   }
 
-  if (action.type === "a") {
+  if (action.type === CHANGE_BACKGROUND_INDEX) {
     return { ...state, bgIndex: action.payload };
   }
 

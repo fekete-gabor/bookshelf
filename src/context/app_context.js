@@ -31,6 +31,8 @@ import {
   FETCH_SINGLE_BOOK_FROM_MONGODB_PENDING,
   FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL,
   FETCH_SINGLE_BOOK_FROM_MONGODB_REJECTED,
+  BACKGROUND_IS_VISIBLE,
+  CHANGE_BACKGROUND_INDEX,
   FETCH_ALL_CATEGORY_BTNS,
   FETCH_ALL_NOTES,
   DELETE_CATEGORY_BTN,
@@ -176,7 +178,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const backgroundsIsVisible = () => {
-    dispatch({ type: "11" });
+    dispatch({ type: BACKGROUND_IS_VISIBLE });
   };
 
   const changeBackgroundIndex = async (index) => {
@@ -190,7 +192,7 @@ export const AppProvider = ({ children }) => {
         xsrfCookieName: "csrftoken",
       });
       const { backgroundIndex } = await response.data;
-      dispatch({ type: "a", payload: backgroundIndex });
+      dispatch({ type: CHANGE_BACKGROUND_INDEX, payload: backgroundIndex });
     } catch (error) {
       console.log(error);
     }
