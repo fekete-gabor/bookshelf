@@ -43,8 +43,11 @@ const SearchFavouriteResults = () => {
   useEffect(() => {
     if (allActions.removeFromFavourite) {
       alertMessages("error", "Removed from favourites!");
-      removeFromFavourite(bookID);
-      fetchAllFavouriteBooks();
+
+      async () => {
+        await removeFromFavourite(bookID);
+        await fetchAllFavouriteBooks();
+      };
     }
     // eslint-disable-next-line
   }, [allActions.removeFromFavourite]);
