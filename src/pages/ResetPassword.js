@@ -29,7 +29,12 @@ const ResetPassword = () => {
       const payload = { token, email, newPassword, confirmPassword };
       const response = await axios.post(
         `${APIUrl}/api/v1/auth/resetPassword`,
-        payload
+        payload,
+        {
+          withCredentials: true,
+          xsrfHeaderName: "X-CSRFTOKEN",
+          xsrfCookieName: "csrftoken",
+        }
       );
       setUser({ newPassword: "", confirmPassword: "" });
       alertMessages("success", `${response.data.msg}`);

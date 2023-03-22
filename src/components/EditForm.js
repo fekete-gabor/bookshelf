@@ -55,8 +55,20 @@ const EditForm = ({
       const payload = { categoryName, inputName, richText };
 
       let response = !status
-        ? await axios.post(url, payload)
-        : await axios.patch(url, { inputName, richText, editID, id });
+        ? await axios.post(url, payload, {
+            withCredentials: true,
+            xsrfHeaderName: "X-CSRFTOKEN",
+            xsrfCookieName: "csrftoken",
+          })
+        : await axios.patch(
+            url,
+            { inputName, richText, editID, id },
+            {
+              withCredentials: true,
+              xsrfHeaderName: "X-CSRFTOKEN",
+              xsrfCookieName: "csrftoken",
+            }
+          );
 
       const { msg } = await response.data;
       alertMessages("success", msg);

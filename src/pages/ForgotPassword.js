@@ -24,7 +24,12 @@ const ForgotPassword = () => {
     try {
       const response = await axios.post(
         `${APIUrl}/api/v1/auth/forgotPassword`,
-        user
+        user,
+        {
+          withCredentials: true,
+          xsrfHeaderName: "X-CSRFTOKEN",
+          xsrfCookieName: "csrftoken",
+        }
       );
       setUser({ email: "" });
       alertMessages("success", `${response.data.msg}`);

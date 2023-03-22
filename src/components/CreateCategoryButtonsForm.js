@@ -20,7 +20,15 @@ const CreateCategoryButtonsForm = ({ id }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${APIUrl}/api/v1/edit/createCategory/${id}`, fieldName);
+      await axios.post(
+        `${APIUrl}/api/v1/edit/createCategory/${id}`,
+        fieldName,
+        {
+          withCredentials: true,
+          xsrfHeaderName: "X-CSRFTOKEN",
+          xsrfCookieName: "csrftoken",
+        }
+      );
       await getAllCategories(id);
       setFieldName({ name: "" });
     } catch (error) {

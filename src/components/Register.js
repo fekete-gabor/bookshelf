@@ -30,7 +30,15 @@ const Register = ({ form, setForm }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${APIUrl}/api/v1/auth/register`, user);
+      const response = await axios.post(
+        `${APIUrl}/api/v1/auth/register`,
+        user,
+        {
+          withCredentials: true,
+          xsrfHeaderName: "X-CSRFTOKEN",
+          xsrfCookieName: "csrftoken",
+        }
+      );
       alertMessages("success", `${response.data.msg}`);
       setUser({ name: "", email: "", password: "" });
     } catch (error) {

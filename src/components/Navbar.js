@@ -29,7 +29,11 @@ const Navbar = () => {
 
   const logout = async () => {
     try {
-      const response = await axios.delete(`${APIUrl}/api/v1/auth/logout`);
+      const response = await axios.delete(`${APIUrl}/api/v1/auth/logout`, {
+        withCredentials: true,
+        xsrfHeaderName: "X-CSRFTOKEN",
+        xsrfCookieName: "csrftoken",
+      });
       await removeUser();
       alertMessages("success", `${response.data}`);
     } catch (error) {
