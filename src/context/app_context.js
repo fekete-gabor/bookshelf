@@ -107,6 +107,10 @@ export const AppProvider = ({ children }) => {
   const [maxResults, setMaxResults] = useState(10);
   const [page, setPage] = useState(1);
 
+  axios.defaults.withCredentials = true;
+  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+  axios.defaults.xsrfCookieName = "csrftoken";
+
   let path;
   const baseUrl = process.env.REACT_APP_BASE_URL;
   const key = process.env.REACT_APP_API_KEY;
