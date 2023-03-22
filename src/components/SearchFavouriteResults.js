@@ -135,7 +135,7 @@ const SearchFavouriteResults = () => {
                   className="heart-icon"
                   onClick={() => removeBook(id)}
                 />
-                <Link to={`/search/${id}`} key={i}>
+                <Link to={`/my-bookshelf/${id}`} key={i}>
                   <MdOutlineOpenInNew className="open-icon" />
                 </Link>
               </div>
