@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import axios from "axios";
 import { CustomInput, CustomTextArea } from "./index";
 import { useAppContext } from "../context/app_context";
@@ -57,16 +56,14 @@ const EditForm = ({
       let response = !status
         ? await axios.post(url, payload, {
             withCredentials: true,
-            xsrfHeaderName: "X-CSRFTOKEN",
-            xsrfCookieName: "csrftoken",
+            credentials: "include",
           })
         : await axios.patch(
             url,
             { inputName, richText, editID, id },
             {
               withCredentials: true,
-              xsrfHeaderName: "X-CSRFTOKEN",
-              xsrfCookieName: "csrftoken",
+              credentials: "include",
             }
           );
 
@@ -83,19 +80,6 @@ const EditForm = ({
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    const { desc } = richText;
-    if (desc.startsWith("<p><br></p>") && !isEditing.status) {
-      // Quill automatically injects a blank paragraph on render & on page load,
-      // this useEffect replaces it with an empty value
-      setRichText({
-        desc: richText.desc
-          .replace(/(^([ ]*<p><br><\/p>)*)|((<p><br><\/p>)*[ ]*$)/gi, "")
-          .trim(" "),
-      });
-    }
-  }, [richText, setRichText, isEditing.status]);
 
   if (isFormVisible) {
     return (
@@ -118,7 +102,11 @@ const EditForm = ({
           <button
             className="btn"
             type="submit"
-            disabled={inputName.name.length === 0 || richText.desc.length === 0}
+            disabled={
+              richText.desc.startsWith("<p><br></p>") ||
+              inputName.name.length === 0 ||
+              richText.desc.length === 0
+            }
           >
             save
           </button>
