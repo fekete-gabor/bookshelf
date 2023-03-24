@@ -8,7 +8,7 @@ const HowToUse = () => {
   if (!mediaQuery) {
     return (
       <Wrapper>
-        <div>
+        <div className="title">
           <h2>how to use</h2>
         </div>
         <div>
@@ -74,10 +74,11 @@ const HowToUse = () => {
 
 const Wrapper = styled.section`
   .title {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4rem 0 7rem 0;
+    padding: 1rem 0 3rem 0;
     text-align: center;
     text-decoration: underline hotpink;
   }
@@ -114,6 +115,10 @@ const Wrapper = styled.section`
   }
 
   @media screen and (min-width: 1000px) {
+    .title {
+      padding: 4rem 0 7rem 0;
+    }
+
     .container,
     .border {
       width: 100%;
