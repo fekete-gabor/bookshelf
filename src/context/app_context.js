@@ -120,7 +120,6 @@ export const AppProvider = ({ children }) => {
       const response = await axios(`${APIUrl}/api/v1/auth/showCurrentUser`, {
         withCredentials: true,
         xsrfHeaderName: "X-CSRFTOKEN",
-        xsrfCookieName: "csrftoken",
       });
       const payload = await response.data.user;
       dispatch({ type: FETCH_CURRENT_USER_SUCCESSFUL, payload });
@@ -135,7 +134,6 @@ export const AppProvider = ({ children }) => {
       await axios.post(`${APIUrl}/api/v1/auth/verifyEmail`, payload, {
         withCredentials: true,
         xsrfHeaderName: "X-CSRFTOKEN",
-        xsrfCookieName: "csrftoken",
       });
       dispatch({ type: VERIFY_EMAIL_SUCCESSFUL });
       alertMessages("success", "email successfully verified!");
@@ -189,7 +187,6 @@ export const AppProvider = ({ children }) => {
       const response = await axios.patch(url, payload, {
         withCredentials: true,
         xsrfHeaderName: "X-CSRFTOKEN",
-        xsrfCookieName: "csrftoken",
       });
       const { backgroundIndex } = await response.data;
       dispatch({ type: CHANGE_BACKGROUND_INDEX, payload: backgroundIndex });
@@ -206,7 +203,6 @@ export const AppProvider = ({ children }) => {
       const response = await axios.patch(url, payload, {
         withCredentials: true,
         xsrfHeaderName: "X-CSRFTOKEN",
-        xsrfCookieName: "csrftoken",
       });
       const { message, notificationStatus } = await response.data;
       alertMessages("success", message);
@@ -289,7 +285,6 @@ export const AppProvider = ({ children }) => {
         await axios.post(url, bookPayload, {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         });
       }
     } catch (error) {
@@ -309,7 +304,6 @@ export const AppProvider = ({ children }) => {
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         }
       );
       const payload = await response.data;
@@ -334,7 +328,6 @@ export const AppProvider = ({ children }) => {
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         }
       );
       const { allUniqueIDs } = await response.data;
@@ -354,7 +347,6 @@ export const AppProvider = ({ children }) => {
       const response = await axios(`${APIUrl}/api/v1/bookshelf/${id}`, {
         withCredentials: true,
         xsrfHeaderName: "X-CSRFTOKEN",
-        xsrfCookieName: "csrftoken",
       });
       const payload = await response.data.singleBook;
       dispatch({ type: FETCH_SINGLE_BOOK_FROM_MONGODB_SUCCESSFUL, payload });
@@ -371,7 +363,6 @@ export const AppProvider = ({ children }) => {
       await axios.delete(`${APIUrl}/api/v1/bookshelf/${id}`, {
         withCredentials: true,
         xsrfHeaderName: "X-CSRFTOKEN",
-        xsrfCookieName: "csrftoken",
       });
     } catch (error) {
       dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_REJECTED, payload: error });
@@ -405,7 +396,6 @@ export const AppProvider = ({ children }) => {
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         }
       );
       const { categories } = await response.data;
@@ -422,7 +412,6 @@ export const AppProvider = ({ children }) => {
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         }
       );
       const { inputs } = await response.data;
@@ -443,7 +432,6 @@ export const AppProvider = ({ children }) => {
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         }
       );
       const { categories } = await response.data;
@@ -473,7 +461,6 @@ export const AppProvider = ({ children }) => {
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         }
       );
       const { inputs } = await response.data;
@@ -492,7 +479,6 @@ export const AppProvider = ({ children }) => {
         {
           withCredentials: true,
           xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
         }
       );
       const { stars } = await response.data;
