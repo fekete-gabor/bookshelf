@@ -8,6 +8,7 @@ const Home = () => {
 
   useEffect(() => {
     showCurrentUser();
+    // eslint-disable-next-line
   }, []);
 
   return (
