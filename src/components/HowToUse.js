@@ -74,6 +74,9 @@ const HowToUse = () => {
 
 const Wrapper = styled.section`
   .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 4rem 0 7rem 0;
     text-align: center;
     text-decoration: underline hotpink;
