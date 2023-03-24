@@ -300,11 +300,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_ALL_BOOKS_FROM_MONGODB_PENDING });
     try {
       const response = await axios(
-        `${APIUrl}/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`,
-        {
-          withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-        }
+        `${APIUrl}/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`
       );
       const payload = await response.data;
       dispatch({
@@ -324,11 +320,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: FETCH_ALL_IDS_FROM_MONGODB_PENDING });
     try {
       const response = await axios.get(
-        `${APIUrl}/api/v1/bookshelf/getUniqueIDs`,
-        {
-          withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-        }
+        `${APIUrl}/api/v1/bookshelf/getUniqueIDs`
       );
       const { allUniqueIDs } = await response.data;
       dispatch({
@@ -392,11 +384,7 @@ export const AppProvider = ({ children }) => {
   const getAllCategories = async (id) => {
     try {
       const response = await axios(
-        `${APIUrl}/api/v1/edit/getAllCategories/${id}`,
-        {
-          withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-        }
+        `${APIUrl}/api/v1/edit/getAllCategories/${id}`
       );
       const { categories } = await response.data;
       dispatch({ type: FETCH_ALL_CATEGORY_BTNS, payload: categories });
@@ -408,11 +396,7 @@ export const AppProvider = ({ children }) => {
   const getNotes = async (id, category) => {
     try {
       const response = await axios(
-        `${APIUrl}/api/v1/edit/getAllNotes/${id}?category=${category}`,
-        {
-          withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-        }
+        `${APIUrl}/api/v1/edit/getAllNotes/${id}?category=${category}`
       );
       const { inputs } = await response.data;
       dispatch({ type: FETCH_ALL_NOTES, payload: inputs });
@@ -428,11 +412,7 @@ export const AppProvider = ({ children }) => {
   const deleteCategory = async (id, category) => {
     try {
       const response = await axios.delete(
-        `${APIUrl}/api/v1/edit/deleteCategory/${id}?category=${category}`,
-        {
-          withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-        }
+        `${APIUrl}/api/v1/edit/deleteCategory/${id}?category=${category}`
       );
       const { categories } = await response.data;
       dispatch({ type: DELETE_CATEGORY_BTN, payload: categories });
@@ -457,11 +437,7 @@ export const AppProvider = ({ children }) => {
   const deleteInput = async (bookID, id, category) => {
     try {
       const response = await axios.delete(
-        `${APIUrl}/api/v1/edit/${bookID}?id=${id}&category=${category}`,
-        {
-          withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-        }
+        `${APIUrl}/api/v1/edit/${bookID}?id=${id}&category=${category}`
       );
       const { inputs } = await response.data;
       dispatch({ type: DELETE_NOTE, payload: inputs });
@@ -475,11 +451,7 @@ export const AppProvider = ({ children }) => {
     try {
       const response = await axios.post(
         `${APIUrl}/api/v1/bookshelf/rateBook/${id}?rating=${rating}`,
-        {},
-        {
-          withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-        }
+        {}
       );
       const { stars } = await response.data;
       dispatch({ type: RATE_BOOK, payload: stars });
