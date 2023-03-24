@@ -288,8 +288,7 @@ export const AppProvider = ({ children }) => {
         const url = `${APIUrl}/api/v1/bookshelf`;
         await axios.post(url, bookPayload, {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         });
       }
     } catch (error) {
@@ -308,8 +307,7 @@ export const AppProvider = ({ children }) => {
         `${APIUrl}/api/v1/bookshelf?author=${searchAuthor}&title=${searchTerm}&maxResults=${maxResults}&page=${page}`,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       const payload = await response.data;
@@ -333,8 +331,7 @@ export const AppProvider = ({ children }) => {
         `${APIUrl}/api/v1/bookshelf/getUniqueIDs`,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       const { allUniqueIDs } = await response.data;
@@ -404,8 +401,7 @@ export const AppProvider = ({ children }) => {
         `${APIUrl}/api/v1/edit/getAllCategories/${id}`,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       const { categories } = await response.data;
@@ -421,8 +417,7 @@ export const AppProvider = ({ children }) => {
         `${APIUrl}/api/v1/edit/getAllNotes/${id}?category=${category}`,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       const { inputs } = await response.data;
@@ -442,8 +437,7 @@ export const AppProvider = ({ children }) => {
         `${APIUrl}/api/v1/edit/deleteCategory/${id}?category=${category}`,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       const { categories } = await response.data;
@@ -472,8 +466,7 @@ export const AppProvider = ({ children }) => {
         `${APIUrl}/api/v1/edit/${bookID}?id=${id}&category=${category}`,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       const { inputs } = await response.data;
@@ -491,8 +484,7 @@ export const AppProvider = ({ children }) => {
         {},
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       const { stars } = await response.data;
