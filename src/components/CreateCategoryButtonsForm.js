@@ -25,8 +25,7 @@ const CreateCategoryButtonsForm = ({ id }) => {
         fieldName,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       await getAllCategories(id);

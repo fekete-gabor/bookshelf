@@ -27,8 +27,7 @@ const ForgotPassword = () => {
         user,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       setUser({ email: "" });

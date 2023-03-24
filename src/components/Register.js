@@ -35,8 +35,7 @@ const Register = ({ form, setForm }) => {
         user,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       alertMessages("success", `${response.data.msg}`);

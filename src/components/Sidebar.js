@@ -32,8 +32,7 @@ const Sidebar = () => {
     try {
       const response = await axios.delete(`${APIUrl}/api/v1/auth/logout`, {
         withCredentials: true,
-        xsrfHeaderName: "X-CSRFTOKEN",
-        xsrfCookieName: "csrftoken",
+        credentials: "include",
       });
       await removeUser();
       alertMessages("success", `${response.data}`);

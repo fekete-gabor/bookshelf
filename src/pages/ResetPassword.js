@@ -32,8 +32,7 @@ const ResetPassword = () => {
         payload,
         {
           withCredentials: true,
-          xsrfHeaderName: "X-CSRFTOKEN",
-          xsrfCookieName: "csrftoken",
+          credentials: "include",
         }
       );
       setUser({ newPassword: "", confirmPassword: "" });
