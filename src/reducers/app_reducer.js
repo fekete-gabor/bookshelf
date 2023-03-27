@@ -89,7 +89,7 @@ const app_reducer = (state, action) => {
   }
 
   if (action.type === SAVE_USER_SUCCESSFUL) {
-    const { name, email, notification, backgroundIndex } = action.payload;
+    const { name, email, notification, backgroundIndex } = action.payload.user;
     return {
       ...state,
       isLoading: false,
