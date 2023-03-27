@@ -68,7 +68,7 @@ const app_reducer = (state, action) => {
 
   if (action.type === FETCH_CURRENT_USER_REJECTED) {
     console.log(action.payload.message);
-    return { ...state, isLoading: true, isError: true };
+    return { ...state, isLoading: false, isError: true };
   }
 
   if (action.type === VERIFY_EMAIL_PENDING) {
@@ -81,7 +81,7 @@ const app_reducer = (state, action) => {
 
   if (action.type === VERIFY_EMAIL_REJECTED) {
     console.log(action.payload.message);
-    return { ...state, isLoading: true, isError: true };
+    return { ...state, isLoading: false, isError: true };
   }
 
   if (action.type === SAVE_USER_PENDING) {
