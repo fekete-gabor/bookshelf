@@ -6,7 +6,7 @@ import { CustomInput } from "../components";
 import { useAppContext } from "../context/app_context";
 
 const Login = ({ form, setForm }) => {
-  const { saveUser } = useAppContext();
+  const { isLoading, saveUser } = useAppContext();
   const APIUrl = process.env.REACT_APP_API_URL;
 
   const [user, setUser] = useState({
@@ -42,8 +42,8 @@ const Login = ({ form, setForm }) => {
         withCredentials: true,
         credentials: "include",
       });
-      const { name, email, notification, backgroundIndex } = response.data.user;
-      await saveUser({ name, email, notification, backgroundIndex });
+      const { name } = await response.data.user;
+      await saveUser({ user: response.data.user });
       alertMessages("success", `Welcome back ${name}!`);
       setUser({ email: "", password: "" });
       navigateHome();
@@ -75,6 +75,7 @@ const Login = ({ form, setForm }) => {
           className={form === "login" ? "active-btn btn" : "btn"}
           onClick={() => setForm("login")}
           type="submit"
+          disabled={isLoading}
         >
           Log In
         </button>
@@ -82,6 +83,7 @@ const Login = ({ form, setForm }) => {
           className={form === "register" ? "active-btn btn" : "btn"}
           onClick={() => setForm("register")}
           type="button"
+          disabled={isLoading}
         >
           Register
         </button>

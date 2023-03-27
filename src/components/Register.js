@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { alertMessages } from "../utils/alertMessages";
+import { useAppContext } from "../context/app_context";
 import { CustomInput } from "../components";
 
 const Register = ({ form, setForm }) => {
@@ -9,6 +10,7 @@ const Register = ({ form, setForm }) => {
     email: "",
     password: "",
   });
+  const { isLoading } = useAppContext();
 
   const APIUrl = process.env.REACT_APP_API_URL;
 
@@ -75,6 +77,7 @@ const Register = ({ form, setForm }) => {
           className={form === "login" ? "active-btn btn" : "btn"}
           onClick={() => setForm("login")}
           type="button"
+          disabled={isLoading}
         >
           Log In
         </button>
@@ -82,6 +85,7 @@ const Register = ({ form, setForm }) => {
           className={form === "register" ? "active-btn btn" : "btn"}
           onClick={() => setForm("register")}
           type="submit"
+          disabled={isLoading}
         >
           Register
         </button>
