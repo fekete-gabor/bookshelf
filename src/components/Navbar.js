@@ -29,10 +29,14 @@ const Navbar = () => {
 
   const logout = async () => {
     try {
-      const response = await axios.post(`${APIUrl}/api/v1/auth/logout`, {
-        withCredentials: true,
-        credentials: "include",
-      });
+      const response = await axios.post(
+        `${APIUrl}/api/v1/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+          credentials: "include",
+        }
+      );
       await removeUser();
       alertMessages("success", `${response.data}`);
     } catch (error) {
