@@ -5,7 +5,9 @@ import {
   VERIFY_EMAIL_PENDING,
   VERIFY_EMAIL_SUCCESSFUL,
   VERIFY_EMAIL_REJECTED,
-  SAVE_USER,
+  SAVE_USER_PENDING,
+  SAVE_USER_SUCCESSFUL,
+  SAVE_USER_REJECTED,
   REMOVE_USER,
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
@@ -82,14 +84,25 @@ const app_reducer = (state, action) => {
     return { ...state, isLoading: true, isError: true };
   }
 
-  if (action.type === SAVE_USER) {
+  if (action.type === SAVE_USER_PENDING) {
+    return { ...state, isLoading: true, isError: false };
+  }
+
+  if (action.type === SAVE_USER_SUCCESSFUL) {
     const { name, email, notification, backgroundIndex } = action.payload;
     return {
       ...state,
+      isLoading: false,
+      isError: false,
       user: { name, email },
       isModal: { ...state.isModal, notification },
       bgIndex: backgroundIndex,
     };
+  }
+
+  if (action.type === SAVE_USER_REJECTED) {
+    console.log(action.payload.message);
+    return { ...state, isLoading: false, isError: true };
   }
 
   if (action.type === REMOVE_USER) {

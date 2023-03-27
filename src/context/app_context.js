@@ -10,7 +10,9 @@ import {
   VERIFY_EMAIL_PENDING,
   VERIFY_EMAIL_SUCCESSFUL,
   VERIFY_EMAIL_REJECTED,
-  SAVE_USER,
+  SAVE_USER_PENDING,
+  SAVE_USER_SUCCESSFUL,
+  SAVE_USER_REJECTED,
   REMOVE_USER,
   OPEN_SIDEBAR,
   CLOSE_SIDEBAR,
@@ -150,7 +152,12 @@ export const AppProvider = ({ children }) => {
   // **************
 
   const saveUser = (user) => {
-    dispatch({ type: SAVE_USER, payload: user });
+    dispatch({ type: SAVE_USER_PENDING });
+    try {
+      dispatch({ type: SAVE_USER_SUCCESSFUL, payload: user });
+    } catch (error) {
+      dispatch({ type: SAVE_USER_REJECTED, payload: error });
+    }
   };
 
   const removeUser = () => {
