@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import notFound from "../assets/404.png";
+import notFound from "../assets/no_img_found.png";
 import { AiFillHeart, MdOutlineOpenInNew } from "../utils/icons";
 import { Link } from "react-router-dom";
 import { Spinner } from "./index";
