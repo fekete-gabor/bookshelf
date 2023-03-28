@@ -16,7 +16,7 @@ const SearchFavouriteResults = () => {
     removeFromFavourite,
     fetchAllFavouriteBooks,
     numberOfPages,
-
+    page,
     setPage,
   } = useAppContext();
 
@@ -28,7 +28,7 @@ const SearchFavouriteResults = () => {
   useEffect(() => {
     fetchAllFavouriteBooks();
     // eslint-disable-next-line
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     const pages = Array.from({ length: numberOfPages }, (_, index) => {
