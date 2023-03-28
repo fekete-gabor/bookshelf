@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import notFound from "../assets/404.png";
+import notFound from "../assets/no_img_found.png";
 import { Link, Navigate } from "react-router-dom";
 import {
   AiFillHeart,
