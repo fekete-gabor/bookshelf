@@ -28,7 +28,7 @@ const SearchFavouriteResults = () => {
   useEffect(() => {
     fetchAllFavouriteBooks();
     // eslint-disable-next-line
-  }, [page]);
+  }, []);
 
   useEffect(() => {
     const pages = Array.from({ length: numberOfPages }, (_, index) => {
