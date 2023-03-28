@@ -16,7 +16,7 @@ const SearchFavouriteResults = () => {
     removeFromFavourite,
     fetchAllFavouriteBooks,
     numberOfPages,
-    page,
+
     setPage,
   } = useAppContext();
 
