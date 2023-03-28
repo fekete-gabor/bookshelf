@@ -1,16 +1,10 @@
-import { useEffect } from "react";
 import bgArray from "../utils/bgs";
 import { useAppContext } from "../context/app_context";
 import { SearchForm, SearchResults } from "../components";
 import styled from "styled-components";
 
 const SearchPage = () => {
-  const { fetchUniqueIDs, bgIndex } = useAppContext();
-
-  useEffect(() => {
-    fetchUniqueIDs();
-    // eslint-disable-next-line
-  }, []);
+  const { bgIndex } = useAppContext();
 
   return (
     <Wrapper>
