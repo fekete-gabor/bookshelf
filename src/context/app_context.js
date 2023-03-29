@@ -257,6 +257,9 @@ export const AppProvider = ({ children }) => {
       if (searchAuthor || searchTerm) {
         const url = await constructUrl();
         const response = await axios(url);
+        if (response.data.totalItems === 0) {
+          return alertMessages("error", "no books found!");
+        }
         const payload = await response.data.items;
         dispatch({ type: FETCH_ALL_BOOKS_FROM_GOOGLE_SUCCESSFUL, payload });
       }
