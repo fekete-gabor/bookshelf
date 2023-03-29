@@ -28,18 +28,25 @@ const SingleFavouriteBook = () => {
   const [mainComponent, setMainComponent] = useState("details");
   const mainContainer = document.querySelector(".main-container");
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const category = e.target.dataset.category;
+
     setMainComponent(category);
+
+    if (category !== "edit") return;
+    try {
+      await getAllCategories(id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     fetchSingleBookFromMongoDB(id);
-    getAllCategories(id);
     hideForm();
     changeCategory("");
     // eslint-disable-next-line
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     // additional if condition to avoid gsap console warning
