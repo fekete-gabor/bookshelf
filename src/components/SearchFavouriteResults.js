@@ -16,7 +16,6 @@ const SearchFavouriteResults = () => {
     removeFromFavourite,
     fetchAllFavouriteBooks,
     numberOfPages,
-    page,
     setPage,
   } = useAppContext();
 
@@ -25,10 +24,6 @@ const SearchFavouriteResults = () => {
   const [bookID, setBookID] = useState(null);
 
   const { notification, allActions } = isModal;
-  useEffect(() => {
-    fetchAllFavouriteBooks();
-    // eslint-disable-next-line
-  }, [page]);
 
   useEffect(() => {
     const pages = Array.from({ length: numberOfPages }, (_, index) => {
@@ -76,11 +71,16 @@ const SearchFavouriteResults = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const id = e.target.dataset.number;
 
     setCurrentIndex(parseInt(id));
     setPage(parseInt(id));
+    try {
+      await fetchAllFavouriteBooks();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (isLoading) {
