@@ -81,7 +81,7 @@ const SearchResults = () => {
     return <Navigate to="/error" />;
   }
 
-  if (!allBooks) {
+  if (allBooks.length === 0) {
     return (
       <Wrapper>
         <div className="error-container">
