@@ -92,7 +92,7 @@ const SearchForm = ({ fetchFromGoogle }) => {
               (fetchFromGoogle &&
                 searchAuthor.length === 0 &&
                 searchTerm.length === 0) ||
-              (!fetchFromGoogle && searchAuthor.length <= 2)
+              (!fetchFromGoogle && searchAuthor.length >= 2)
             }
           >
             <SlMagnifier />
