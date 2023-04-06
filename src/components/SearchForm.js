@@ -79,9 +79,10 @@ const SearchForm = ({ fetchFromGoogle }) => {
           <button
             type="submit"
             className={
-              fetchFromGoogle &&
-              searchAuthor.length === 0 &&
-              searchTerm.length === 0
+              (fetchFromGoogle &&
+                searchAuthor.length === 0 &&
+                searchTerm.length === 0) ||
+              (!fetchFromGoogle && searchAuthor.length >= 2)
                 ? "disabled submit-btn"
                 : "submit-btn"
             }
